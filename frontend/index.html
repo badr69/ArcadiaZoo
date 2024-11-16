@@ -3,10 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
+
     <title>Arcadia Zoo</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
     <link rel="stylesheet" href="/frontend/styles/style.css">
+    
+    
 </head>
 
 
@@ -65,13 +68,13 @@
 <div id="carouselHabitats" class="carousel slide">
   <div class="carousel-inner">
     <div class="carousel-item active" >
-      <img src="/frontend/assets/imageHabitats/Savane.png" class="d-block w-100" alt="...">
+      <img src="/frontend/assets/imageHabitats/Savane.png" class="d-block w-100" alt="Habitat Savane">
     </div>
     <div class="carousel-item" >
-      <img src="/frontend/assets/imageHabitats/jungle.png" class="d-block w-100" alt="...">
+      <img src="/frontend/assets/imageHabitats/jungle.png" class="d-block w-100" alt="Habitat Jungle">
     </div>
     <div class="carousel-item" >
-      <img src="/frontend/assets/imageHabitats/marais.jpeg" class="d-block w-100" alt="...">
+      <img src="/frontend/assets/imageHabitats/marais.jpeg" class="d-block w-100" alt="Habitat Marais">
     </div>
   </div>
   <button class="carousel-control-prev" type="button" data-bs-target="#carouselHabitats" data-bs-slide="prev">
@@ -95,7 +98,7 @@
       <img src="/frontend/assets/imagesAnimaux/lion.jpeg" class="d-block w-100" alt="Lion">
     </div>
     <div class="carousel-item" >
-      <img src="/frontend/assets/imagesAnnimaux/leopard.jpeg" class="d-block w-100" alt="leopard">
+      <img src="/frontend/assets/imagesAnimaux/leopard.jpeg" class="d-block w-100" alt="leopard">
     </div>
     <div class="carousel-item" >
       <img src="/frontend/assets/imagesAnimaux/giraffe.jpeg" class="d-block w-100" alt="giraffe">
@@ -120,25 +123,29 @@
 
 <!---------------------Les services du Zoo-->
 <hr>
-<div>
-  <h2>les services du zoo</h2>
- <div class="container">
-  <ul>
-    <li>
-      Differents services sont proposés aux visiteur dont un restaurant à la carte, 
-      restauration rapide et restauration à emporté.
-    </li>
-    <li>
-      un train dédié au balades en petit train à travers le zoo.
-    </li>
-    <li>
-      Une visite guidé du Zoo avec un guide.
-    </li>
-  </ul>
- </div>
-        
+<div class="container">
+  <div class="card" style="width: 30rem;">
+    <div class="card-body">
+      <h3 class="card-title">Les Services du Zoo</h3>
+      
+      <ul id="serviceZoo">
+        <li>
+          Differents services sont proposés aux visiteurs dont un restaurant à la carte, 
+          restauration rapide et restauration à emporté.
+        </li>
+        <li>
+          un petit train dédié pour les à travers le zoo.
+        </li>
+        <li>
+          Une visite guidé du Zoo avec un guide.
+        </li>
+      </ul>
+    </div>
+  </div>
 </div>
 <hr>
+
+
 
 <!---------------------les avis-de utilisateurs------------>
 <form action="/"  method="post">
@@ -152,9 +159,7 @@
     <label for="tex-area-avis" class="form-label">Avis</label>
     <textarea class="form-control" id="tex-area-avis" rows="3" placeholder="ecrire un avis"></textarea>
   </div>
-
-    <button type="submit" class="btn btn-primary">Add</button>
-
+    <button type="submit" class="btn btn-dark">Add</button>
   </div>
 </form>
 </main>
@@ -182,9 +187,6 @@
 
 
   
-
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 </html>
