@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}Contat page{%  endblock %}
+
+
+{% block content %}
+    <h1>Contact</h1>
+<form method="POST" action="{{ url_for('contact') }}">
+    {{ form.csrf_token }}
+    <p>
+        {{ form.email.label }} <br> {{ form.email(size=20) }}
+    </p>
+    <p>
+        {{ form.title.label }} <br> {{ form.title(size=20) }}
+    </p>
+    <p>
+        {{ form.description.label }} <br> {{ form.description(size=20) }}
+    </p>
+     {{ form.submit }}
+</form>
+
+{% endblock %}
