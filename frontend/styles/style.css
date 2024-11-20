@@ -1,15 +1,23 @@
 body { 
     background-color: #e8ddb4;
-    min-height: 10v0h;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
   
   }
-  
+
+  main{
+    display: flex;
+    flex-direction: column;
+    padding: 125px 50px 50px;
+    flex-grow: 1;
+  } 
+
   html body {
   height: 100%;
   width: 100%;
   }
+ 
 
   .form-control {
     background-color: #efe8d0;
@@ -37,11 +45,10 @@ body {
   }
   /*-------------carousssel Habitat-----------*/
   .carousel{
-  
-  width: 800px ;
-  margin: 0 auto;
-  display: flex;
-  flex-wrap: wrap;
+      width: 800px ;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
   }
   
   .caroussel-item {
@@ -58,6 +65,7 @@ body {
 .card {
   background-color: #efe8d0;
 }
+
 .card-title {
   text-align: center;
 }
@@ -65,6 +73,7 @@ body {
 #serviceZoo {
   font-size: 20px;
 }
+
  .card-group {
   display: flex;
   flex-wrap: wrap;
@@ -75,10 +84,10 @@ body {
   gap: 20px;
   }
  
-  .container-services {
+  .container-services{
     width: 600px;
-    height: 100px;
-    padding-top: 0px;
+    height: 400px;
+    padding-top: 50px;
     }
 
   .container {
@@ -118,8 +127,6 @@ body {
        padding-top: 0px;
         
   }
-  
- 
   
   
   

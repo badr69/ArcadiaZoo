@@ -9,6 +9,9 @@
 
     <link rel="stylesheet" href="/frontend/styles/style.css">
     
+
+
+    
     
 </head>
 
@@ -16,14 +19,14 @@
 <!----- header------>
 <header>
   <!-----Nav Bar----->
-      
+ 
   <nav class="navbar navbar-expand-lg">
     <div class="container-fluid">
       <a class="navbar-brand" href="">Zoo Arcadia</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <div class="collapse navbar-collapse" id="navbarSupportedContent" >
 
         <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
           <li class="nav-item">
@@ -50,12 +53,14 @@
 
 <body>
   
+  <div>
+    <img class="img-fluid" src="/frontend/assets/header.jpg" alt="bigtitle">
+  </div> 
+
 <main>
 <!----bigtitle------>
   
-    
-  <img class="img-fluid" src="/frontend/assets/header.jpg" alt="bigtitle">
-    <div>
+    <div id="description-zoo">
       <p>Arcadia est un zoo situé en France près de la forêt de Brocéliande, en bretagne depuis 1960.
         Ils possèdent tout un panel d’animaux, réparti par habitat (savane, jungle, marais) et font
         extrêmement attention à leurs santés.</p>
@@ -83,12 +88,8 @@
   </button>
   <button class="carousel-control-next" type="button" data-bs-target="#carouselHabitats" data-bs-slide="next">
     <span class="carousel-control-next-icon" aria-hidden="true"></span>
-    <span class="visually-hidden">Next</span>
-  </button>
-</div>
+    class="visually-hidden">Previous</button>
   
-
-
   <hr>
 <!---Animaux-->
 <h2>Les Animaux du Zoo</h2>
@@ -148,9 +149,15 @@
 
 
 <!---------------------les avis-de utilisateurs------------>
-<form action="/"  method="post">
+
+
+
+
+<form id="form-avis">
   <div class="container">
-    <h2>Les Avis</h2>
+    <h2>les Avis</h2>
+<ul id="avis">
+</ul>
   <div class="mb-3">
     <label for="pseudo" class="form-label">Pseudo</label>
     <input type="text" class="form-control" id="pseudo" placeholder="pseudo"  autocomplete="off">
@@ -159,9 +166,10 @@
     <label for="tex-area-avis" class="form-label">Avis</label>
     <textarea class="form-control" id="tex-area-avis" rows="3" placeholder="ecrire un avis"></textarea>
   </div>
-    <button type="submit" class="btn btn-dark">Add</button>
+    <button type="submit"  class="btn btn-dark submit-avis">Submit</button>
   </div>
 </form>
+</div>
 </main>
 
 <!----------Footer------------->
@@ -188,5 +196,7 @@
 
   
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+<script src="/frontend/script/index.js"></script>
 </body>
 </html>
