@@ -1,0 +1,16 @@
+Flask~=3.0.2
+pip~=24.0
+attrs~=23.2.0
+distro~=1.9.0
+wheel~=0.42.0
+pyOpenSSL~=23.2.0
+cryptography~=41.0.7
+pillow~=10.2.0
+docutils~=0.20.1
+Jinja2~=3.1.6
+typing_extensions~=4.10.0
+MarkupSafe~=2.1.5
+Werkzeug~=3.0.6
+click~=8.1.6
+blinker~=1.7.0
+itsdangerous~=2.1.2
