@@ -1,0 +1,47 @@
+# === Environnements virtuels ===
+venv/
+.venv/
+env/
+
+# === Cache Python ===
+__pycache__/
+*.py[cod]
+*$py.class
+
+# === Fichiers de configuration sensibles ===
+.env
+.env.*
+*.env
+secrets.json
+config.yaml
+
+# === Fichiers temporaires ou système ===
+*.log
+*.tmp
+*.bak
+*.swp
+.DS_Store
+Thumbs.db
+
+# === Fichiers de build et de distribution ===
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# === Dossiers spécifiques à PyCharm ===
+.idea/
+
+# === Dossiers spécifiques à VSCode ===
+.vscode/
+
+# === Fichiers de test / couverture (si tu fais des tests) ===
+.coverage
+coverage.xml
+htmlcov/
+.tox/
+nosetests.xml
+test-results/
+
+# === Checkpoints Jupyter (si tu en utilises un jour) ===
+.ipynb_checkpoints/
