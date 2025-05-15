@@ -1,0 +1,18 @@
+-- TABLE role
+CREATE TABLE IF NOT EXISTS role (
+    id SERIAL PRIMARY KEY,
+    nom VARCHAR(50) UNIQUE NOT NULL
+);
+
+-- TABLE users
+CREATE TABLE IF NOT EXISTS users (
+    id SERIAL PRIMARY KEY,
+    username VARCHAR(50) UNIQUE NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    password_hash TEXT NOT NULL,
+    role_id INT REFERENCES role(id),
+    date_inscription TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+SELECT * FROM role;
+SELECT * FROM users;
