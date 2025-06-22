@@ -15,3 +15,5 @@ class Config:
 
     # configuration mongodb
     MONGO_URI = os.getenv('MONGO_URI')
+
+
