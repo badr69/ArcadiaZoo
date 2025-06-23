@@ -12,7 +12,6 @@ from .submit_mixin import SubmitMixin
 class BaseForm(FlaskForm, SubmitMixin):
     pass
 
-
 # TODO Authform aui fait herite d'autres formulaires(register, login et logout.
 class AuthForm(BaseForm):
     email = StringField("Email", validators=[DataRequired(message="email adresse is required"),
@@ -20,22 +19,18 @@ class AuthForm(BaseForm):
     password = PasswordField("password", validators=[DataRequired(message="password is required"),
                                                      Length(min=4, max=25)])
 
-
 # TODO Register form qui herite de AuthForm
 class RegisterForm(AuthForm):
     username = StringField("username",
                            validators=[DataRequired(message="username is required."), Length(min=3, max=15)])
 
-
 # TODO Login from qui herite de BAseForm
 class Loginforrm(BaseForm):
     pass
 
-
 # TODO Logout form
 class LogoutForm(BaseForm):
     pass
-
 
 # -----------------Contact form-----------------
 # TODO Contact form
@@ -46,7 +41,6 @@ class ContactForm(SubmitMixin):
         DataRequired(message="Description is required."),
         Length(min=10, message="Description must be at least 10 characters long.")
     ])
-
 
 # TODO Create HabitatsForm
 class HabitatCreateForm(FlaskForm, SubmitMixin):
