@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %} Home {% endblock %}
+
+
+{% block content %}
+
+    <h1>hello badredine to ArcadiaZoo</h1>
+     <div>
+        <img class="img-fluid" src="{{ url_for('static', filename='images/header.jpg') }}" alt="bigtitle">
+    </div>
+
+    <div class="container">
+        <form method="POST" action="{{ url_for('main_bp.index') }}">
+            {{ form.csrf_token }}
+            <p>
+            {{ form.pseudo.label }} <br> {{ form.pseudo(class="form-label form-control") }}
+            </p>
+
+             <div>
+                 {{ form.entity.label }}<br>
+                {{ form.entity() }}
+            </div>
+            <p>
+                {{ form.message.label }} <br> {{ form.message(class="form-label form-control", size=20) }}
+            </p>
+            <div>
+                {{ form.rating.label }}<br>
+                {{ form.rating(class="form-select") }}
+            </div>
+                {{ form.submit }}
+        </form>
+    </div>
+
+<hr>
+{#<div class="container">#}
+{#{% for review in reviews %}#}
+{#  <div>#}
+{#    <strong>User {{ review.user_id }}</strong>#}
+{#    <span>Note : {{ review.note }}/5</span>#}
+{#    <p>{{ review.comment }}</p>#}
+{#    <small>Posté le {{ review.date_review }}</small>#}
+{#  </div>#}
+{#{% else %}#}
+{#  <p>no reviews.</p>#}
+{#{% endfor %}#}
+{#</div>#}
+
+{% endblock %}

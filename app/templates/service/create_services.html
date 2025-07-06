@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}Créer un service{% endblock %}
+
+{% block content %}
+<h2>Créer un service</h2>
+<form method="POST" enctype="multipart/form-data">
+    {{ form.hidden_tag() }}
+
+    <div class="mb-3">
+        {{ form.name.label }} {{ form.ame(class="form-control") }}
+        {% for error in form.nom.errors %}
+            <div class="text-danger">{{ error }}</div>
+        {% endfor %}
+    </div>
+
+    <div class="mb-3">
+        {{ form.description.label }} {{ form.description(class="form-control", rows=4) }}
+        {% for error in form.description.errors %}
+            <div class="text-danger">{{ error }}</div>
+        {% endfor %}
+    </div>
+
+    <div class="mb-3">
+        {{ form.image.label }} {{ form.image(class="form-control") }}
+        {% for error in form.image.errors %}
+            <div class="text-danger">{{ error }}</div>
+        {% endfor %}
+    </div>
+
+    {{ form.submit(class="btn btn-primary") }}
+</form>
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}Habitats{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  {% if habitats %}
+    <div class="row">
+      {% for habitat in habitats %}
+        <div class="col-md-4 mb-4">
+          <div class="card h-100 shadow-sm hover-shadow">
+            <img src="{{ url_for('uploaded_file', filename=habitat.image_filename) }}"
+                 class="card-img-top"
+                 alt="Photo de l'habitat {{ habitat.name }}"
+                 style="height: 250px; object-fit: cover;">
+            <div class="card-body d-flex flex-column justify-content-between">
+              <h5 class="card-title text-center">{{ habitat.name }}</h5>
+              {% if habitat.description %}
+                <p class="card-text">{{ habitat.description[:100] }}...</p>
+              {% endif %}
+              <a href="{{ url_for('habitat_detail', habitat_id=habitat.id) }}" class="btn btn-primary mt-2">
+                Voir plus
+              </a>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="text-center">Aucun habitat disponible pour le moment.</p>
+  {% endif %}
+</div>
+
+<style>
+.hover-shadow:hover {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  transition: box-shadow 0.3s ease-in-out;
+}
+</style>
+{% endblock %}

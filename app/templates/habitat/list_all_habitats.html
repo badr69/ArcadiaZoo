@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <h1>List of habitats</h1>
+    <a href="{{ url_for('habitat.create_habitat') }}" class="btn btn-primary mb-3">Créer un utilisateur</a>
+
+    <table class="table table-striped table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th>id</th>
+                <th>Name Habitat</th>
+                <th>url_image</th>
+                <th>description</th>
+                <th>animals_images</th>
+                 <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for habitat in habitats %}
+            <tr>
+                <td>{{ habitat.id }}</td>
+                <td>{{ habitat.name }}</td>
+                <td>{{ habitat.url_image }}</td>
+                <td>{{ habitat.description }}</td>
+                <td>{{  habitats.animals_images}}</td>
+                <td>
+                    <a href="{{ url_for('habitat.update_habitat', habitat_id=habitat.id) }}" class="btn btn-warning btn-sm">Modifier</a>
+                    <form action="{{ url_for('habitat.delete_habitat', habitat_id=habitat.id) }}" method="POST" style="display:inline;">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                            <button type="submit" class="btn btn-danger btn-sm"
+                            onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?');">
+                            Supprimer
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="5" class="text-center">Aucun utilisateur trouvé</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
