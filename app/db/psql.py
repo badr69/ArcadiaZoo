@@ -2,7 +2,7 @@ import psycopg2
 from app.config import Config
 import traceback
 
-def get_connection():
+def get_db_connection():
     try:
         conn = psycopg2.connect(
             host=Config.POSTGRES_HOST,
