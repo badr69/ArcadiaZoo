@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Create Animal{% endblock %}
+
+{% block content %}
+<h2>Create Animal</h2>
+
+<form method="POST" enctype="multipart/form-data">
+    {{ form.hidden_tag() }}
+
+    <div class="mb-3">
+        {{ form.name.label }} {{ form.name(class="form-control") }}
+        {% for error in form.name.errors %}
+            <div class="text-danger">{{ error }}</div>
+        {% endfor %}
+    </div>
+
+    <div class="mb-3">
+        {{ form.race.label }} {{ form.race(class="form-control") }}
+        {% for error in form.race.errors %}
+            <div class="text-danger">{{ error }}</div>
+        {% endfor %}
+    </div>
+
+    <div class="mb-3">
+        {{ form.images.label }} {{ form.images(class="form-control", multiple=True) }}
+        {% for error in form.images.errors %}
+            <div class="text-danger">{{ error }}</div>
+        {% endfor %}
+    </div>
+
+    <div class="mb-3">
+        {{ form.habitat.label }} {{ form.habitat(class="form-select control") }}
+        {% for error in form.habitat.errors %}
+            <div class="text-danger">{{ error }}</div>
+        {% endfor %}
+    </div>
+
+    {{ form.submit(class="btn btn-primary") }}
+</form>
+{% endblock %}
