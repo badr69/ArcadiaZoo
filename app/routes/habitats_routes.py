@@ -1,5 +1,5 @@
 from flask import Blueprint
-from app.controllers.habitats_controller import HabitatController
+from app.controllers.habitat_controller import HabitatController
 
 
 habitat_bp = Blueprint('habitat', __name__, url_prefix="/habitat")

@@ -1,5 +1,5 @@
 from app.db.psql import get_db_connection
-import psycopg2
+
 
 class Habitat:
     def __init__(self, id, name, url_image, description, created_at=None, updated_at=None):
@@ -23,9 +23,12 @@ class Habitat:
                 RETURNING id, created_at
             """, (name, url_image, description))
             row = cur.fetchone()
+            print("Resultat RETURNING :", row)
             conn.commit()
             habitat_id, created_at = row
-            return cls(habitat_id, name, url_image, description, created_at=created_at)
+            return cls(habitat_id, name, url_image, description)
+
+
         except Exception as e:
             print(f"Erreur lors de la création d'un habitat : {e}")
             return None
@@ -93,7 +96,7 @@ class Habitat:
                 UPDATE habitats
                 SET name=%s, url_image=%s, description=%s, updated_at=NOW()
                 WHERE id=%s
-            """, (name, url_image, description, habitat_id))
+            """, (name, description, url_image, habitat_id))
             conn.commit()
             if cur.rowcount == 0:
                 print(f"Aucun habitat trouvé avec l'id {habitat_id} pour mise à jour.")

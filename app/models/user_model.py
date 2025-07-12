@@ -34,6 +34,7 @@ class User:
             if conn:
                 conn.close()
 
+
     @classmethod
     def create(cls, username, email, password, role_id):
         password = generate_password_hash(password)

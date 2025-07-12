@@ -30,6 +30,9 @@ def create_app():
     from app.routes.main_routes import main_bp
     app.register_blueprint(main_bp)
 
+    from app.routes.animal_routes import animal_bp
+    app.register_blueprint(animal_bp)
+
     from app.routes.habitats_routes import habitat_bp
     app.register_blueprint(habitat_bp)
 

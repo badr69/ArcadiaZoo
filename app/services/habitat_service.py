@@ -1,4 +1,4 @@
-from app.models.habitats_model import Habitat
+from app.models.habitat_model import Habitat
 
 
 class HabitatService:

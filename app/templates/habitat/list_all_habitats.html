@@ -24,7 +24,7 @@
                 <td>{{ habitat.name }}</td>
                 <td>{{ habitat.url_image }}</td>
                 <td>{{ habitat.description }}</td>
-                <td>{{  habitats.animals_images}}</td>
+                <td>{{ habitats.animals_images}}</td>
                 <td>
                     <a href="{{ url_for('habitat.update_habitat', habitat_id=habitat.id) }}" class="btn btn-warning btn-sm">Modifier</a>
                     <form action="{{ url_for('habitat.delete_habitat', habitat_id=habitat.id) }}" method="POST" style="display:inline;">

@@ -9,36 +9,33 @@
   <form method="POST" enctype="multipart/form-data">
     {{ form.hidden_tag() }}
 
-    <p>
-      {{ form.name.label }}<br>
-      {{ form.name(size=40) }}<br>
+    <div>
+      {{ form.name.label }} {{ form.name(size=40) }}<br>
       {% for error in form.name.errors %}
         <span style="color: red;">{{ error }}</span>
       {% endfor %}
-    </p>
+    </div>
 
-    <p>
+    <div>
       Image actuelle:<br>
       <img src="{{ habitat.url_image }}" style="max-width: 300px;">
-    </p>
+    </div>
 
-    <p>
-      {{ form.url_images.label }}<br>
-      {{ form.url_images(multiple=True) }}<br>
-      {% for error in form.url_images.errors %}
+    <div>
+      {{ form.url_image.label }} {{ form.url_image(class="form-control") }}<br>
+      {% for error in form.url_image.errors %}
         <span style="color: red;">{{ error }}</span>
       {% endfor %}
-    </p>
+    </div>
 
-    <p>
-      {{ form.description.label }}<br>
-      {{ form.description(rows=5, cols=40) }}<br>
+    <div>
+      {{ form.description.label }} {{ form.description(class="form-control", rows=4) }}<br>
       {% for error in form.description.errors %}
         <span style="color: red;">{{ error }}</span>
       {% endfor %}
-    </p>
+    </div>
 
-    <p>{{ form.submit() }}</p>
+    {{ form.submit(class="btn btn-primary") }}
   </form>
     </div>
 {% endblock %}
