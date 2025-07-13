@@ -10,9 +10,6 @@ from flask_wtf.file import FileAllowed
 # from app.utils.validator import StrongPassword
 
 
-
-
-
 # TODO uploads form
 class UploadImageForm(FlaskForm):
     images = MultipleFileField("Uploader des images", validators=[
@@ -114,7 +111,15 @@ class AnimalCreateForm(BaseForm):
         DataRequired(message="Race is required."),
         Length(min=2, max=50)
     ])
-        habitat = SelectField("Habitat", coerce=int, validators=[
+
+
+# TODO: Formulaire de création d'animal
+class AnimalUpdateForm(BaseForm):
+    race = StringField("Race", validators=[
+        DataRequired(message="Race is required."),
+        Length(min=2, max=50)
+    ])
+    habitat = SelectField("Habitat", coerce=int, validators=[
         DataRequired(message="Habitat is required.")
     ])
 
