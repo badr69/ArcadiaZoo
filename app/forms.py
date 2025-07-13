@@ -9,8 +9,6 @@ from wtforms.validators import DataRequired, Email, Length, NumberRange, EqualTo
 from flask_wtf.file import FileAllowed, FileField
 
 
-# from app.utils.validator import StrongPassword
-
 
 # TODO uploads form
 class UploadImageForm(FlaskForm):
@@ -120,6 +118,7 @@ class HabitatUpdateForm(BaseForm):
     ])
     # animals = SelectMultipleField("Animals", coerce=int)
 
+
 # TODO: Create animal form
 class AnimalCreateForm(BaseForm):
         race = StringField("Race", validators=[
@@ -145,10 +144,26 @@ class AnimalUpdateForm(BaseForm):
 
 # TODO: Formulaire de création de service
 class ServiceCreateForm(BaseForm):
-        description = TextAreaField("Description", validators=[
+    description = TextAreaField("Description", validators=[
         DataRequired(message="Description is required."),
         Length(max=300, message="Description must be 300 characters max.")
     ])
+    url_image = FileField("Images", validators=[
+        FileAllowed(['jpg', 'jpeg', 'png', 'gif'], "Only image files are allowed.")
+    ])
+    submit = SubmitField("Submit")
+
+#TODO: Update Services Form
+class ServiceUpdateForm(BaseForm):
+    description = TextAreaField("Description", validators=[
+        DataRequired(message="Description is required."),
+        Length(max=300, message="Description must be 300 characters max.")
+    ])
+    url_image = FileField("Images", validators=[
+        FileAllowed(['jpg', 'jpeg', 'png', 'gif'], "Only image files are allowed.")
+    ])
+    submit = SubmitField("Submit")
+
 
 # TODO: Formulaire de rapport vétérinaire
 class ReportForm(FlaskForm):

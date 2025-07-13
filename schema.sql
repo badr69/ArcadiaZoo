@@ -20,6 +20,7 @@ CREATE TABLE IF NOT EXISTS users (
 CREATE TABLE IF NOT EXISTS habitats (
     id SERIAL PRIMARY KEY,
     name VARCHAR(100) UNIQUE NOT NULL,
+    url_image VARCHAR(255) NOT NULL,
     description TEXT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -43,11 +44,12 @@ CREATE TABLE IF NOT EXISTS habitats_images (
     FOREIGN KEY (image_id) REFERENCES img_habitats(id) ON DELETE CASCADE
 );
 
--- creation table animaux
-CREATE TABLE IF NOT EXISTS animaux (
+-- creation table animals
+CREATE TABLE IF NOT EXISTS animals (
     id SERIAL PRIMARY KEY,
     name VARCHAR(100) UNIQUE NOT NULL,
     race VARCHAR(100) NOT NULL,
+    url_image VARCHAR(255),
     habitat_id INTEGER,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -55,7 +57,7 @@ CREATE TABLE IF NOT EXISTS animaux (
 );
 
 -- creation table img_animaux
-CREATE TABLE IF NOT EXISTS img_animaux (
+CREATE TABLE IF NOT EXISTS img_animals (
     id SERIAL PRIMARY KEY,
     filename VARCHAR(255) NOT NULL,
     description TEXT,
@@ -63,19 +65,20 @@ CREATE TABLE IF NOT EXISTS img_animaux (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Table d'association (animaux et img_animaux)= animaux_images
-CREATE TABLE IF NOT EXISTS animaux_images (
+-- Table d'association (animaux et img_animals)= animals_images
+CREATE TABLE IF NOT EXISTS animals_images (
     animal_id INTEGER NOT NULL,
     image_id INTEGER NOT NULL,
     PRIMARY KEY (animal_id, image_id),
-    FOREIGN KEY (animal_id) REFERENCES animaux(id) ON DELETE CASCADE,
-    FOREIGN KEY (image_id) REFERENCES img_animaux(id) ON DELETE CASCADE
+    FOREIGN KEY (animal_id) REFERENCES animals(id) ON DELETE CASCADE,
+    FOREIGN KEY (image_id) REFERENCES img_animals(id) ON DELETE CASCADE
 );
 
 -- creation table services
 CREATE TABLE IF NOT EXISTS services (
     id SERIAL PRIMARY KEY,
     name VARCHAR(100) UNIQUE NOT NULL,
+    url_image VARCHAR(255) NOT NULL,
     description TEXT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -100,7 +103,7 @@ CREATE TABLE IF NOT EXISTS services_images (
 );
 
 -- creation table nourriture
-CREATE TABLE IF NOT EXISTS nourritures (
+CREATE TABLE IF NOT EXISTS foods (
     id SERIAL PRIMARY KEY,
     animal_id INTEGER NOT NULL,
     type_nourriture VARCHAR(100) NOT NULL,
@@ -108,11 +111,11 @@ CREATE TABLE IF NOT EXISTS nourritures (
     date_nourriture TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (animal_id) REFERENCES animaux(id) ON DELETE CASCADE
+    FOREIGN KEY (animal_id) REFERENCES animals(id) ON DELETE CASCADE
 );
 
--- creation table soins
-CREATE TABLE IF NOT EXISTS soins (
+-- creation table care
+CREATE TABLE IF NOT EXISTS care (
     id SERIAL PRIMARY KEY,
     animal_id INTEGER NOT NULL,
     user_id INTEGER,
@@ -121,7 +124,7 @@ CREATE TABLE IF NOT EXISTS soins (
     date_soin TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (animal_id) REFERENCES animaux(id) ON DELETE CASCADE,
+    FOREIGN KEY (animal_id) REFERENCES animals(id) ON DELETE CASCADE,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
 );
 
@@ -136,7 +139,7 @@ CREATE TABLE IF NOT EXISTS report_vet (
     description_state TEXT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (animal_id) REFERENCES animaux(id) ON DELETE CASCADE,
+    FOREIGN KEY (animal_id) REFERENCES animals(id) ON DELETE CASCADE,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
 );
 
@@ -169,14 +172,14 @@ FOR EACH ROW
 EXECUTE FUNCTION update_updated_at_column();
 
 -- Trigger pour la table animaux
-CREATE TRIGGER trg_update_animaux_updated_at
-BEFORE UPDATE ON animaux
+CREATE TRIGGER trg_update_animals_updated_at
+BEFORE UPDATE ON animals
 FOR EACH ROW
 EXECUTE FUNCTION update_updated_at_column();
 
 -- Trigger pour la table img_animaux
-CREATE TRIGGER trg_update_img_animaux_updated_at
-BEFORE UPDATE ON img_animaux
+CREATE TRIGGER trg_update_img_animals_updated_at
+BEFORE UPDATE ON img_animals
 FOR EACH ROW
 EXECUTE FUNCTION update_updated_at_column();
 
@@ -193,14 +196,14 @@ FOR EACH ROW
 EXECUTE FUNCTION update_updated_at_column();
 
 -- Trigger pour la table nourritures
-CREATE TRIGGER trg_update_nourritures_updated_at
-BEFORE UPDATE ON nourritures
+CREATE TRIGGER trg_update_foods_updated_at
+BEFORE UPDATE ON foods
 FOR EACH ROW
 EXECUTE FUNCTION update_updated_at_column();
 
 -- Trigger pour la table soins
-CREATE TRIGGER trg_update_soins_updated_at
-BEFORE UPDATE ON soins
+CREATE TRIGGER trg_update_care_updated_at
+BEFORE UPDATE ON care
 FOR EACH ROW
 EXECUTE FUNCTION update_updated_at_column();
 

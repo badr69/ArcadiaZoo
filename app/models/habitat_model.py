@@ -28,7 +28,6 @@ class Habitat:
             habitat_id, created_at = row
             return cls(habitat_id, name, url_image, description)
 
-
         except Exception as e:
             print(f"Erreur lors de la création d'un habitat : {e}")
             return None
