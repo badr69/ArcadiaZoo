@@ -5,32 +5,38 @@
 {% block content %}
 
 <div class="container">
-  <h1>Modifier l'habitat</h1>
+  <h1>Update Animal</h1>
   <form method="POST" enctype="multipart/form-data">
     {{ form.hidden_tag() }}
 
     <p>
-      {{ form.name.label }}<br>
-      {{ form.name(size=40) }}<br>
+      {{ form.name.label }} {{ form.name(class="form-control", size=40) }}<br>
       {% for error in form.name.errors %}
+        <span style="color: red;">{{ error }}</span>
+      {% endfor %}
+    </p>
+
+     <p>
+      {{ form.race.label }} {{ form.race(class="form-control", size=40) }}<br>
+      {% for error in form.race.errors %}
         <span style="color: red;">{{ error }}</span>
       {% endfor %}
     </p>
 
     <p>
       Image actuelle:<br>
-      <img src="{{ habitat.url_image }}" style="max-width: 300px;">
+      <img src="{{ animal.url_image }}" style="max-width: 300px;" alt="image actuel">
     </p>
 
     <p>
-      {{ form.url_images.label }}<br>
-      {{ form.url_images(multiple=True) }}<br>
-      {% for error in form.url_images.errors %}
+      {{ form.url_image.label }}<br>
+      {{ form.url_image(class="form-control", multiple=True) }}<br>
+      {% for error in form.url_image.errors %}
         <span style="color: red;">{{ error }}</span>
       {% endfor %}
     </p>
 
-    <p>
+     <p>
       {{ form.description.label }}<br>
       {{ form.description(rows=5, cols=40) }}<br>
       {% for error in form.description.errors %}
@@ -38,7 +44,9 @@
       {% endfor %}
     </p>
 
-    <p>{{ form.submit() }}</p>
+
+
+    <p>{{ form.submit(class="btn btn-primary") }}</p>
   </form>
     </div>
 {% endblock %}

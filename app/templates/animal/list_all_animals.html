@@ -12,7 +12,10 @@
                 <th>id</th>
                 <th>Name</th>
                 <th>race</th>
+                <th>description</th>
                 <th>url_image</th>
+
+
                 <th>Actions</th>
             </tr>
         </thead>
@@ -21,15 +24,18 @@
             <tr>
                 <td>{{ animal.id }}</td>
                 <td>{{ animal.name }}</td>
-                <td>{{ animal.url_image }}</td>
+                <td>{{ animal.race }}</td>
                 <td>{{ animal.description }}</td>
-                <td>{{ animals.animals_images}}</td>
+                <td>{{ animal.url_image }}</td>
+
+
+
                 <td>
                     <a href="{{ url_for('animal.update_animal', animal_id=animal.id) }}" class="btn btn-warning btn-sm">Modifier</a>
                     <form action="{{ url_for('animal.delete_animal', animal_id=animal.id) }}" method="POST" style="display:inline;">
                         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                             <button type="submit" class="btn btn-danger btn-sm"
-                            onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?');">
+                            onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet animal ?');">
                             Supprimer
                         </button>
                     </form>

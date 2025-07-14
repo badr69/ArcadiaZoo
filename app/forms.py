@@ -6,7 +6,9 @@ from wtforms.fields.datetime import DateField
 from wtforms.fields.numeric import DecimalField, IntegerField
 from wtforms import MultipleFileField, SubmitField
 from wtforms.validators import DataRequired, Email, Length, NumberRange, EqualTo
-from flask_wtf.file import FileAllowed
+from flask_wtf.file import FileAllowed, FileField
+
+
 # from app.utils.validator import StrongPassword
 
 
@@ -54,11 +56,11 @@ class UpdateUserForm(AuthForm):
         submit = SubmitField('Enregistrer les modifications')
 
 class DeleteUserForm(FlaskForm):
-        user_id = IntegerField("ID de l'utilisateur", validators=[
+    user_id = IntegerField("ID de l'utilisateur", validators=[
         DataRequired(message="L'ID utilisateur est requis"),
         NumberRange(min=1, message="L'ID doit être un entier positif")
     ])
-        submit = SubmitField("Supprimer l'utilisateur")
+    submit = SubmitField("Supprimer l'utilisateur")
 
 # TODO: LoginForm
 class LoginForm(AuthForm):
@@ -86,7 +88,7 @@ class BaseForm(FlaskForm):
         DataRequired(message="Name is required."),
         Length(min=2, max=50)
     ])
-        url_images = MultipleFileField("Images", validators=[
+        url_image = FileField("Images", validators=[
         FileAllowed(['jpg', 'jpeg', 'png', 'gif'], "Only image files are allowed.")
     ])
         submit = SubmitField("Submit")
@@ -107,9 +109,12 @@ class HabitatUpdateForm(BaseForm):
 
 # TODO: Formulaire de création d'animal
 class AnimalCreateForm(BaseForm):
-        race = StringField("Race", validators=[
+    race = StringField("Race", validators=[
         DataRequired(message="Race is required."),
         Length(min=2, max=50)
+    ])
+    description = TextAreaField("Description", validators=[
+            Length(max=300, message="Description must be 300 characters max.")
     ])
 
 
@@ -119,9 +124,12 @@ class AnimalUpdateForm(BaseForm):
         DataRequired(message="Race is required."),
         Length(min=2, max=50)
     ])
-    habitat = SelectField("Habitat", coerce=int, validators=[
-        DataRequired(message="Habitat is required.")
+    description = TextAreaField("Description", validators=[
+        Length(max=300, message="Description must be 300 characters max.")
     ])
+    # habitat = SelectField("Habitat", coerce=int, validators=[
+    #     DataRequired(message="Habitat is required.")
+    # ])
 
 # TODO: Formulaire de création de service
 class ServiceCreateForm(BaseForm):

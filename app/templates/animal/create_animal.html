@@ -23,18 +23,25 @@
     </div>
 
     <div class="mb-3">
-        {{ form.images.label }} {{ form.images(class="form-control", multiple=True) }}
-        {% for error in form.images.errors %}
+        {{ form.url_image.label }} {{ form.url_image(class="form-control", multiple=True) }}
+        {% for error in form.url_image.errors %}
             <div class="text-danger">{{ error }}</div>
         {% endfor %}
     </div>
 
     <div class="mb-3">
-        {{ form.habitat.label }} {{ form.habitat(class="form-select control") }}
-        {% for error in form.habitat.errors %}
+        {{ form.description.label }} {{ form.description(class="form-control", rows=4) }}
+        {% for error in form.description.errors %}
             <div class="text-danger">{{ error }}</div>
         {% endfor %}
     </div>
+
+{#    <div class="mb-3">#}
+{#        {{ form.habitat.label }} {{ form.habitat(class="form-select control") }}#}
+{#        {% for error in form.habitat.errors %}#}
+{#            <div class="text-danger">{{ error }}</div>#}
+{#        {% endfor %}#}
+{#    </div>#}
 
     {{ form.submit(class="btn btn-primary") }}
 </form>
