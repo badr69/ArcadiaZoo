@@ -9,6 +9,8 @@ from wtforms.validators import DataRequired, Email, Length, NumberRange, EqualTo
 from flask_wtf.file import FileAllowed, FileField
 
 
+# from app.utils.validator import StrongPassword
+
 
 # TODO uploads form
 class UploadImageForm(FlaskForm):
@@ -51,18 +53,14 @@ class UpdateUserForm(AuthForm):
         'Rôle',
         choices=[('employee', 'Employee'), ('vet', 'Vet')],
         validators=[DataRequired()])
-        confirm_password = PasswordField('Confirmer le mot de passe', validators=[
-            DataRequired(),
-            EqualTo('password', message='Les mots de passe doivent correspondre.')
-        ])
         submit = SubmitField('Enregistrer les modifications')
 
 class DeleteUserForm(FlaskForm):
-        user_id = IntegerField("ID de l'utilisateur", validators=[
+    user_id = IntegerField("ID de l'utilisateur", validators=[
         DataRequired(message="L'ID utilisateur est requis"),
         NumberRange(min=1, message="L'ID doit être un entier positif")
     ])
-        submit = SubmitField("Supprimer l'utilisateur")
+    submit = SubmitField("Supprimer l'utilisateur")
 
 # TODO: LoginForm
 class LoginForm(AuthForm):
@@ -90,7 +88,7 @@ class BaseForm(FlaskForm):
         DataRequired(message="Name is required."),
         Length(min=2, max=50)
     ])
-        url_image = MultipleFileField("Images", validators=[
+        url_image = FileField("Images", validators=[
         FileAllowed(['jpg', 'jpeg', 'png', 'gif'], "Only image files are allowed.")
     ])
         submit = SubmitField("Submit")
@@ -100,70 +98,45 @@ class HabitatCreateForm(BaseForm):
         description = TextAreaField("Description", validators=[
         Length(max=300, message="Description must be 300 characters max.")
     ])
-        url_image = FileField("Images", validators=[
-            FileAllowed(['jpg', 'jpeg', 'png', 'gif'], "Only image files are allowed.")
-    ])
-        # animals = SelectMultipleField(
-        #     "Animals",
-        #     choices=[(1, "lion"), (2, "giraffe"), (3, "elephant")],  # choix statiques
-        #     coerce=int)
-        submit = SubmitField("Submit")
+        animals = SelectMultipleField("Animals", coerce=int)
+
 # TODO UPDATE FORM HABITATS
 class HabitatUpdateForm(BaseForm):
     description = TextAreaField("Description", validators=[
         Length(max=300, message="Description must be 300 characters max.")
     ])
-    url_image = FileField("Images", validators=[
-        FileAllowed(['jpg', 'jpeg', 'png', 'gif'], "Only image files are allowed.")
-    ])
-    # animals = SelectMultipleField("Animals", coerce=int)
+    animals = SelectMultipleField("Animals", coerce=int)
 
-
-# TODO: Create animal form
+# TODO: Formulaire de création d'animal
 class AnimalCreateForm(BaseForm):
-        race = StringField("Race", validators=[
+    race = StringField("Race", validators=[
         DataRequired(message="Race is required."),
         Length(min=2, max=50)
     ])
-        habitat = SelectField(
-            "Habitats",
-            choices=[(1, "savane"), (2, "jungle"), (3, "marais")],  # choix statiques
-            coerce=int)
+    description = TextAreaField("Description", validators=[
+            Length(max=300, message="Description must be 300 characters max.")
+    ])
 
 
-# TODO: Update animal form
+# TODO: Formulaire de création d'animal
 class AnimalUpdateForm(BaseForm):
-        race = StringField("Race", validators=[
-            Length(max=300, message="race must be 300 characters max.")
-        ])
-        habitat = SelectField(
-            "Habitats",
-            choices=[(1, "savane"), (2, "jungle"), (3, "marais")],  # choix statiques
-            coerce=int)
-
+    race = StringField("Race", validators=[
+        DataRequired(message="Race is required."),
+        Length(min=2, max=50)
+    ])
+    description = TextAreaField("Description", validators=[
+        Length(max=300, message="Description must be 300 characters max.")
+    ])
+    # habitat = SelectField("Habitat", coerce=int, validators=[
+    #     DataRequired(message="Habitat is required.")
+    # ])
 
 # TODO: Formulaire de création de service
 class ServiceCreateForm(BaseForm):
-    description = TextAreaField("Description", validators=[
+        description = TextAreaField("Description", validators=[
         DataRequired(message="Description is required."),
         Length(max=300, message="Description must be 300 characters max.")
     ])
-    url_image = FileField("Images", validators=[
-        FileAllowed(['jpg', 'jpeg', 'png', 'gif'], "Only image files are allowed.")
-    ])
-    submit = SubmitField("Submit")
-
-#TODO: Update Services Form
-class ServiceUpdateForm(BaseForm):
-    description = TextAreaField("Description", validators=[
-        DataRequired(message="Description is required."),
-        Length(max=300, message="Description must be 300 characters max.")
-    ])
-    url_image = FileField("Images", validators=[
-        FileAllowed(['jpg', 'jpeg', 'png', 'gif'], "Only image files are allowed.")
-    ])
-    submit = SubmitField("Submit")
-
 
 # TODO: Formulaire de rapport vétérinaire
 class ReportForm(FlaskForm):

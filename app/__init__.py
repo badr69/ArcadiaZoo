@@ -12,7 +12,7 @@ def create_app():
     app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'change_me')  # Bonne pratique
 
     app.config['UPLOAD_FOLDER'] = os.path.join('app', 'static', 'uploads')
-    app.config['MAX_CONTENT_LENGTH'] = 10 * 1024 * 1024  # 5 MB max
+    app.config['MAX_CONTENT_LENGTH'] = 5 * 1024 * 1024  # 5 MB max
     app.config['ALLOWED_EXTENSIONS'] = {'png', 'jpg', 'jpeg', 'gif'}
 
     csrf.init_app(app)  # Protection CSRF via Flask-WTF
@@ -30,14 +30,11 @@ def create_app():
     from app.routes.main_routes import main_bp
     app.register_blueprint(main_bp)
 
-    from app.routes.animal_routes import animal_bp
-    app.register_blueprint(animal_bp)
-
     from app.routes.habitats_routes import habitat_bp
     app.register_blueprint(habitat_bp)
 
-    from app.routes.service_routes import service_bp
-    app.register_blueprint(service_bp)
+    from app.routes.animal_routes import animal_bp
+    app.register_blueprint(animal_bp)
 
 
     return app
