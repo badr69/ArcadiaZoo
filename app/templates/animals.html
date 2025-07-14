@@ -6,6 +6,31 @@
 
 {% block content %}
 
-    <h1>hello to my Animals badreddine</h1>
+
+
+
+
+<div class="container mt-5">
+  <h1 class="mb-4">List of animals</h1>
+
+  <div class="row">
+    {% for animal in animals %}
+      <div class="col-md-4 mb-4">
+        <div class="card h-100">
+          <img src="{{ url_for('static', filename='uploads/' ~ animal.image_filename) }}" class="card-img-top" alt="{{ animal.name }}">
+          <div class="card-body">
+            <h5 class="card-title">{{ animal.name }}</h5>
+            <p class="card-text">{{ animal.description }}</p>
+          </div>
+        </div>
+      </div>
+
+      {% if loop.index % 3 == 0 %}
+        </div><div class="row">
+      {% endif %}
+    {% endfor %}
+  </div>
+</div>
+
 
 {% endblock %}

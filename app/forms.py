@@ -138,6 +138,13 @@ class ServiceCreateForm(BaseForm):
         Length(max=300, message="Description must be 300 characters max.")
     ])
 
+# TODO: service Update Form
+class ServiceUpdateForm(BaseForm):
+        description = TextAreaField("Description", validators=[
+        DataRequired(message="Description is required."),
+        Length(max=300, message="Description must be 300 characters max.")
+    ])
+
 # TODO: Formulaire de rapport vétérinaire
 class ReportForm(FlaskForm):
         animal_status = StringField("Animal's Condition", validators=[
