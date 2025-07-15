@@ -1,6 +1,6 @@
 import os
 from pathlib import Path
-from app.forms import ServiceCreateForm, ServiceUpdateForm
+from app.forms.service_forms import ServiceCreateForm, ServiceUpdateForm
 from app.services.service_service import ServiceService
 from flask import render_template, redirect, url_for, flash
 from werkzeug.utils import secure_filename

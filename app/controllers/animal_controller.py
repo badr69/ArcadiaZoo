@@ -1,5 +1,6 @@
+import uuid
 from pathlib import Path
-from app.forms import AnimalCreateForm, AnimalUpdateForm
+from app.forms.animal_forms import AnimalCreateForm, AnimalUpdateForm
 from app.services.animal_service import AnimalService
 from flask import render_template, redirect, url_for, flash, current_app
 from werkzeug.utils import secure_filename
@@ -19,6 +20,7 @@ class AnimalController:
             flash("Animal non trouvé.", "danger")
             return redirect(url_for('animal.list_all_animals'))
         return render_template('animal/animal_details.html', animal=animal)
+
 
     @staticmethod
     def create_animal():

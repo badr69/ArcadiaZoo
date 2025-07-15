@@ -1,6 +1,6 @@
 import os
 from pathlib import Path
-from app.forms import HabitatCreateForm, HabitatUpdateForm
+from app.forms.habitat_forms import HabitatCreateForm, HabitatUpdateForm
 from app.services.habitat_service import HabitatService
 from flask import render_template, redirect, url_for, flash
 from werkzeug.utils import secure_filename
@@ -22,7 +22,6 @@ class HabitatController:
             flash("Habitat non trouvé.", "danger")
             return redirect(url_for('habitat.list_habitats'))
         return render_template('habitat/habitat_details.html', habitat=habitat)
-
 
 
     @staticmethod

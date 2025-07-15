@@ -3,27 +3,31 @@
 {% block title %}Détail Utilisateur{% endblock %}
 
 {% block content %}
-<div class="container mt-5">
-    <h2 class="mb-4">Détails de l'utilisateur</h2>
+    <div class="container mt-5">
+        <h2 class="mb-4">habitat details</h2>
 
-    <table class="table table-bordered table-striped">
-        <thead>
+        <table class="table table-bordered table-striped">
+            <thead>
             <tr>
                 <th>ID</th>
                 <th>name</th>
-                <th>Date de création</th>
+                <th>description</th>
+                <th>url_image</th>
+                <th>created_at</th>
             </tr>
-        </thead>
-        <tbody>
+            </thead>
+            <tbody>
             <tr>
                 <td>{{ habitat.id }}</td>
-                <td>{{ habitat.tname }}</td>
-                <td>{{ habitat.email }}</td>
+                <td>{{ habitat.name }}</td>
+                <td>{{ habitat.description }}</td>
+                <td>{{ habitat.url_image }}</td>
                 <td>{{ habitat.created_at }}</td>
             </tr>
-        </tbody>
-    </table>
-</div>
+            </tbody>
+        </table>
+        <a href="{{ url_for('habitat.list_all_habitats') }}" class="btn btn-secondary">Back</a>
+    </div>
 {% endblock %}
 
 

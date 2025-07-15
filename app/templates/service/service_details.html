@@ -3,28 +3,29 @@
 {% block title %}Détail Utilisateur{% endblock %}
 
 {% block content %}
-<div class="container mt-5">
-    <h2 class="mb-4">Service details</h2>
+    <div class="container mt-5">
+        <h2 class="mb-4">Service details</h2>
 
-    <table class="table table-bordered table-striped">
-        <thead>
+        <table class="table table-bordered table-striped">
+            <thead>
             <tr>
                 <th>ID</th>
                 <th>name</th>
                 <th>description</th>
                 <td>created_at</td>
             </tr>
-        </thead>
-        <tbody>
+            </thead>
+            <tbody>
             <tr>
                 <td>{{ service.id }}</td>
                 <td>{{ service.name }}</td>
                 <td>{{ service.description }}</td>
                 <td>{{ service.created_at }}</td>
             </tr>
-        </tbody>
-    </table>
-</div>
+            </tbody>
+        </table>
+        <a href="{{ url_for('service.list_all_services') }}" class="btn btn-secondary">back</a>
+    </div>
 {% endblock %}
 
 

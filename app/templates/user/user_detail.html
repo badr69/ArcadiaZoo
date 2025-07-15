@@ -1,32 +1,35 @@
 {% extends "base.html" %}
 
-{% block title %}Détail Utilisateur{% endblock %}
+{% block title %}Détail de l'utilisateur{% endblock %}
 
 {% block content %}
-<div class="container mt-5">
-    <h2 class="mb-4">Détails de l'utilisateur</h2>
+    <div class="container mt-5">
+        <h2 class="mb-4">user Details</h2>
 
-    <table class="table table-bordered table-striped">
-        <thead>
+        <table class="table table-bordered table-hover">
             <tr>
                 <th>ID</th>
-                <th>Username</th>
-                <th>Email</th>
-                <th>Role_name</th>
-                <th>Date de création</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
                 <td>{{ user.id }}</td>
-                <td>{{ user.username }}</td>
-                <td>{{ user.email }}</td>
-                <td>{{ user.role_name }}</td> {# ou {{ user.role_name }} si tu récupères le nom du rôle #}
-                <td>{{ user.created_at }}</td>
             </tr>
-        </tbody>
-    </table>
-</div>
-{% endblock %}
+            <tr>
+                <th>UserName</th>
+                <td>{{ user.username }}</td>
+            </tr>
+            <tr>
+                <th>Email</th>
+                <td>{{ user.email }}</td>
+            </tr>
+            <tr>
+                <th>Rôle</th>
+                <td>{{ user.role_name }}</td>
+            </tr>
+            <tr>
+                <th>Date de création</th>
+                <td>{{ user.created_at.strftime('%d/%m/%Y %H:%M') if user.created_at }}</td>
+            </tr>
+        </table>
 
+        <a href="{{ url_for('user.list_all_users') }}" class="btn btn-secondary">Back</a>
+    </div>
+{% endblock %}
 

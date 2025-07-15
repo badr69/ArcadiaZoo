@@ -39,11 +39,13 @@
                             Supprimer
                         </button>
                     </form>
+                    <a href="{{ url_for('animal.get_animal_by_id', animal_id=animal.id) }}" class="btn btn-warning btn-sm">Details</a>
+
                 </td>
             </tr>
             {% else %}
             <tr>
-                <td colspan="5" class="text-center">Aucun utilisateur trouvé</td>
+                <td colspan="5" class="text-center">No animal found</td>
             </tr>
             {% endfor %}
         </tbody>

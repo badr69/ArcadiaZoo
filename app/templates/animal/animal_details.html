@@ -3,30 +3,32 @@
 {% block title %}Détail Utilisateur{% endblock %}
 
 {% block content %}
-<div class="container mt-5">
-    <h2 class="mb-4">Détails de l'utilisateur</h2>
-
-    <table class="table table-bordered table-striped">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Username</th>
-                <th>Email</th>
-                <th>Role_name</th>
-                <th>Date de création</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>{{ user.id }}</td>
-                <td>{{ user.username }}</td>
-                <td>{{ user.email }}</td>
-                <td>{{ user.role_name }}</td> {# ou {{ user.role_name }} si tu récupères le nom du rôle #}
-                <td>{{ user.created_at }}</td>
-            </tr>
-        </tbody>
-    </table>
-</div>
+    <div class="container mt-5">
+        <h2 class="mb-4">Animal Details</h2>
+            <table class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>name</th>
+                    <th>race</th>
+                    <th>description</th>
+                    <th>url_image</th>
+                    <th>update_at</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>{{ animal.id }}</td>
+                    <td>{{ animal.name }}</td>
+                    <td>{{ animal.race }}</td>
+                    <td>{{ animal.description }}</td>
+                    <td>{{ animal.url_image }}
+                    <td>{{ animal.created_at }}</td>
+                </tr>
+                </tbody>
+            </table>
+            <a href="{{ url_for('animal.list_all_animals') }}" class="btn btn-secondary">Back</a>
+    </div>
 {% endblock %}
 
 

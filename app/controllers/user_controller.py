@@ -1,55 +1,14 @@
 from flask import render_template, redirect, url_for, flash, request
-from app.db.psql import get_db_connection
-from app.forms import CreateUserForm
+from app.forms.user_forms import UpdateUserForm, CreateUserForm
 from app.services.user_service import UserService
-
+from app.services.role_service import RoleService
 
 class UserController:
 
     @staticmethod
-    def create_user():
-        form = CreateUserForm()
-        try:
-            conn = get_db_connection()
-            cursor = conn.cursor()
-            cursor.execute("SELECT id, name FROM roles WHERE name != 'admin'")
-            roles = cursor.fetchall()
-            form.role_id.choices = [(role[0], role[1]) for role in roles]
-        except Exception as e:
-            flash(f"Erreur lors du chargement des rôles : {str(e)}", "danger")
-            return render_template('user/create_user.html', form=form)
-        finally:
-            if cursor:
-                cursor.close()
-            if conn:
-                conn.close()
-
-        if form.validate_on_submit():
-            username = form.username.data
-            email = form.email.data
-            password = form.password.data
-            role_id = form.role_id.data
-
-            result, status = UserService.create_user(username, email, password, role_id)
-            if status == 201:
-                flash("Utilisateur créé avec succès !", "success")
-                return redirect(url_for('user.get_all_users'))
-            else:
-                flash(result.get('error', 'Erreur lors de la création'), 'danger')
-
-        return render_template('user/create_user.html', form=form)
-
-    @staticmethod
-    def get_all_users():
-        try:
-            users = UserService.get_all_users()
-            if users is None:
-                flash("Impossible de récupérer les utilisateurs", "warning")
-                users = []
-            return users
-        except Exception as e:
-            flash(f"Erreur : {str(e)}", "danger")
-            return []
+    def list_all_users():
+        users = UserService.list_all_users()
+        return render_template('user/list_all_users.html', users=users)
 
     @staticmethod
     def get_user_by_id(user_id):
@@ -61,40 +20,56 @@ class UserController:
 
     @staticmethod
     def update_user(user_id):
+        form = UpdateUserForm()
         user = UserService.get_user_by_id(user_id)
-        if user is None:
-            flash("Utilisateur non trouvé", "warning")
-            return redirect(url_for('user.list_all_users'))
+        if not user:
+            flash("Utilisateur introuvable", "danger")
+            return redirect(url_for("user.list_all_users"))
 
-        if request.method == 'POST':
-            username = request.form.get('username')
-            email = request.form.get('email')
-            role_name = request.form.get('role')  # Assure-toi que ce nom est correct
+        roles = RoleService.list_all_roles()
+        form.role_name.choices = [(str(r.id), r.name) for r in roles]
 
-            # Validation des champs
-            if not all([username, email, role_name]):
-                flash("Tous les champs sont obligatoires", "warning")
-                return render_template('user/update_user.html', user=user)
+        if form.validate_on_submit():
+            username = form.username.data
+            email = form.email.data
+            role_id = int(form.role_name.data)
 
-            # Validation de l'email (si nécessaire)
-            # try:
-            #     valid_email = validate_email(email)
-            #     email = valid_email.email
-            # except EmailNotValidError as e:
-            #     flash("Email invalide", "danger")
-            #     return render_template('user/update_user.html', user=user)
+            success = UserService.update_user(user_id, username, email, role_id)
+            if success:
+                flash("Utilisateur mis à jour avec succès !", "success")
+                return redirect(url_for("user.list_all_users"))
+            else:
+                flash("Erreur lors de la mise à jour", "danger")
 
-            # Mise à jour de l'utilisateur
-            success = UserService.update_user(user_id, username, email, role_name)
-            if not success:
-                flash("Erreur lors de la mise à jour de l'utilisateur", "danger")
-                return render_template('user/update_user.html', user=user)
+        if request.method == "GET":
+            form.username.data = user.username
+            form.email.data = user.email
+            form.role_name.data = str(user.role_id)
 
-            flash("Utilisateur mis à jour avec succès", "success")
-            return redirect(url_for('user.list_all_users'))  # Retour à la liste des utilisateurs
+        return render_template("user/update_user.html", form=form, user=user)
 
-        return render_template('user/update_user.html', user=user)
+    @staticmethod
+    def create_user():
+        form = CreateUserForm()
+        roles = RoleService.list_all_roles()
+        # roles = [r for r in roles if r.name.lower() != "admin"]  # exclure admin
+        roles = [r for r in roles if r.id != 1] # exlure admin
+        form.role_name.choices = [(str(r.id), r.name) for r in roles]
 
+        if form.validate_on_submit():
+            username = form.username.data
+            email = form.email.data
+            password = form.password.data
+            role_id = int(form.role_name.data)
+
+            success = UserService.create_user(username, email, password, role_id)
+            if success:
+                flash("Utilisateur créé avec succès", "success")
+                return redirect(url_for("user.list_all_users"))
+            else:
+                flash("Erreur lors de la création", "danger")
+
+        return render_template("user/create_user.html", form=form)
 
     @staticmethod
     def delete_user(user_id):
@@ -104,10 +79,5 @@ class UserController:
         else:
             flash("Erreur lors de la suppression de l'utilisateur", "danger")
         return redirect(url_for('user.list_all_users'))
-
-
-
-
-
 
 

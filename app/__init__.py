@@ -17,8 +17,10 @@ def create_app():
 
     csrf.init_app(app)  # Protection CSRF via Flask-WTF
 
-    from app.routes.user_routes import user_bp
+    from app.routes.role_routes import role_bp
+    app.register_blueprint(role_bp)
 
+    from app.routes.user_routes import user_bp
     app.register_blueprint(user_bp)# Enregistrement d'un blueprint utilisateur
 
     from app.routes.admin_route import admin_bp

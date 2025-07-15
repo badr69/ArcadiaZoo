@@ -1,6 +1,8 @@
-# app/routes/main_routes.py
+# TODO: Importation des dépendances
 from flask import Blueprint, render_template
-from app.forms import ContactForm, LoginForm, ReviewForm
+from app.forms.contact_forms import ContactForm
+from app.forms.review_forms import ReviewForm
+from app.forms.auth_forms import LoginForm
 
 main_bp = Blueprint('main_bp', __name__)
 
@@ -20,13 +22,6 @@ def animals():
 @main_bp.route('/habitats/')
 def habitats():
     return render_template('habitats.html')
-
-# @main_bp.route('/contact')
-# def contact():
-#     return render_template('contact.html')
-
-
- # Assure-toi que ce chemin est correct
 
 @main_bp.route("/contact")
 def contact():
