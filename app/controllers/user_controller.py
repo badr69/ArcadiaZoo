@@ -18,35 +18,6 @@ class UserController:
             print(f"Erreur get_user_by_id: {e}")
             return None
 
-    @staticmethod
-    def update_user(user_id):
-        form = UpdateUserForm()
-        user = UserService.get_user_by_id(user_id)
-        if not user:
-            flash("Utilisateur introuvable", "danger")
-            return redirect(url_for("user.list_all_users"))
-
-        roles = RoleService.list_all_roles()
-        form.role_name.choices = [(str(r.id), r.name) for r in roles]
-
-        if form.validate_on_submit():
-            username = form.username.data
-            email = form.email.data
-            role_id = int(form.role_name.data)
-
-            success = UserService.update_user(user_id, username, email, role_id)
-            if success:
-                flash("Utilisateur mis à jour avec succès !", "success")
-                return redirect(url_for("user.list_all_users"))
-            else:
-                flash("Erreur lors de la mise à jour", "danger")
-
-        if request.method == "GET":
-            form.username.data = user.username
-            form.email.data = user.email
-            form.role_name.data = str(user.role_id)
-
-        return render_template("user/update_user.html", form=form, user=user)
 
     @staticmethod
     def create_user():
@@ -70,6 +41,41 @@ class UserController:
                 flash("Erreur lors de la création", "danger")
 
         return render_template("user/create_user.html", form=form)
+
+
+    @staticmethod
+    def update_user(user_id):
+        form = UpdateUserForm()
+        user = UserService.get_user_by_id(user_id)
+        if not user:
+            flash("Utilisateur introuvable", "danger")
+            return redirect(url_for("user.list_all_users"))
+
+        roles = RoleService.list_all_roles()
+        roles = RoleService.list_all_roles()
+        # roles = [r for r in roles if r.name.lower() != "admin"]  # exclure admin
+        roles = [r for r in roles if r.id != 1]  # exlure admin
+        form.role_name.choices = [(str(r.id), r.name) for r in roles]
+
+        if form.validate_on_submit():
+            username = form.username.data
+            email = form.email.data
+            role_id = int(form.role_name.data)
+
+            success = UserService.update_user(user_id, username, email, role_id)
+            if success:
+                flash("Utilisateur mis à jour avec succès !", "success")
+                return redirect(url_for("user.list_all_users"))
+            else:
+                flash("Erreur lors de la mise à jour", "danger")
+
+        if request.method == "GET":
+            form.username.data = user.username
+            form.email.data = user.email
+            form.role_name.data = str(user.role_id)
+
+        return render_template("user/update_user.html", form=form, user=user)
+
 
     @staticmethod
     def delete_user(user_id):
