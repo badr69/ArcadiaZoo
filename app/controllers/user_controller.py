@@ -51,7 +51,7 @@ class UserController:
             flash("Utilisateur introuvable", "danger")
             return redirect(url_for("user.list_all_users"))
 
-        roles = RoleService.list_all_roles()
+
         roles = RoleService.list_all_roles()
         # roles = [r for r in roles if r.name.lower() != "admin"]  # exclure admin
         roles = [r for r in roles if r.id != 1]  # exlure admin

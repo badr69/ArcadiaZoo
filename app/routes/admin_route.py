@@ -1,10 +1,11 @@
-# Exemple dans app/routes/admin_routes.py
 from flask import Blueprint, render_template
-from app.services.user_service import UserService
+from app.forms.auth_forms import LogoutForm
+
 
 admin_bp = Blueprint('admin', __name__, url_prefix="/admin")
 
 @admin_bp.route('/admin_dash')
 def admin_dash():
-    return render_template('dash/admin_dash.html')
+    form = LogoutForm()
+    return render_template('dash/admin_dash.html', form=form)
 

@@ -5,9 +5,23 @@ from typing import Dict, List
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
+
 def hash_password(password: str) -> str:
     # Hash avec un salt et un algorithme sécurisé (pbkdf2:sha256 par défaut)
     return generate_password_hash(password)
+
+from werkzeug.security import check_password_hash
+
+# def verify_password(hashed_password, plain_password):
+#     print(f"[verify_password] Hashed password: {hashed_password}")
+#     print(f"[verify_password] Plain password: {plain_password}")
+#     try:
+#         result = check_password_hash(hashed_password, plain_password)
+#         print(f"[verify_password] Résultat: {result}")
+#         return result
+#     except Exception as e:
+#         print(f"[verify_password] Erreur: {e}")
+#         return False
 
 def verify_password(hashed_password: str, password: str) -> bool:
     # Vérifie si le mot de passe correspond au hash

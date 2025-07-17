@@ -11,7 +11,7 @@
     </div>
 
     <div class="container">
-        <form method="POST" action="{{ url_for('main_bp.index') }}">
+        <form method="POST" action="{{ url_for('main.index') }}">
             {{ form.csrf_token }}
             <p>
             {{ form.pseudo.label }} <br> {{ form.pseudo(class="form-label form-control") }}

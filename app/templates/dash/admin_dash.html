@@ -15,12 +15,43 @@
         /* Sidebar */
         .sidebar {
             width: 220px;
-        {#background-color: #2c3e50;#}
             background-color: #5d3002;
             color: white;
             display: flex;
             flex-direction: column;
             padding-top: 20px;
+            padding-left: 15px;
+            box-sizing: border-box;
+        }
+
+        /* Zone admin */
+        .admin-info {
+            margin-bottom: 30px;
+            border-bottom: 1px solid #814f0c;
+            padding-bottom: 15px;
+        }
+
+        .admin-info strong {
+            font-size: 1.1rem;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .logout-button {
+            background-color: #a63603;
+            border: none;
+            color: white;
+            padding: 8px 12px;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 3px;
+            width: 100%;
+            text-align: center;
+            transition: background-color 0.3s;
+        }
+
+        .logout-button:hover {
+            background-color: #d94e06;
         }
 
         .sidebar a {
@@ -38,7 +69,6 @@
         }
 
         .sidebar a.active {
-            {#background-color: #1abc9c;#}
             background-color: #170101;
             border-left: 4px solid #16a085;
         }
@@ -47,7 +77,6 @@
         .main-content {
             flex-grow: 1;
             padding: 30px;
-            {#background-color: #ecf0f1;#}
             background-color: #e8ddb4;
         }
 
@@ -59,28 +88,34 @@
 <body>
 
 <nav class="sidebar">
-    <a href="{{ url_for('user.create_user') }}" class="active">Create_user</a><br>
-    <a href="{{ url_for('user.list_all_users') }}" class="active">list_all_users</a><br>
-    <a href="{{ url_for('habitat.create_habitat') }}" class="active">create_Habitat</a><br>
-    <a href="{{ url_for('habitat.list_all_habitats') }}" class="active">List_all_habitats</a><br>
-    <a href="{{ url_for('animal.create_animal') }}" class="active">create Animal</a><br>
-    <a href="{{ url_for('animal.list_all_animals') }}" class="active">List_all_animals</a><br>
-    <a href="{{ url_for('service.create_service') }}" class="active">create Service</a><br>
-    <a href="{{ url_for('service.list_all_services') }}" class="active">List_all_services</a><br>
+
+    <!-- Affichage du nom admin + bouton logout -->
+    <div class="admin-info">
+        <strong>Admin: {{ current_user.username }}</strong>
+        <form action="{{ url_for('auth.logout') }}" method="POST">
+            {{ form.hidden_tag() }}
+            <button type="submit" class="btn btn-danger logout-button w-100">Logout</button>
+        </form>
+    </div>
+
+    <!-- Liens du menu -->
+    <a href="{{ url_for('user.create_user') }}" class="active">Create User</a><br>
+    <a href="{{ url_for('user.list_all_users') }}" class="active">All Users</a><br>
+    <a href="{{ url_for('habitat.create_habitat') }}" class="active">Create Habitat</a><br>
+    <a href="{{ url_for('habitat.list_all_habitats') }}" class="active">All habitats</a><br>
+    <a href="{{ url_for('animal.create_animal') }}" class="active">Create animal</a><br>
+    <a href="{{ url_for('animal.list_all_animals') }}" class="active">All animals</a><br>
+    <a href="{{ url_for('service.create_service') }}" class="active">Create Service</a><br>
+    <a href="{{ url_for('service.list_all_services') }}" class="active">All services</a><br>
 </nav>
 
-
-{#  <nav class="sidebar">#}
-{#    <a href="user/create_user" class="active">Créer un utilisateur</a>#}
-{#    <a href="user/update_user">Modifier un utilisateur</a>#}
-{#    <a href="user/list_all_users">Liste des utilisateurs</a>#}
-{#    <a href="user/user_detail">Détail utilisateur</a>#}
-{#  </nav>#}
-
 <div class="main-content">
-    <h1>Admin Dashboard</h1>
+    <h1>Welcom to your Admin Dashboard</h1>
     <p>Sélectionnez une option dans la barre latérale.</p>
 </div>
 
 </body>
 </html>
+
+
+

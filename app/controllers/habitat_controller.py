@@ -21,7 +21,6 @@ class HabitatController:
             return redirect(url_for('habitat.list_habitats'))
         return render_template('habitat/habitat_details.html', habitat=habitat)
 
-
     @staticmethod
     def create_habitat():
         form = HabitatCreateForm()
@@ -71,6 +70,7 @@ class HabitatController:
         # GET initial ou formulaire invalide
         return render_template("habitat/create_habitat.html", form=form)
 
+
     @staticmethod
     def update_habitat(habitat_id):
         habitat = HabitatService.get_habitat_by_id(habitat_id)
@@ -83,18 +83,14 @@ class HabitatController:
         if form.validate_on_submit():
             name = form.name.data
             description = form.description.data
-            url_image = form.url_image.data
-            # Gestion des images uploadées
+
             file = form.url_image.data
-            if file:
-                # Traite le premier fichier pour l'exemple
-                file = form.url_image.data
-                if file:
-                    filename = secure_filename(file.filename)
-                    upload_path = os.path.join(current_app.root_path, 'static/uploads', filename)
-                    os.makedirs(os.path.dirname(upload_path), exist_ok=True)
-                    file.save(upload_path)
-                    url_image = f'/static/uploads/{filename}'
+            if hasattr(file, 'filename') and file.filename != '':
+                filename = secure_filename(file.filename)
+                upload_path = os.path.join(current_app.root_path, 'static/uploads', filename)
+                os.makedirs(os.path.dirname(upload_path), exist_ok=True)
+                file.save(upload_path)
+                url_image = f'/static/uploads/{filename}'
             else:
                 url_image = habitat.url_image  # garder l'ancienne image
 

@@ -4,7 +4,7 @@ from app.forms.contact_forms import ContactForm
 from app.forms.review_forms import ReviewForm
 from app.forms.auth_forms import LoginForm
 
-main_bp = Blueprint('main_bp', __name__)
+main_bp = Blueprint('main', __name__)
 
 @main_bp.route('/')
 def index():
