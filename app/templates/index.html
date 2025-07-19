@@ -4,46 +4,127 @@
 
 
 {% block content %}
-
-    <h1>hello badredine to ArcadiaZoo</h1>
-     <div>
+    <h1 class="my-4 text-center">Welcome To ArcadiaZoo</h1>
+    <div class="mb-4">
         <img class="img-fluid" src="{{ url_for('static', filename='images/header.jpg') }}" alt="bigtitle">
     </div>
+
+
+    <h2 class="my-4 text-center">Our Animals</h2>
+    <div id="animalsCarousel" class="carousel slide" data-bs-ride="carousel">
+
+        <div class="carousel-inner">
+            {% for animal in animals %}
+                <div class="carousel-item {% if loop.first %}active{% endif %}">
+                    <img src="{{ url_for('static', filename=animal.url_image.lstrip('/')) }}" class="d-block w-100"
+                         alt="{{ animal.name }}" style="height: 400px; object-fit: cover;">
+                    <div class="carousel-caption d-none d-md-block">
+                        <h5>{{ animal.name }}</h5>
+                        <!-- tu peux ajouter d'autres infos ici -->
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#animalsCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Précédent</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#animalsCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Suivant</span>
+        </button>
+    </div>
+
+    <h2 class="my-4 text-center">Our habitats</h2>
+    <div id="habitatsCarousel" class="carousel slide" data-bs-ride="carousel">
+
+        <div class="carousel-inner">
+            {% for habitat in habitats %}
+                <div class="carousel-item {% if loop.first %}active{% endif %}">
+                    <img src="{{ url_for('static', filename=habitat.url_image.lstrip('/')) }}" class="d-block w-100"
+                         alt="{{ habitat.name }}" style="height: 400px; object-fit: cover;">
+                    <div class="carousel-caption d-none d-md-block">
+                        <h5>{{ habitat.name }}</h5>
+                        <!-- tu peux ajouter d'autres infos ici -->
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#habitatsCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Précédent</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#habitatsCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Suivant</span>
+        </button>
+    </div>
+
+
+    <h2 class="my-4 text-center">Our Services</h2>
+    <div id="servicesCarousel" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+            {% for service in services %}
+                <div class="carousel-item {% if loop.first %}active{% endif %}">
+                    <img src="{{ url_for('static', filename=service.url_image.lstrip('/')) }}" class="d-block w-100"
+                         alt="{{ service.name }}" style="height: 400px; object-fit: cover;">
+                    <div class="carousel-caption d-none d-md-block">
+                        <h5>{{ service.name }}</h5>
+                        <!-- tu peux ajouter d'autres infos ici -->
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#servicesCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Précédent</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#servicesCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Suivant</span>
+        </button>
+    </div>
+
+
+
+
+
+
+
 
     <div class="container">
         <form method="POST" action="{{ url_for('main.index') }}">
             {{ form.csrf_token }}
-            <p>
-            {{ form.pseudo.label }} <br> {{ form.pseudo(class="form-label form-control") }}
-            </p>
-
-             <div>
-                 {{ form.entity.label }}<br>
+            <div>
+                {{ form.pseudo.label }} <br> {{ form.pseudo(class="form-label form-control") }}
+            </div>
+            <div>
+                {{ form.entity.label }}<br>
                 {{ form.entity() }}
             </div>
-            <p>
+            <div>
                 {{ form.message.label }} <br> {{ form.message(class="form-label form-control", size=20) }}
-            </p>
+            </div>
             <div>
                 {{ form.rating.label }}<br>
                 {{ form.rating(class="form-select") }}
             </div>
-                {{ form.submit }}
+            {{ form.submit }}
         </form>
     </div>
 
-<hr>
-{#<div class="container">#}
-{#{% for review in reviews %}#}
-{#  <div>#}
-{#    <strong>User {{ review.user_id }}</strong>#}
-{#    <span>Note : {{ review.note }}/5</span>#}
-{#    <p>{{ review.comment }}</p>#}
-{#    <small>Posté le {{ review.date_review }}</small>#}
-{#  </div>#}
-{#{% else %}#}
-{#  <p>no reviews.</p>#}
-{#{% endfor %}#}
-{#</div>#}
+    <hr>
+    <div class="container">
+        {% for review in reviews %}
+            <div>
+                <strong>User {{ review.user_id }}</strong>
+                <span>Note : {{ review.note }}/5</span>
+                <p>{{ review.comment }}</p>
+                <small>Posté le {{ review.date_review }}</small>
+            </div>
+        {% else %}
+            <p>no reviews.</p>
+        {% endfor %}
+    </div>
 
 {% endblock %}

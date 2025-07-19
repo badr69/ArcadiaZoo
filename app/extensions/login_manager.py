@@ -9,8 +9,5 @@ def load_user(user_id):
     return UserModel.get_user_by_id(int(user_id))
 
 
-# @login_manager.user_loader
-# def load_user(user_id):
-#     return UserModel.get_user_by_id(user_id)
 
 

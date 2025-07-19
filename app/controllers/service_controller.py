@@ -45,14 +45,14 @@ class ServiceController:
             # 2) Sauvegarder l’image
             try:
                 filename = secure_filename(file.filename)
-                upload_dir = Path(current_app.root_path) / "static" / "uploads"
+                upload_dir = Path(current_app.config['SERVICE_IMG_FOLDER'])
                 upload_dir.mkdir(parents=True, exist_ok=True)
 
                 filepath = upload_dir / filename
                 file.save(filepath)
 
                 # Chemin à enregistrer en BDD
-                url_image = f"/static/uploads/{filename}"
+                url_image = f"uploads/service_img/{filename}"
 
                 # 3) Appeler le service
                 result = ServiceService.create_service(

@@ -30,8 +30,8 @@ class HabitatController:
 
         if form.validate_on_submit():
             name = form.name.data
-            description = form.description.data
             file = form.url_image.data  # FileStorage ou None
+            description = form.description.data
 
             # 1) Vérifier qu’un fichier a bien été téléversé
             if not file or file.filename == "":
@@ -41,14 +41,14 @@ class HabitatController:
             # 2) Sauvegarder l’image
             try:
                 filename = secure_filename(file.filename)
-                upload_dir = Path(current_app.root_path) / "static" / "uploads"
+                upload_dir = Path(current_app.config['HABITAT_IMG_FOLDER'])
                 upload_dir.mkdir(parents=True, exist_ok=True)
 
                 filepath = upload_dir / filename
                 file.save(filepath)
 
                 # Chemin à enregistrer en BDD
-                url_image = f"/static/uploads/{filename}"
+                url_image = f"uploads/habitat_img/{filename}"
 
                 # 3) Appeler le service
                 result = HabitatService.create_habitat(
@@ -69,7 +69,6 @@ class HabitatController:
 
         # GET initial ou formulaire invalide
         return render_template("habitat/create_habitat.html", form=form)
-
 
     @staticmethod
     def update_habitat(habitat_id):
@@ -103,7 +102,6 @@ class HabitatController:
                 flash(result['message'], "danger")
 
         return render_template('habitat/update_habitat.html', form=form, habitat=habitat)
-
 
     @staticmethod
     def delete_habitat(habitat_id):

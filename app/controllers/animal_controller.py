@@ -40,13 +40,13 @@ class AnimalController:
 
             try:
                 filename = secure_filename(file.filename)
-                upload_dir = Path(current_app.root_path) / "static" / "uploads"
+                upload_dir = Path(current_app.config['ANIMAL_IMG_FOLDER'])
                 upload_dir.mkdir(parents=True, exist_ok=True)
 
                 filepath = upload_dir / filename
                 file.save(filepath)
 
-                url_image = f"/static/uploads/{filename}"
+                url_image = f"uploads/animal_img/{filename}"
 
                 result = AnimalService.create_animal(
                     name=name,
