@@ -1,15 +1,15 @@
 # TODO: Importation des dépendances
 from flask import Blueprint, render_template
 from app.forms.contact_forms import ContactForm
-from app.forms.review_forms import ReviewForm
 from app.forms.auth_forms import LoginForm
 from app.models.habitat_model import Habitat # ou ta fonction qui récupère les habitats
 from app.models.service_model import ServiceModel
 from app.models.animal_model import AnimalModel
-
+from app.forms.review_form import ReviewForm
 
 
 main_bp = Blueprint('main', __name__)
+
 
 @main_bp.route('/')
 def index():
@@ -18,9 +18,7 @@ def index():
     animals = AnimalModel.list_all_animals() # à adapter selon ton code
     habitats = Habitat.list_all_habitats()
     services = ServiceModel.list_all_services()
-    return render_template("/index.html", form=form, animals=animals, habitats=habitats, services=services)
-
-    # return render_template('index.html', form=form)
+    return render_template("index.html", form=form, animals=animals, habitats=habitats, services=services)
 
 
 @main_bp.route('/services/')

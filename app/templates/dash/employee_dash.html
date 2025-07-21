@@ -114,8 +114,25 @@
     <p>Sélectionnez une option dans la barre latérale.</p>
 </div>
 
-</body>
-</html>
 
+<h2>Add a Review</h2>
+<form method="POST">
+    {{ form.hidden_tag() }}
 
+    <div class="mb-3">
+        {{ form.user.label }} {{ form.user(class="form-control") }}
+    </div>
+
+    <div class="mb-3">
+        {{ form.comment.label }} {{ form.comment(class="form-control") }}
+    </div>
+
+    <div class="mb-3">
+        {{ form.rating.label }} {{ form.rating(class="form-control") }}
+    </div>
+
+    <div class="mb-3">
+        {{ form.submit(class="btn btn-primary") }}
+    </div>
+</form>
 

@@ -13,7 +13,6 @@ def create_app():
     app = Flask(__name__, template_folder="templates", static_folder="static")
     app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'change_me')  # Bonne pratique
 
-    # update_forlder = os.path.join('app', 'static', 'uploads')
     upload_folder = os.path.join('app', 'static', 'uploads')
     app.config['upload_folder'] = upload_folder
 
@@ -60,6 +59,9 @@ def create_app():
 
     from app.routes.service_routes import service_bp
     app.register_blueprint(service_bp)
+
+    # from app.routes.review_route import review_bp
+    # app.register_blueprint(review_bp)
 
     return app
 

@@ -6,6 +6,8 @@ from flask import render_template, redirect, url_for, flash
 from werkzeug.utils import secure_filename
 from flask import current_app
 
+from app.utils.security import detect_sql_injection
+
 
 class HabitatController:
     @staticmethod
@@ -24,14 +26,17 @@ class HabitatController:
     @staticmethod
     def create_habitat():
         form = HabitatCreateForm()
-
         # Debug éventuel (à supprimer en production)
         current_app.logger.debug("Form errors: %s", form.errors)
 
         if form.validate_on_submit():
             name = form.name.data
-            file = form.url_image.data  # FileStorage ou None
+            file = form.url_image.data
             description = form.description.data
+
+            if detect_sql_injection(name) or detect_sql_injection(race) or detect_sql_injection(description):
+                flash("Invalide Input.", "danger")
+                return render_template("animal/create_animal.html", form=form)
 
             # 1) Vérifier qu’un fichier a bien été téléversé
             if not file or file.filename == "":
@@ -82,6 +87,10 @@ class HabitatController:
         if form.validate_on_submit():
             name = form.name.data
             description = form.description.data
+
+            if detect_sql_injection(name) or detect_sql_injection(race) or detect_sql_injection(description):
+                flash("Invalide Input.", "danger")
+                return render_template("animal/create_animal.html", form=form)
 
             file = form.url_image.data
             if hasattr(file, 'filename') and file.filename != '':

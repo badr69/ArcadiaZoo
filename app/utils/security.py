@@ -10,7 +10,6 @@ def hash_password(password: str) -> str:
     # Hash avec un salt et un algorithme sécurisé (pbkdf2:sha256 par défaut)
     return generate_password_hash(password)
 
-from werkzeug.security import check_password_hash
 
 # def verify_password(hashed_password, plain_password):
 #     print(f"[verify_password] Hashed password: {hashed_password}")

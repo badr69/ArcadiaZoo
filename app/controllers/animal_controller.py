@@ -5,6 +5,7 @@ from app.services.animal_service import AnimalService
 from flask import render_template, redirect, url_for, flash, current_app
 from werkzeug.utils import secure_filename
 from werkzeug.datastructures import FileStorage
+from app.utils.security import detect_sql_injection, sanitize_html
 
 
 class AnimalController:
@@ -29,13 +30,17 @@ class AnimalController:
         current_app.logger.debug("Form errors: %s", form.errors)
 
         if form.validate_on_submit():
-            name = form.name.data
-            race = form.race.data
-            description = form.description.data
+            name = sanitize_html(form.name.data)
+            race = sanitize_html(form.race.data)
+            description = sanitize_html(form.description.data)
             file = form.url_image.data
 
+            if detect_sql_injection(name) or detect_sql_injection(race) or detect_sql_injection(description):
+                flash("Invalide Input.", "danger")
+                return render_template("animal/create_animal.html", form=form)
+
             if not file or file.filename == "":
-                flash("Veuillez ajouter une image.", "danger")
+                flash("Please add an image.", "danger")
                 return render_template("animal/create_animal.html", form=form)
 
             try:
@@ -59,11 +64,11 @@ class AnimalController:
                     flash("Animal créé avec succès.", "success")
                     return redirect(url_for("animal.list_all_animals"))
 
-                flash(result.get("message", "Erreur inconnue lors de la création."), "danger")
+                flash(result.get("message", "Unknoun Error when Creation."), "danger")
 
             except Exception:
-                current_app.logger.exception("Erreur lors de la création de l'animal")
-                flash("Une erreur est survenue pendant la création de l’animal.", "danger")
+                current_app.logger.exception("Error when creating animal")
+                flash("Error when creating animal.", "danger")
 
         return render_template("animal/create_animal.html", form=form)
 
@@ -71,15 +76,20 @@ class AnimalController:
     def update_animal(animal_id):
         animal = AnimalService.get_animal_by_id(animal_id)
         if animal is None:
-            flash("Animal non trouvé.", "danger")
+            flash("Animal not found.", "danger")
             return redirect(url_for('animal.list_all_animals'))
 
         form = AnimalUpdateForm(obj=animal)
 
         if form.validate_on_submit():
-            name = form.name.data
-            race = form.race.data
-            description = form.description.data
+            name = sanitize_html(form.name.data)
+            race = sanitize_html(form.race.data)
+            description = sanitize_html(form.description.data)
+
+            if detect_sql_injection(name) or detect_sql_injection(race) or detect_sql_injection(description):
+                flash("Invalide Input.", "danger")
+                return render_template("animal/create_animal.html", form=form)
+
             file = form.url_image.data
 
             if isinstance(file, FileStorage) and file.filename:

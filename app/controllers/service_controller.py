@@ -6,7 +6,7 @@ from flask import render_template, redirect, url_for, flash
 from werkzeug.utils import secure_filename
 from flask import current_app
 from werkzeug.datastructures import FileStorage
-
+from app.utils.security import detect_sql_injection, sanitize_html
 
 
 class ServiceController:
@@ -19,7 +19,7 @@ class ServiceController:
     def get_service_by_id(service_id):
         service = ServiceService.get_service_by_id(service_id)
         if service is None:
-            flash("service non trouvé.", "danger")
+            flash("service not found.", "danger")
             return redirect(url_for('service.list_services'))
         return render_template('service/service_details.html', service=service)
 
@@ -29,17 +29,22 @@ class ServiceController:
     def create_service():
         form = ServiceCreateForm()
 
-        # Debug éventuel (à supprimer en production)
-        current_app.logger.debug("Form errors: %s", form.errors)
+        # # Debug éventuel (à supprimer en production)
+        # current_app.logger.debug("Form errors: %s", form.errors)
 
         if form.validate_on_submit():
-            name = form.name.data
-            description = form.description.data
+            name = sanitize_html(form.name.data)
+            description = sanitize_html(form.description.data)
+
+            if detect_sql_injection(name) or detect_sql_injection(description):
+                flash("Invalide Input.", "danger")
+                return render_template("animal/create_animal.html", form=form)
+
             file = form.url_image.data  # FileStorage ou None
 
             # 1) Vérifier qu’un fichier a bien été téléversé
             if not file or file.filename == "":
-                flash("Veuillez ajouter une image.", "danger")
+                flash("Please add an image.", "danger")
                 return render_template("service/create_service.html", form=form)
 
             # 2) Sauvegarder l’image
@@ -62,10 +67,10 @@ class ServiceController:
                 )
 
                 if result.get("status"):
-                    flash("service créé avec succès.", "success")
+                    flash("service created with success.", "success")
                     return redirect(url_for("service.list_all_services"))
 
-                flash(result.get("message", "Erreur inconnue lors de la création."), "danger")
+                flash(result.get("message", "Unknown Error when creation."), "danger")
 
             except Exception:
                 current_app.logger.exception("Erreur lors de la création de l'service")
@@ -80,7 +85,7 @@ class ServiceController:
     def update_service(service_id):
         service = ServiceService.get_service_by_id(service_id)
         if service is None:
-            flash("service non trouvé.", "danger")
+            flash("service not found.", "danger")
             return redirect(url_for('service.list_all_services'))
 
         form = ServiceUpdateForm(obj=service)
@@ -88,6 +93,11 @@ class ServiceController:
         if form.validate_on_submit():
             name = form.name.data
             description = form.description.data
+
+            if detect_sql_injection(name) or detect_sql_injection(description):
+                flash("Invalide Input.", "danger")
+                return render_template("animal/create_animal.html", form=form)
+
             file = form.url_image.data
 
             if isinstance(file, FileStorage) and file.filename:  # vérifie si un fichier est uploadé
@@ -101,7 +111,7 @@ class ServiceController:
 
             result = ServiceService.update_service(service_id, name, description, url_image)
             if result['status']:
-                flash("service mis à jour.", "success")
+                flash("service updated.", "success")
                 return redirect(url_for('service.list_all_services'))
             else:
                 flash(result['message'], "danger")
@@ -112,7 +122,7 @@ class ServiceController:
     def delete_service(service_id):
         result = ServiceService.delete_service(service_id)
         if result['status']:
-            flash("service supprimé.", "success")
+            flash("service deleted.", "success")
         else:
             flash(result['message'], "danger")
         return redirect(url_for('service.list_all_services'))

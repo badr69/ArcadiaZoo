@@ -1,32 +1,23 @@
 from pymongo import MongoClient
-from app.config import Config
+from pymongo.server_api import ServerApi
+from dotenv import load_dotenv
+import os
+
+# Charge les variables d'environnement
+load_dotenv()
+
+# Récupère l'URI Atlas
+uri = os.getenv("MONGO_URI")
+
+if not uri:
+    print("❌ Erreur : MONGO_URI non trouvé dans le fichier .env")
+    exit()
+
+# Connexion Atlas
+client = MongoClient(uri, server_api=ServerApi('1'))
 
 try:
-    client = MongoClient(Config.MONGO_URI)
-    # Test simple : liste des bases de données
-    dbs = client.list_database_names()
-    print("Connexion MongoDB réussie ! Bases disponibles :", dbs)
-    client.close()
+    client.admin.command('ping')
+    print("✅ Connexion réussie à MongoDB Atlas")
 except Exception as e:
-    print("Erreur connexion MongoDB :", e)
-
-
-
-
-
-
-
-
-
-
-# from pymongo import MongoClient
-# from app.config import MONGO_URI
-#
-# try:
-#     client = MongoClient(MONGO_URI)
-#     # Test simple : liste des bases de données
-#     dbs = client.list_database_names()
-#     print("Connexion MongoDB réussie ! Bases disponibles :", dbs)
-#     client.close()
-# except Exception as e:
-#     print("Erreur connexion MongoDB :", e)
+    print("❌ Erreur de connexion :", e)

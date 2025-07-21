@@ -1,62 +1,59 @@
-from flask import redirect, url_for, flash, render_template, request
+from flask import render_template, request, jsonify
 from app.models.user_model import UserModel
 from app.forms.auth_forms import LoginForm
-from flask_login import login_user, logout_user, login_required, current_user
+from flask_login import login_user, logout_user
 from flask import redirect, url_for, flash
-from app.utils.security import hash_password, verify_password
-
-print("🧩 Méthode login() de AuthController appelée")
+from app.utils.security import verify_password
 
 class AuthController:
     @staticmethod
     def login():
         form = LoginForm()
 
+        # On détecte si c'est une requête AJAX ou non
+        is_fetch = request.headers.get("X-Requested-With") == "XMLHttpRequest"
+
         if request.method == 'POST':
-            print("➡️ Form POST reçu")
-            print("Email:", form.email.data)
-            print("Password:", form.password.data)
+            if form.validate_on_submit():
+                user = UserModel.get_by_email(form.email.data)
 
-        if form.validate_on_submit():
-            print("✅ Formulaire validé")
+                if user and verify_password(user.password_hash, form.password.data):
+                    login_user(user)
 
-            user = UserModel.get_by_email(form.email.data)
-            print("Utilisateur trouvé:", user)
+                    # En mode fetch() → on renvoie du JSON
+                    if is_fetch:
+                        # Redirection cible selon rôle
+                        if user.role_name == 'admin':
+                            return jsonify({"success": True, "redirect": url_for('admin.admin_dash')})
+                        elif user.role_name == 'employee':
+                            return jsonify({"success": True, "redirect": url_for('employee.employee_dash')})
+                        elif user.role_name == 'vet':
+                            return jsonify({"success": True, "redirect": url_for('vet.vet_dash')})
+                        else:
+                            return jsonify({"success": False, "message": "Rôle inconnu"}), 400
 
-            if user and verify_password(user.password_hash, form.password.data):
-                print("✅ Mot de passe correct")
-                login_user(user)
-                print("🔐 Utilisateur connecté :", user.username)
-                flash(f'Bienvenue {user.username} !', 'success')
+                    # Sinon → requête HTML normale
+                    flash(f"Bienvenue {user.username} !", "success")
+                    if user.role_name == 'admin':
+                        return redirect(url_for('admin.admin_dash'))
+                    elif user.role_name == 'employee':
+                        return redirect(url_for('employee.employee_dash'))
+                    elif user.role_name == 'vet':
+                        return redirect(url_for('vet.vet_dash'))
 
-                if user.role_name == 'admin':
-                    print("➡️ Redirection vers admin_dash")
-                    return redirect(url_for('admin.admin_dash'))
-                elif user.role_name == "employee":
-                    print("➡️ Redirection vers employee_dash")
-                    return redirect(url_for('employee.employee_dash'))
-                elif user.role_name == "vet":
-                    print("➡️ Redirection vers vet_dash")
-                    return redirect(url_for('vet.vet_dash'))
                 else:
-                    print("❌ Rôle non reconnu :", user.role_name)
-                    flash("Rôle non reconnu.", "danger")
+                    # Mauvais identifiants
+                    if is_fetch:
+                        return jsonify({"success": False, "message": "Email ou mot de passe incorrect"}), 401
+                    flash("Email ou mot de passe incorrect", "danger")
                     return redirect(url_for('auth.login'))
 
             else:
-                print("❌ Email ou mot de passe incorrect")
-                flash("Email ou mot de passe incorrect.", "danger")
+                # Form invalide
+                if is_fetch:
+                    return jsonify({"success": False, "errors": form.errors}), 400
+                flash("Formulaire invalide", "danger")
                 return redirect(url_for('auth.login'))
 
-        print("❌ Formulaire invalide ou méthode GET")
+        # GET → on affiche le formulaire normalement
         return render_template('auth/login.html', form=form)
-
-
-
-    # @app.route('/logout')
-    # @login_required
-    @staticmethod
-    def logout():
-        logout_user()
-        flash("You are diconected.", "success")
-        return redirect(url_for('index'))

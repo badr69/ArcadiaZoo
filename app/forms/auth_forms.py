@@ -5,11 +5,11 @@ from wtforms.validators import DataRequired, Email, Length
 
 
 class AuthForm(FlaskForm):
-        email = StringField("Email", validators=[
+    email = StringField("Email", validators=[
         DataRequired(message="Email address is required"),
         Email(message="Email is not valid")
     ])
-        password = PasswordField("Password", validators=[
+    password = PasswordField("Password", validators=[
         DataRequired(message="Password is required"),
         Length(min=4, max=25)
     ])

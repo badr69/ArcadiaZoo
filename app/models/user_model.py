@@ -5,7 +5,6 @@ from flask_login import UserMixin
 from app.utils.security import verify_password
 
 
-
 class UserModel(UserMixin):
     def __init__(self, id, username, email, password_hash=None, role_id=None, role_name=None, created_at=None):
         self.id = id

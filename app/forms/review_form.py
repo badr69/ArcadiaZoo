@@ -4,17 +4,16 @@ from wtforms import StringField, TextAreaField, SubmitField, SelectField
 from wtforms.fields.numeric import IntegerField
 from wtforms.validators import DataRequired, Length, NumberRange
 
-
 # TODO: Formulaire d'avis / review
 class ReviewForm(FlaskForm):
         pseudo = StringField("Pseudo", validators=[
         DataRequired(message="The pseudo is required."),
         Length(min=4, max=20)
     ])
-        entity = SelectField(
-            choices=[('animals', 'Animals'), ('habitats', 'Habitats'), ('services', 'Services')],
-            validators=[DataRequired()]
-        )
+        # entity = SelectField(
+        #     choices=[('animals', 'Animals'), ('habitats', 'Habitats'), ('services', 'Services')],
+        #     validators=[DataRequired()]
+        # )
         message = TextAreaField("Comment", validators=[
         DataRequired(message="Comment is required."),
         Length(min=4, max=50)

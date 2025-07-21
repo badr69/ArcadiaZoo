@@ -1,7 +1,6 @@
 import os
 from dotenv import load_dotenv
-
-load_dotenv()
+from pymongo.mongo_client import MongoClient
 
 class Config:
     SECRET_KEY = os.getenv('SECRET_KEY', 'change_me')
@@ -12,4 +11,7 @@ class Config:
     POSTGRES_USER = os.getenv('POSTGRES_USER', 'user')
     POSTGRES_PASSWORD = os.getenv('POSTGRES_PASSWORD', 'password')
 
-    MONGO_URI = os.getenv('MONGO_URI', 'mongodb://localhost:27017/mydb')
+# Configuration MongoDB en dehors de la classe (directement accessible)
+MONGO_URI = os.getenv("MONGO_URI")
+client = MongoClient(MONGO_URI)
+db = client["zoo_db"]

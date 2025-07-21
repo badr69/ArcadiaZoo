@@ -86,22 +86,16 @@
     </div>
 
 
-
-
-
-
-
-
     <div class="container">
         <form method="POST" action="{{ url_for('main.index') }}">
             {{ form.csrf_token }}
             <div>
                 {{ form.pseudo.label }} <br> {{ form.pseudo(class="form-label form-control") }}
             </div>
-            <div>
-                {{ form.entity.label }}<br>
-                {{ form.entity() }}
-            </div>
+{#            <div>#}
+{#                {{ form.entity.label }}<br>#}
+{#                {{ form.entity() }}#}
+{#            </div>#}
             <div>
                 {{ form.message.label }} <br> {{ form.message(class="form-label form-control", size=20) }}
             </div>
@@ -109,22 +103,10 @@
                 {{ form.rating.label }}<br>
                 {{ form.rating(class="form-select") }}
             </div>
-            {{ form.submit }}
+            {{ form.submit(class="btn btn-primary") }}
         </form>
     </div>
-
     <hr>
-    <div class="container">
-        {% for review in reviews %}
-            <div>
-                <strong>User {{ review.user_id }}</strong>
-                <span>Note : {{ review.note }}/5</span>
-                <p>{{ review.comment }}</p>
-                <small>Posté le {{ review.date_review }}</small>
-            </div>
-        {% else %}
-            <p>no reviews.</p>
-        {% endfor %}
-    </div>
+    <h2 class="my-4 text-center">Rist Off Reviews</h2>
 
 {% endblock %}
