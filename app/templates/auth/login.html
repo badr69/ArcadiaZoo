@@ -5,6 +5,7 @@
 
 
     <h2>Login</h2>
+    <div class="container mt-5">
 
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
@@ -35,6 +36,7 @@
 
           {{ form.submit(class="btn btn-primary") }}
     </form>
+    </div>
 
     <script src="{{ url_for('static', filename='js/login.js') }}"></script>
 {% endblock %}

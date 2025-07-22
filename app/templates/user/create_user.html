@@ -1,7 +1,12 @@
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+{% extends "base.html" %}
+
+{% block title %} Create User {% endblock %}
+
+
+{% block content %}
 
 <div class="container mt-5">
-  <h1 class="mb-4 text-center">Créer un utilisateur</h1>
+  <h1 class="mb-4 text-center">Create User</h1>
 
 
     <div class="row justify-content-center">
@@ -56,4 +61,4 @@
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+{% endblock %}

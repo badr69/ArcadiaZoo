@@ -1,37 +1,54 @@
-document.addEventListener("DOMContentLoaded", function () {
-    const form = document.getElementById("loginForm");
+document.addEventListener("DOMContentLoaded", () => {
+  const form = document.querySelector("#login-form");
+  const messageBox = document.querySelector("#message-box");
 
-    form.addEventListener("submit", async function (e) {
-        e.preventDefault();
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
 
-        const formData = new FormData(form);
+    // Reset message box
+    messageBox.innerHTML = "";
+    messageBox.className = "";
 
-        try {
-            const response = await fetch(form.action, {
-                method: "POST",
-                body: formData,
-                headers: {
-                    "X-Requested-With": "XMLHttpRequest"
-                }
+    const formData = new FormData(form);
+    const data = new URLSearchParams(formData);
+
+    try {
+      const response = await fetch(form.action, {
+        method: "POST",
+        headers: {
+          "X-Requested-With": "XMLHttpRequest",
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: data.toString(),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        // Redirection vers l'URL reçue
+        window.location.href = result.redirect;
+      } else {
+        // Afficher le message d'erreur
+        if (result.message) {
+          messageBox.textContent = result.message;
+          messageBox.className = "alert alert-danger";
+        } else if (result.errors) {
+          // Afficher les erreurs de validation formulaire
+          let errorsHtml = "<ul>";
+          for (const field in result.errors) {
+            result.errors[field].forEach((error) => {
+              errorsHtml += `<li><strong>${field}</strong>: ${error}</li>`;
             });
-
-            const data = await response.json();
-
-            if (response.ok && data.success) {
-                // Rediriger vers le dashboard correspondant
-                window.location.href = data.redirect;
-            } else {
-                // Afficher les erreurs
-                const alertBox = document.createElement("div");
-                alertBox.className = "alert alert-danger";
-                alertBox.innerText = data.message || "Erreur inconnue";
-
-                // Insère au-dessus du formulaire
-                form.prepend(alertBox);
-            }
-        } catch (err) {
-            console.error("Erreur fetch:", err);
-            alert("Erreur réseau. Veuillez réessayer.");
+          }
+          errorsHtml += "</ul>";
+          messageBox.innerHTML = errorsHtml;
+          messageBox.className = "alert alert-danger";
         }
-    });
+      }
+    } catch (error) {
+      messageBox.textContent = "Erreur serveur. Merci de réessayer plus tard.";
+      messageBox.className = "alert alert-danger";
+      console.error("Fetch error:", error);
+    }
+  });
 });

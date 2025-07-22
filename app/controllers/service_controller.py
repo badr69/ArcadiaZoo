@@ -104,8 +104,9 @@ class ServiceController:
                 filename = secure_filename(file.filename)
                 upload_path = os.path.join(current_app.root_path, 'static/uploads', filename)
                 os.makedirs(os.path.dirname(upload_path), exist_ok=True)
+
                 file.save(upload_path)
-                url_image = f'/static/uploads/{filename}'
+                url_image = f'uploads/service.img{filename}'
             else:
                 url_image = service.url_image  # garder l'image existante
 

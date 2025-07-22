@@ -18,7 +18,7 @@
 
             <div>
                 Image actuelle:<br>
-                <img src="{{ service_url_image }}" style="max-width: 300px;">
+                <img src="{{ url_for('static', filename=service.url_image) }}" alt="service image {{ service.name }}" style="max-width: 300px;">
             </div>
 
             <div>
@@ -36,6 +36,8 @@
             </div>
 
             {{ form.submit(class="btn btn-primary") }}
+            <a href="{{ url_for('service.list_all_services') }}" class="btn btn-secondary">Back</a>
+
         </form>
 
     </div>

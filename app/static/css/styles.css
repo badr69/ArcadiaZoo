@@ -128,11 +128,76 @@ body {
 
   }
 
+  /* Media for responsive */
 
+@media (max-width: 992px) {
+  /* Tablettes et petits écrans */
+  main {
+    padding: 80px 20px 30px;
+  }
 
+  .carousel {
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+  }
 
+  .caroussel-item {
+    width: 100%;
+    margin-bottom: 20px;
+  }
 
+  .services, .restauration {
+    width: 100%;
+    height: auto;
+    padding: 10px;
+    box-sizing: border-box;
+  }
 
+  .container-services, .container {
+    width: 100%;
+    height: auto;
+    padding-top: 30px;
+  }
+
+  img {
+    width: 150px;
+  }
+}
+
+@media (max-width: 576px) {
+  /* Petits écrans mobiles */
+  main {
+    padding: 60px 15px 20px;
+  }
+
+  .navbar-brand {
+    font-size: 1.2rem;
+  }
+
+  img {
+    width: 120px;
+  }
+
+  h5, h2 {
+    font-size: 18px;
+  }
+
+  .animaux li {
+    display: block;
+    margin-bottom: 10px;
+  }
+
+  .animal {
+    width: 100%;
+  }
+
+  .container-footer {
+    flex-direction: column;
+    padding: 15px;
+    text-align: center;
+  }
+}
 
 
 

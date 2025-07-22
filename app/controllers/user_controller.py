@@ -3,6 +3,7 @@ from app.forms.user_forms import UpdateUserForm, CreateUserForm
 from app.services.user_service import UserService
 from app.services.role_service import RoleService
 from app.utils.security import sanitize_html, detect_sql_injection
+from app.utils.validator import is_valid_email, is_strong_password
 
 
 class UserController:
@@ -21,11 +22,12 @@ class UserController:
             return None
 
 
+
     @staticmethod
     def create_user():
         form = CreateUserForm()
         roles = RoleService.list_all_roles()
-        roles = [r for r in roles if r.id != 1] # exlure admin
+        roles = [r for r in roles if r.id != 1]  # exclure admin
         form.role_name.choices = [(str(r.id), r.name) for r in roles]
 
         if form.validate_on_submit():
@@ -36,18 +38,56 @@ class UserController:
 
             # Vérification SQL Injection
             if detect_sql_injection(username) or detect_sql_injection(email):
-                flash("Entrée invalide détectée.", "danger")
+                flash("Invalide Input.", "danger")
+                return render_template("user/create_user.html", form=form)
+
+            # Validation email
+            if not is_valid_email(email):
+                flash("Adresse email invalide.", "danger")
+                return render_template("user/create_user.html", form=form)
+
+            # Validation mot de passe
+            if not is_strong_password(password):
+                flash(
+                    "Mot de passe trop faible. Il doit faire au moins 8 caractères, contenir une majuscule, un chiffre et un caractère spécial.",
+                    "danger")
                 return render_template("user/create_user.html", form=form)
 
             success = UserService.create_user(username, email, password, role_id)
             if success:
-                flash("User created with succcess", "success")
+                flash("User created with success", "success")
                 return redirect(url_for("user.list_all_users"))
             else:
                 flash("Error when creating User", "danger")
 
         return render_template("user/create_user.html", form=form)
 
+    # def create_user():
+    #     form = CreateUserForm()
+    #     roles = RoleService.list_all_roles()
+    #     roles = [r for r in roles if r.id != 1] # exlure admin
+    #     form.role_name.choices = [(str(r.id), r.name) for r in roles]
+    #
+    #     if form.validate_on_submit():
+    #         username = sanitize_html(form.username.data)
+    #         email = sanitize_html(form.email.data)
+    #         password = sanitize_html(form.password.data)
+    #         role_id = int(form.role_name.data)
+    #
+    #         # Vérification SQL Injection
+    #         if detect_sql_injection(username) or detect_sql_injection(email):
+    #             flash("Entrée invalide détectée.", "danger")
+    #             return render_template("user/create_user.html", form=form)
+    #
+    #         success = UserService.create_user(username, email, password, role_id)
+    #         if success:
+    #             flash("User created with succcess", "success")
+    #             return redirect(url_for("user.list_all_users"))
+    #         else:
+    #             flash("Error when creating User", "danger")
+    #
+    #     return render_template("user/create_user.html", form=form)
+    #
 
     @staticmethod
     def update_user(user_id):
