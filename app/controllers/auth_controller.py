@@ -5,6 +5,7 @@ from flask_login import login_user, logout_user
 from flask import redirect, url_for, flash
 from app.utils.security import verify_password
 
+
 class AuthController:
     @staticmethod
     def login():

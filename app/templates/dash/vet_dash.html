@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <title>Employee Dashboard</title>
+    <title>Vetirinarian Dashboard</title>
     <style>
         body {
             margin: 0;
@@ -89,7 +89,7 @@
 
 <nav class="sidebar">
 
-    <!-- Affichage du nom admin + bouton logout -->
+    <!-- Affichage du nom vet + bouton logout -->
     <div class="admin-info">
         <strong>Admin: {{ current_user.username }}</strong>
         <form action="{{ url_for('auth.logout') }}" method="POST">
@@ -98,20 +98,12 @@
         </form>
     </div>
 
-    <!-- Liens du menu -->
-    <a href="{{ url_for('user.create_user') }}" class="active">Create User</a><br>
-    <a href="{{ url_for('user.list_all_users') }}" class="active">All Users</a><br>
-    <a href="{{ url_for('habitat.create_habitat') }}" class="active">Create Habitat</a><br>
-    <a href="{{ url_for('habitat.list_all_habitats') }}" class="active">All habitats</a><br>
-    <a href="{{ url_for('animal.create_animal') }}" class="active">Create animal</a><br>
-    <a href="{{ url_for('animal.list_all_animals') }}" class="active">All animals</a><br>
-    <a href="{{ url_for('service.create_service') }}" class="active">Create Service</a><br>
-    <a href="{{ url_for('service.list_all_services') }}" class="active">All services</a><br>
 </nav>
 
+
 <div class="main-content">
-    <h1>Welcom to your Employee Dashboard</h1>
-    <p>Sélectionnez une option dans la barre latérale.</p>
+    <h1>Welcom to your Vet Dashboard</h1>
+    <p>Select an option in the sidebar.</p>
 </div>
 
 </body>

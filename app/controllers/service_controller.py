@@ -91,8 +91,8 @@ class ServiceController:
         form = ServiceUpdateForm(obj=service)
 
         if form.validate_on_submit():
-            name = form.name.data
-            description = form.description.data
+            name = sanitize_html(form.name.data)
+            description = sanitize_html(form.description.data)
 
             if detect_sql_injection(name) or detect_sql_injection(description):
                 flash("Invalide Input.", "danger")

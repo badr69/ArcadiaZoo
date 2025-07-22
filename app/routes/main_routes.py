@@ -6,20 +6,37 @@ from app.models.habitat_model import Habitat # ou ta fonction qui récupère les
 from app.models.service_model import ServiceModel
 from app.models.animal_model import AnimalModel
 from app.forms.review_form import ReviewForm
-
+from app.utils.security import sanitize_html
 
 main_bp = Blueprint('main', __name__)
 
+from flask import request, redirect, url_for, flash
 
-@main_bp.route('/')
+from app.models.review_model import Review  # ou le chemin vers ta classe Review
+
+
+@main_bp.route('/', methods=['GET', 'POST'])
 def index():
     form = ReviewForm()
-    # Récupère ta liste d'animaux depuis la BDD ou une fonction
-    animals = AnimalModel.list_all_animals() # à adapter selon ton code
+    animals = AnimalModel.list_all_animals()
     habitats = Habitat.list_all_habitats()
     services = ServiceModel.list_all_services()
-    return render_template("index.html", form=form, animals=animals, habitats=habitats, services=services)
 
+    if form.validate_on_submit():
+        # Créer un review avec les données du formulaire
+        review = Review(
+            pseudo=form.pseudo.data,
+            message=form.message.data,
+            rating=form.rating.data,
+            element_id="global"  # ou un id lié à un animal/habitat/service selon contexte
+        )
+        review.save()
+        flash("Merci pour votre avis !", "success")
+        return redirect(url_for('main.index'))
+
+    # Charger les reviews (par ex tous ou filtrer sur element_id)
+    reviews_data = Review.get_by_element_id("global")  # adapte si tu veux filtrer
+    return render_template("index.html", form=form, animals=animals, habitats=habitats, services=services, reviews=reviews_data)
 
 @main_bp.route('/services/')
 def services():

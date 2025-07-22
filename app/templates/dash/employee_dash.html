@@ -4,6 +4,8 @@
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <title>Employee Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+
     <style>
         body {
             margin: 0;
@@ -99,40 +101,43 @@
     </div>
 
     <!-- Liens du menu -->
-    <a href="{{ url_for('user.create_user') }}" class="active">Create User</a><br>
-    <a href="{{ url_for('user.list_all_users') }}" class="active">All Users</a><br>
-    <a href="{{ url_for('habitat.create_habitat') }}" class="active">Create Habitat</a><br>
-    <a href="{{ url_for('habitat.list_all_habitats') }}" class="active">All habitats</a><br>
-    <a href="{{ url_for('animal.create_animal') }}" class="active">Create animal</a><br>
+
     <a href="{{ url_for('animal.list_all_animals') }}" class="active">All animals</a><br>
-    <a href="{{ url_for('service.create_service') }}" class="active">Create Service</a><br>
     <a href="{{ url_for('service.list_all_services') }}" class="active">All services</a><br>
 </nav>
 
 <div class="main-content">
-    <h1>Welcom to your Admin Dashboard</h1>
-    <p>Sélectionnez une option dans la barre latérale.</p>
+    <h1>Welcom to your Employee Dashboard</h1>
+    <p>Select an option in the sidebar.</p>
 </div>
 
+<section id="reviews-section" class="mt-4">
+    <h2>Reviews List</h2>
+    {% if reviews %}
+        <table class="table table-striped table-bordered">
+            <thead class="table-dark">
+                <tr>
+                    <th>Pseudo</th>
+                    <th>Message</th>
+                    <th>Note</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for review in reviews %}
+                <tr>
+                    <td>{{ review.pseudo }}</td>
+                    <td>{{ review.message }}</td>
+                    <td>{{ review.rating }}</td>
+                    <td>{{ review.created_at if review.created_at else "date inconnue" }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>Aucun avis disponible.</p>
+    {% endif %}
+</section>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
 
-<h2>Add a Review</h2>
-<form method="POST">
-    {{ form.hidden_tag() }}
-
-    <div class="mb-3">
-        {{ form.user.label }} {{ form.user(class="form-control") }}
-    </div>
-
-    <div class="mb-3">
-        {{ form.comment.label }} {{ form.comment(class="form-control") }}
-    </div>
-
-    <div class="mb-3">
-        {{ form.rating.label }} {{ form.rating(class="form-control") }}
-    </div>
-
-    <div class="mb-3">
-        {{ form.submit(class="btn btn-primary") }}
-    </div>
-</form>
 

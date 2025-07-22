@@ -103,7 +103,7 @@ class AnimalController:
 
             result = AnimalService.update_animal(animal_id, name, race, description, url_image)
             if result['status']:
-                flash("Animal mis à jour.", "success")
+                flash("Animal Updated with success.", "success")
                 return redirect(url_for('animal.list_all_animals'))
             else:
                 flash(result['message'], "danger")

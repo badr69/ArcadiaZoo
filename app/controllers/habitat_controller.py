@@ -31,12 +31,12 @@ class HabitatController:
 
         if form.validate_on_submit():
             name = sanitize_html(form.name.data)
-            file = sanitize_html(form.url_image.data)
+            file = form.url_image.data
             description = sanitize_html(form.description.data)
 
             if detect_sql_injection(name) or detect_sql_injection(description):
                 flash("Invalide Input.", "danger")
-                return render_template("animal/create_animal.html", form=form)
+                return render_template("habitat/create_habitat.html", form=form)
 
             # 1) Vérifier qu’un fichier a bien été téléversé
             if not file or file.filename == "":
@@ -85,13 +85,13 @@ class HabitatController:
         form = HabitatUpdateForm(obj=habitat)  # Pré-remplit le formulaire avec l'objet habitat
 
         if form.validate_on_submit():
-            name = form.name.data
+            name = sanitize_html(form.name.data)
             file = form.url_image.data
-            description = form.description.data
+            description = sanitize_html(form.description.data)
 
             if detect_sql_injection(name) or detect_sql_injection(description):
                 flash("Invalide Input.", "danger")
-                return render_template("animal/create_animal.html", form=form)
+                return render_template("habitat/update_habitat.html", form=form)
 
 
             if hasattr(file, 'filename') and file.filename != '':

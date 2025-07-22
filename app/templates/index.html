@@ -92,10 +92,10 @@
             <div>
                 {{ form.pseudo.label }} <br> {{ form.pseudo(class="form-label form-control") }}
             </div>
-{#            <div>#}
-{#                {{ form.entity.label }}<br>#}
-{#                {{ form.entity() }}#}
-{#            </div>#}
+            {#            <div>#}
+            {#                {{ form.entity.label }}<br>#}
+            {#                {{ form.entity() }}#}
+            {#            </div>#}
             <div>
                 {{ form.message.label }} <br> {{ form.message(class="form-label form-control", size=20) }}
             </div>
@@ -107,6 +107,25 @@
         </form>
     </div>
     <hr>
-    <h2 class="my-4 text-center">Rist Off Reviews</h2>
+
+
+    <h2 class="my-4 text-center">List Off Reviews</h2>
+
+    <div class="container">
+        {% if reviews %}
+            <ul class="list-group">
+                {% for review in reviews %}
+                    <li class="list-group-item">
+                        <strong>{{ review.pseudo }}</strong> — Note : {{ review.rating }} / 5<br>
+                        <small><em>{{ review.date.strftime('%Y-%m-%d %H:%M') }}</em></small>
+                        <p>{{ review.message }}</p>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>Aucun avis pour le moment.</p>
+        {% endif %}
+    </div>
+
 
 {% endblock %}
