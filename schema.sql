@@ -49,6 +49,7 @@ CREATE TABLE IF NOT EXISTS animals (
     id SERIAL PRIMARY KEY,
     name VARCHAR(100) UNIQUE NOT NULL,
     race VARCHAR(100) NOT NULL,
+    description TEXT,
     url_image VARCHAR(255),
     habitat_id INTEGER,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

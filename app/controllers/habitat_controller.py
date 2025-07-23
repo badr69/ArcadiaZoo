@@ -6,7 +6,7 @@ from flask import render_template, redirect, url_for, flash
 from werkzeug.utils import secure_filename
 from flask import current_app
 
-from app.utils.security import detect_sql_injection
+from app.utils.security import detect_sql_injection, sanitize_html
 
 
 class HabitatController:
@@ -30,13 +30,13 @@ class HabitatController:
         current_app.logger.debug("Form errors: %s", form.errors)
 
         if form.validate_on_submit():
-            name = form.name.data
+            name = sanitize_html(form.name.data)
             file = form.url_image.data
-            description = form.description.data
+            description = sanitize_html(form.description.data)
 
-            if detect_sql_injection(name) or detect_sql_injection(race) or detect_sql_injection(description):
+            if detect_sql_injection(name) or detect_sql_injection(description):
                 flash("Invalide Input.", "danger")
-                return render_template("animal/create_animal.html", form=form)
+                return render_template("habitat/create_habitat.html", form=form)
 
             # 1) Vérifier qu’un fichier a bien été téléversé
             if not file or file.filename == "":
@@ -85,25 +85,26 @@ class HabitatController:
         form = HabitatUpdateForm(obj=habitat)  # Pré-remplit le formulaire avec l'objet habitat
 
         if form.validate_on_submit():
-            name = form.name.data
-            description = form.description.data
-
-            if detect_sql_injection(name) or detect_sql_injection(race) or detect_sql_injection(description):
-                flash("Invalide Input.", "danger")
-                return render_template("animal/create_animal.html", form=form)
-
+            name = sanitize_html(form.name.data)
             file = form.url_image.data
+            description = sanitize_html(form.description.data)
+
+            if detect_sql_injection(name) or detect_sql_injection(description):
+                flash("Invalide Input.", "danger")
+                return render_template("habitat/update_habitat.html", form=form)
+
+
             if hasattr(file, 'filename') and file.filename != '':
                 filename = secure_filename(file.filename)
                 upload_path = os.path.join(current_app.root_path, 'static/uploads', filename)
                 os.makedirs(os.path.dirname(upload_path), exist_ok=True)
                 file.save(upload_path)
-                url_image = f'/static/uploads/{filename}'
+                url_image = f'uploads/habitat_img/{filename}'
             else:
                 url_image = habitat.url_image  # garder l'ancienne image
 
             # Appeler la mise à jour dans le service
-            result = HabitatService.update_habitat(habitat_id, name, description, url_image)
+            result = HabitatService.update_habitat(habitat_id, name, url_image, description)
             if result['status']:
                 flash("Habitat mis à jour.", "success")
                 return redirect(url_for('habitat.list_all_habitats'))

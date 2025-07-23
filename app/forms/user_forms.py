@@ -40,11 +40,11 @@ class UpdateUserForm(BaseForm):
         'Rôle',
         choices=[('employee', 'Employee'), ('vet', 'Vet')],
         validators=[DataRequired()])
-        submit = SubmitField('Enregistrer les modifications')
+        submit = SubmitField('Submit')
 
 class DeleteUserForm(FlaskForm):
-    user_id = IntegerField("ID de l'utilisateur", validators=[
-        DataRequired(message="L'ID utilisateur est requis"),
-        NumberRange(min=1, message="L'ID doit être un entier positif")
+    user_id = IntegerField("User ID", validators=[
+        DataRequired(message="User ID Required"),
+        NumberRange(min=1, message="ID must be a int")
     ])
-    submit = SubmitField("Supprimer l'utilisateur")
+    submit = SubmitField("Delete User")

@@ -61,7 +61,7 @@ class AnimalController:
                 )
 
                 if result.get("status"):
-                    flash("Animal créé avec succès.", "success")
+                    flash("Animal created with success.", "success")
                     return redirect(url_for("animal.list_all_animals"))
 
                 flash(result.get("message", "Unknoun Error when Creation."), "danger")
@@ -97,13 +97,13 @@ class AnimalController:
                 upload_path = Path(current_app.root_path) / 'static' / 'uploads' / filename
                 upload_path.parent.mkdir(parents=True, exist_ok=True)
                 file.save(upload_path)
-                url_image = f'/static/uploads/{filename}'
+                url_image = f'uploads/animal_img/{filename}'
             else:
                 url_image = animal.url_image
 
             result = AnimalService.update_animal(animal_id, name, race, description, url_image)
             if result['status']:
-                flash("Animal mis à jour.", "success")
+                flash("Animal Updated with success.", "success")
                 return redirect(url_for('animal.list_all_animals'))
             else:
                 flash(result['message'], "danger")

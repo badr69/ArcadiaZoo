@@ -19,7 +19,7 @@ def create_app():
     app.config['ANIMAL_IMG_FOLDER'] = os.path.join(upload_folder, 'animal_img')
     app.config['HABITAT_IMG_FOLDER'] = os.path.join(upload_folder, 'habitat_img')
     app.config['SERVICE_IMG_FOLDER'] = os.path.join(upload_folder, 'service_img')
-    app.config['MAX_CONTENT_LENGTH'] = 30 * 1024 * 1024  # 30 MB max
+    app.config['MAX_CONTENT_LENGTH'] = 100 * 1024 * 1024  # 30 MB max
     app.config['ALLOWED_EXTENSIONS'] = {'png', 'jpg', 'jpeg', 'gif'}
 
     csrf.init_app(app)  # Protection CSRF via Flask-WTF
@@ -60,8 +60,9 @@ def create_app():
     from app.routes.service_routes import service_bp
     app.register_blueprint(service_bp)
 
-    # from app.routes.review_route import review_bp
-    # app.register_blueprint(review_bp)
+    from app.routes.review_route import reviews_bp
+    app.register_blueprint(reviews_bp)
+
 
     return app
 
