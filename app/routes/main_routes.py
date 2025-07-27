@@ -7,7 +7,7 @@ from app.models.animal_model import AnimalModel
 from app.forms.review_form import ReviewForm
 from app.models.review_model import Review
 from flask import redirect, url_for, flash
-
+from app.models.service_model import ServiceModel
 
 main_bp = Blueprint('main', __name__)
 
@@ -26,6 +26,7 @@ def index():
             message=form.message.data,
             rating=form.rating.data,
             element_id="global"
+        )
         review.save()
         flash("Merci pour votre avis !", "success")
         return redirect(url_for('main.index'))
