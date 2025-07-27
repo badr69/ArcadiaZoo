@@ -5,7 +5,6 @@ from app.services.role_service import RoleService
 from app.utils.security import sanitize_html, detect_sql_injection
 from app.utils.validator import is_valid_email, is_strong_password
 
-
 class UserController:
 
     @staticmethod

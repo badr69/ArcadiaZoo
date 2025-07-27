@@ -85,54 +85,66 @@
         </button>
     </div>
 
-<div class="container">
-
-<div class="container">
-{#    action="{{ url_for('main.index') }}"#}
-    <form id="form-review" method="POST" >
-        {{ form.csrf_token }}
-        <div>
-            <input type="hidden" id="element-id" value="{{ element_id }}">
-        </div>
-        <div>
-            {{ form.pseudo.label }} <br>
-            {{ form.pseudo(class="form-label form-control", id="pseudo") }}
-        </div>
-        <div>
-            {{ form.message.label }} <br>
-            {{ form.message(class="form-label form-control", id="text-area-review", rows="4") }}
-        </div>
-        <div>
-            {{ form.rating.label }}<br>
-            {{ form.rating(class="form-select", id="rating") }}
-        </div>
-        {{ form.submit(class="btn btn-primary", id="submit-btn") }}
-    </form>
-</div>
-
-
-
-    <hr>
-
-
-    <h2 class="my-4 text-center">List Off Reviews</h2>
     <div class="container">
-    {% if reviews %}
-        <ul id="reviews-list" class="list-group">
-            {% for review in reviews %}
-                <li class="list-group-item review-item">
-                    <strong>{{ review.pseudo }}</strong> — Note : {{ review.rating }} / 5<br>
-                    <p>{{ review.message }}</p>
-                    <small><em>{{ review.date.strftime('%Y-%m-%d %H:%M') }}</em></small>
-                </li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p id="no-reviews">No reviews!!.</p>
-    {% endif %}
-</div>
 
-<script src="{{ url_for('static', filename='js/review.js') }}"></script>
+        <div class="container">
+            {#    action="{{ url_for('main.index') }}"#}
+            <form id="form-review" method="POST">
+                {{ form.csrf_token }}
+                <div>
+                    <input type="hidden" id="element-id" value="{{ element_id }}">
+                </div>
+                <div>
+                    {{ form.pseudo.label }} <br>
+                    {{ form.pseudo(class="form-label form-control", id="pseudo") }}
+                </div>
+                <div>
+                    {{ form.message.label }} <br>
+                    {{ form.message(class="form-label form-control", id="text-area-review", rows="4") }}
+                </div>
+                <div>
+                    {{ form.rating.label }}<br>
+                    {{ form.rating(class="form-select", id="rating") }}
+                </div>
+                {{ form.submit(class="btn btn-primary", id="submit-btn") }}
+            </form>
+        </div>
+        <hrr>
+
+            <h2 class="my-4 text-center">List Off Reviews</h2>
+
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>id</th>
+                    <th>pseudo</th>
+                    <th>message</th>
+                    <th>rating</th>
+                    <th>created_at</th>
+                </tr>
+                </thead>
+                <tbody id="Reviews-list">
+                <!-- les lignes seront insérées ici -->
+                </tbody>
+            </table>
+
+            {#    <div class="container">#}
+            {#    {% if reviews %}#}
+            {#        <ul id="reviews-list" class="list-group">#}
+            {#            {% for review in reviews %}#}
+            {#                <li class="list-group-item review-item">#}
+            {#                    <strong>{{ review.pseudo }}</strong> — Note : {{ review.rating }} / 5<br>#}
+            {#                    <p>{{ review.message }}</p>#}
+            {#                    <small><em>{{ review.date.strftime('%Y-%m-%d %H:%M') }}</em></small>#}
+            {#                </li>#}
+            {#            {% endfor %}#}
+            {#        </ul>#}
+            {#    {% else %}#}
+            {#        <p id="no-reviews">No reviews!!.</p>#}
+            {#    {% endif %}#}
+    </div>
+
+
 {% endblock %}
 
 

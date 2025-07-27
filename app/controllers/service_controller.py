@@ -47,7 +47,7 @@ class ServiceController:
                 flash("Please add an image.", "danger")
                 return render_template("service/create_service.html", form=form)
 
-            # 2) Sauvegarder l’image
+            # 1) Sauvegarder l’image
             try:
                 filename = secure_filename(file.filename)
                 upload_dir = Path(current_app.config['SERVICE_IMG_FOLDER'])
@@ -56,10 +56,10 @@ class ServiceController:
                 filepath = upload_dir / filename
                 file.save(filepath)
 
-                # Chemin à enregistrer en BDD
+                # 2) Chemin à enregistrer en BDD
                 url_image = f"uploads/service_img/{filename}"
 
-                # 3) Appeler le service
+                # 3)Appeler le service
                 result = ServiceService.create_service(
                     name=name,
                     url_image=url_image,
@@ -76,7 +76,7 @@ class ServiceController:
                 current_app.logger.exception("Erreur lors de la création de l'service")
                 flash("Une erreur est survenue pendant la création de l’service.", "danger")
 
-        # GET initial ou formulaire invalide
+
         return render_template("service/create_service.html", form=form)
 
 
