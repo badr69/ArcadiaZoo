@@ -2,17 +2,14 @@
 from flask import Blueprint, render_template
 from app.forms.contact_forms import ContactForm
 from app.forms.auth_forms import LoginForm
-from app.models.habitat_model import Habitat # ou ta fonction qui récupère les habitats
+from app.models.habitat_model import Habitat
 from app.models.service_model import ServiceModel
 from app.models.animal_model import AnimalModel
 from app.forms.review_form import ReviewForm
-from app.utils.security import sanitize_html
+from flask import redirect, url_for, flash
+from app.controllers.review_controller import ReviewController
 
 main_bp = Blueprint('main', __name__)
-
-from flask import request, redirect, url_for, flash
-
-from app.models.review_model import Review  # ou le chemin vers ta classe Review
 
 
 @main_bp.route('/', methods=['GET', 'POST'])
@@ -28,14 +25,14 @@ def index():
             pseudo=form.pseudo.data,
             message=form.message.data,
             rating=form.rating.data,
-            element_id="global"  # ou un id lié à un animal/habitat/service selon contexte
+            element_id="global"
         )
         review.save()
         flash("Merci pour votre avis !", "success")
         return redirect(url_for('main.index'))
 
-    # Charger les reviews (par ex tous ou filtrer sur element_id)
-    reviews_data = Review.get_by_element_id("global")  # adapte si tu veux filtrer
+    # Charger les reviews
+    reviews_data = ReviewController.get_reviews_by_element_id("global")
     return render_template("index.html", form=form, animals=animals, habitats=habitats, services=services, reviews=reviews_data)
 
 @main_bp.route('/services/')
