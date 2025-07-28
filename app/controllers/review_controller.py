@@ -1,37 +1,40 @@
 from flask import request, jsonify
-from datetime import datetime
-from app.db.mongo import reviews_collection
-
+from app.models.review_model import ReviewModel
 
 class ReviewController:
 
     @staticmethod
-    def submit_review():
+    def add_review():
+        data = request.get_json()
         try:
-            data = request.get_json()
-            if not data:
-                return jsonify({"error": "Données manquantes"}), 400
-
-            pseudo = data.get("pseudo")
-            message = data.get("message")
-            rating = data.get("rating")
-            if not all([pseudo, message, rating]):
-                return jsonify({"error": "Champs manquants"}), 400
-
-            review = {
-                "pseudo": pseudo,
-                "message": message,
-                "rating": int(rating),
-                "element_id": "global",  # ou autre élément selon contexte
-                "date": datetime.utcnow()
-            }
-            result = reviews_collection.insert_one(review)
-
-            review["_id"] = str(result.inserted_id)
-            review["date"] = review["date"].isoformat()
-
-            return jsonify(review), 201
-
+            review_id = ReviewModel.add_review(data)
+            return jsonify({"status": "success", "review_id": review_id}), 201
         except Exception as e:
-            print(f"Erreur serveur: {e}")
-            return jsonify({"error": "Erreur serveur"}), 500
+            return jsonify({"status": "error", "message": str(e)}), 400
+
+    @staticmethod
+    def get_all_reviews():
+        reviews = ReviewModel.get_all_reviews()
+        reviews_dict = [r.to_dict() for r in reviews]
+        return jsonify(reviews_dict), 200
+
+    @staticmethod
+    def get_review_by_id(review_id):
+        review = ReviewModel.get_by_id(review_id)
+        if review:
+            return jsonify(review.to_dict()), 200
+        else:
+            return jsonify({"status": "error", "message": "Review not found"}), 404
+
+    @staticmethod
+    def get_reviews_by_element_id(element_id):
+        reviews = ReviewModel.get_by_element_id(element_id)
+        reviews_dict = [r.to_dict() for r in reviews]
+        return jsonify(reviews_dict), 200
+
+    @staticmethod
+    def list_all_reviews():
+        reviews = ReviewModel.list_all_reviews()
+        reviews_dict = [r.to_dict() for r in reviews]
+        return jsonify(reviews_dict), 200
+

@@ -90,6 +90,7 @@
         <div class="container">
             {#    action="{{ url_for('main.index') }}"#}
             <form id="form-review" method="POST">
+                <input type="hidden" name="element_id" value="123">
                 {{ form.csrf_token }}
                 <div>
                     <input type="hidden" id="element-id" value="{{ element_id }}">
@@ -109,39 +110,26 @@
                 {{ form.submit(class="btn btn-primary", id="submit-btn") }}
             </form>
         </div>
-        <hr>
+    </div>
 
-            <h2 class="my-4 text-center">List Off Reviews</h2>
+    <hr>
+    <h2 class="my-4 text-center">List Off Reviews</h2>
+    <div class="container mt-5">
+        <table class="table table-striped table-bordered">
+            <thead>
+            <tr>
+                <th>id</th>
+                <th>pseudo</th>
+                <th>message</th>
+                <th>rating</th>
+                <th>created_at</th>
+            </tr>
+            </thead>
+            <tbody id="Reviews-list">
+            <!-- les lignes seront insérées ici -->
+            </tbody>
+        </table>
 
-            <table class="table table-striped">
-                <thead>
-                <tr>
-                    <th>id</th>
-                    <th>pseudo</th>
-                    <th>message</th>
-                    <th>rating</th>
-                    <th>created_at</th>
-                </tr>
-                </thead>
-                <tbody id="Reviews-list">
-                <!-- les lignes seront insérées ici -->
-                </tbody>
-            </table>
-
-            {#    <div class="container">#}
-            {#    {% if reviews %}#}
-            {#        <ul id="reviews-list" class="list-group">#}
-            {#            {% for review in reviews %}#}
-            {#                <li class="list-group-item review-item">#}
-            {#                    <strong>{{ review.pseudo }}</strong> — Note : {{ review.rating }} / 5<br>#}
-            {#                    <p>{{ review.message }}</p>#}
-            {#                    <small><em>{{ review.date.strftime('%Y-%m-%d %H:%M') }}</em></small>#}
-            {#                </li>#}
-            {#            {% endfor %}#}
-            {#        </ul>#}
-            {#    {% else %}#}
-            {#        <p id="no-reviews">No reviews!!.</p>#}
-            {#    {% endif %}#}
     </div>
 
 

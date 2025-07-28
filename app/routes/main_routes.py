@@ -3,11 +3,11 @@ from flask import Blueprint, render_template
 from app.forms.contact_forms import ContactForm
 from app.forms.auth_forms import LoginForm
 from app.models.habitat_model import Habitat
+from app.models.service_model import ServiceModel
 from app.models.animal_model import AnimalModel
 from app.forms.review_form import ReviewForm
-from app.models.review_model import Review
 from flask import redirect, url_for, flash
-from app.models.service_model import ServiceModel
+from app.controllers.review_controller import ReviewController
 
 main_bp = Blueprint('main', __name__)
 
@@ -20,7 +20,7 @@ def index():
     services = ServiceModel.list_all_services()
 
     if form.validate_on_submit():
-
+        # Créer un review avec les données du formulaire
         review = Review(
             pseudo=form.pseudo.data,
             message=form.message.data,
@@ -31,8 +31,8 @@ def index():
         flash("Merci pour votre avis !", "success")
         return redirect(url_for('main.index'))
 
-
-    reviews_data = Review.get_by_element_id("global")  # adapte si tu veux filtrer
+    # Charger les reviews
+    reviews_data = ReviewController.get_reviews_by_element_id("global")
     return render_template("index.html", form=form, animals=animals, habitats=habitats, services=services, reviews=reviews_data)
 
 @main_bp.route('/services/')
@@ -53,7 +53,7 @@ def services():
 
 @main_bp.route('/animals/')
 def animals():
-    animals_objects = AnimalModel.list_all_animals()
+    animals_objects = AnimalModel.list_all_animals()  # ta méthode qui récupère les animaux
     animals = []
     for a in animals_objects:
         animals.append({

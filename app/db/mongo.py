@@ -11,5 +11,5 @@ MONGO_DB_NAME = os.getenv("MONGO_DB_NAME", "zoo_db")
 client = MongoClient(MONGO_URI, server_api=ServerApi("1"))
 db = client[MONGO_DB_NAME]
 
-# ✅ Définition de la collection reviews
+# Définition de la collection reviews
 reviews_collection = db["reviews"]

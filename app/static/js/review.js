@@ -4,10 +4,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const messageInput = document.querySelector("#text-area-review");
     const ratingInput = document.querySelector("#rating");
     const submitBtn = document.querySelector("#submit-btn");
+    const reviewsList = document.querySelector("#Reviews-list");
 
     submitBtn.disabled = true;
 
-    // Valide le formulaire en temps réel
+    // Validation du formulaire
     function validateForm() {
         submitBtn.disabled = !(pseudoInput.value.trim() && messageInput.value.trim() && ratingInput.value.trim());
     }
@@ -16,59 +17,71 @@ document.addEventListener("DOMContentLoaded", () => {
     messageInput.addEventListener("keyup", validateForm);
     ratingInput.addEventListener("change", validateForm);
 
-    // Soumission du formulaire
+    // Récupération du token CSRF
+    const csrfToken = form.querySelector('input[name="csrf_token"]').value;
+
+    // 🔹 Soumission du formulaire
     form.addEventListener("submit", async function (event) {
         event.preventDefault();
+        console.log("Submit intercepté !");
 
-        const csrfTokenInput = form.querySelector('input[name="csrf_token"]');
-        const csrfToken = csrfTokenInput ? csrfTokenInput.value : "";
-
+        const element_id = form.querySelector('input[name="element_id"]').value;
         const pseudo = pseudoInput.value.trim();
         const message = messageInput.value.trim();
         const rating = ratingInput.value.trim();
 
         try {
-            const response = await fetch("/reviews/submit_review", {
+            const response = await fetch("/reviews/add_review", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                     "X-Requested-With": "XMLHttpRequest",
-                    ...(csrfToken && { "X-CSRFToken": csrfToken })
+                    "X-CSRFToken": csrfToken
                 },
-                body: JSON.stringify({ pseudo, message, rating }),
+                body: JSON.stringify({ pseudo, message, rating, element_id }),
             });
 
             const data = await response.json();
+            console.log("Données envoyées:", { pseudo, message, rating, element_id });
+            console.log("Réponse serveur:", data);
 
             if (response.ok) {
                 alert("Votre review a bien été envoyée !");
                 form.reset();
                 submitBtn.disabled = true;
 
-                // Recharge toute la liste à partir de la base
-                await loadReviews();
+                // ✅ Ajout direct de la review sans recharger toute la liste
+                const newReview = document.createElement("tr");
+                newReview.innerHTML = `
+                    <td>${data.review_id || ''}</td>
+                    <td>${pseudo}</td>
+                    <td>${message}</td>
+                    <td>${rating}</td>
+                    <td>À l'instant</td>
+                `;
+                reviewsList.prepend(newReview);
             } else {
-                alert("Erreur : " + (data.error || "Impossible d’envoyer la review."));
+                alert("Erreur : " + (data.message || "Impossible d’envoyer la review."));
             }
         } catch (err) {
             alert("Erreur lors de l’envoi de la review.");
-            console.error("Erreur fetch POST :", err);
+            console.error(err);
         }
     });
 
-    // Chargement des avis depuis MongoDB
+    // 🔹 Chargement initial des reviews
     async function loadReviews() {
         try {
-            const response = await fetch("/reviews/get_all");
+            const response = await fetch("/reviews/get_all_reviews");
+            if (!response.ok) throw new Error("Erreur réseau");
             const data = await response.json();
 
-            const reviewsList = document.querySelector("#Reviews-list");
-            reviewsList.innerHTML = ""; // Vide la liste existante
+            reviewsList.innerHTML = ""; // Vide la liste
 
             data.forEach((review) => {
                 const tr = document.createElement("tr");
                 tr.innerHTML = `
-                    <td>${review._id}</td>
+                    <td>${review.id || ''}</td>
                     <td>${review.pseudo}</td>
                     <td>${review.message}</td>
                     <td>${review.rating}</td>
@@ -81,6 +94,9 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // Appel initial pour afficher les reviews déjà en BDD
+    // Appel une seule fois
     loadReviews();
 });
+
+
+
