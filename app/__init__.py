@@ -27,8 +27,6 @@ def create_app():
     login_manager.init_app(app)  # Init login manager **après** la création de l'app
     login_manager.login_view = 'auth.login'  # nom de ta route de login
 
-
-
     # Enregistrement des blueprints
     from app.routes.role_routes import role_bp
     app.register_blueprint(role_bp)

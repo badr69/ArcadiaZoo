@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Récupération du token CSRF
     const csrfToken = form.querySelector('input[name="csrf_token"]').value;
 
-    // 🔹 Soumission du formulaire
+    // Soumission du formulaire
     form.addEventListener("submit", async function (event) {
         event.preventDefault();
         console.log("Submit intercepté !");
@@ -50,7 +50,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 form.reset();
                 submitBtn.disabled = true;
 
-                // ✅ Ajout direct de la review sans recharger toute la liste
+                // Ajout direct de la review sans recharger toute la liste
                 const newReview = document.createElement("tr");
                 newReview.innerHTML = `
                     <td>${data.review_id || ''}</td>
@@ -69,13 +69,14 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // 🔹 Chargement initial des reviews
+    //  Chargement initial des reviews
     async function loadReviews() {
         try {
             const response = await fetch("/reviews/get_all_reviews");
             if (!response.ok) throw new Error("Erreur réseau");
             const data = await response.json();
 
+            const reviewsList = document.querySelector("#Reviews-list");
             reviewsList.innerHTML = ""; // Vide la liste
 
             data.forEach((review) => {

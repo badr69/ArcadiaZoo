@@ -12,7 +12,7 @@ class ReviewModel:
         self.message = message
         self.rating = int(rating)
         self.element_id = element_id
-        self.date = date if date else datetime.utcnow()
+        self.date = date if date else datetime.now()
 
     @staticmethod
     def from_dict(data):
