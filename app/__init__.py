@@ -61,6 +61,5 @@ def create_app():
     from app.routes.review_route import reviews_bp
     app.register_blueprint(reviews_bp)
 
-
     return app
 

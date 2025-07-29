@@ -32,7 +32,7 @@ def index():
         return redirect(url_for('main.index'))
 
     # Charger les reviews
-    reviews_data = ReviewController.get_reviews_by_element_id("global")
+    reviews_data = ReviewController.get_review_by_element_id("global")
     return render_template("index.html", form=form, animals=animals, habitats=habitats, services=services, reviews=reviews_data)
 
 @main_bp.route('/services/')
@@ -67,7 +67,6 @@ def animals():
         })
     return render_template('animals.html', animals=animals)
 
-
 @main_bp.route('/habitats/')
 def habitats():
     habitats_objects = Habitat.list_all_habitats()  # renvoie une liste d'objets Habitat
@@ -92,3 +91,32 @@ def contact():
 def login():
     form = LoginForm()
     return render_template("auth/login.html", form=form)
+
+
+@main_bp.route('/employee_dash', methods=['GET', 'POST'])
+def employee_dash():
+    form = ReviewForm()
+    animals = AnimalModel.list_all_animals()
+    habitats = Habitat.list_all_habitats()
+    services = ServiceModel.list_all_services()
+
+    if form.validate_on_submit():
+        review = Review(
+            pseudo=form.pseudo.data,
+            message=form.message.data,
+            rating=form.rating.data,
+            element_id="global"
+        )
+        review.save()
+        flash("Merci pour votre avis !", "success")
+        return redirect(url_for('main.employee_dash'))
+
+    reviews_data = ReviewController.get_review_by_element_id("global")
+    return render_template(
+        "employee_dash.html",
+        form=form,
+        animals=animals,
+        habitats=habitats,
+        services=services,
+        reviews=reviews_data
+    )

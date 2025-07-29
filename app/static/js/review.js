@@ -4,11 +4,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const messageInput = document.querySelector("#text-area-review");
     const ratingInput = document.querySelector("#rating");
     const submitBtn = document.querySelector("#submit-btn");
-    const reviewsList = document.querySelector("#Reviews-list");
+    const reviewsList = document.querySelector("#Reviews-list"); // si présent ici
+
+    if (!form || !submitBtn) return; // stop si on est pas sur la bonne page
 
     submitBtn.disabled = true;
 
-    // Validation du formulaire
     function validateForm() {
         submitBtn.disabled = !(pseudoInput.value.trim() && messageInput.value.trim() && ratingInput.value.trim());
     }
@@ -17,13 +18,10 @@ document.addEventListener("DOMContentLoaded", () => {
     messageInput.addEventListener("keyup", validateForm);
     ratingInput.addEventListener("change", validateForm);
 
-    // Récupération du token CSRF
     const csrfToken = form.querySelector('input[name="csrf_token"]').value;
 
-    // Soumission du formulaire
     form.addEventListener("submit", async function (event) {
         event.preventDefault();
-        console.log("Submit intercepté !");
 
         const element_id = form.querySelector('input[name="element_id"]').value;
         const pseudo = pseudoInput.value.trim();
@@ -42,62 +40,40 @@ document.addEventListener("DOMContentLoaded", () => {
             });
 
             const data = await response.json();
-            console.log("Données envoyées:", { pseudo, message, rating, element_id });
-            console.log("Réponse serveur:", data);
 
             if (response.ok) {
-                alert("Votre review a bien été envoyée !");
+                alert("✅ Votre review a bien été envoyée !");
                 form.reset();
                 submitBtn.disabled = true;
 
-                // Ajout direct de la review sans recharger toute la liste
-                const newReview = document.createElement("tr");
-                newReview.innerHTML = `
-                    <td>${data.review_id || ''}</td>
-                    <td>${pseudo}</td>
-                    <td>${message}</td>
-                    <td>${rating}</td>
-                    <td>À l'instant</td>
-                `;
-                reviewsList.prepend(newReview);
+                // Optionnel : ajouter la review dans la liste si elle est affichée ici
+                if (reviewsList) {
+                    const newReview = document.createElement("tr");
+                    newReview.innerHTML = `
+                        <td>${data.review_id || ''}</td>
+                        <td>${pseudo}</td>
+                        <td>${message}</td>
+                        <td>${rating}</td>
+                        <td>À l'instant</td>
+                        <td>
+                          <div class="btn-group" role="group" aria-label="Actions">
+                            <button class="btn-delete btn btn-danger btn-sm me-2" data-id="${data.review_id}">Delete</button>
+                            <button class="btn-publish btn btn-primary btn-sm me-2" data-id="${data.review_id}">Publish</button>
+                          </div>
+                        </td>
+                    `;
+                    reviewsList.prepend(newReview);
+                }
             } else {
-                alert("Erreur : " + (data.message || "Impossible d’envoyer la review."));
+                alert("❌ Erreur : " + (data.message || "Impossible d’envoyer la review."));
             }
         } catch (err) {
-            alert("Erreur lors de l’envoi de la review.");
+            alert("❌ Erreur lors de l’envoi de la review.");
             console.error(err);
         }
     });
-
-    //  Chargement initial des reviews
-    async function loadReviews() {
-        try {
-            const response = await fetch("/reviews/get_all_reviews");
-            if (!response.ok) throw new Error("Erreur réseau");
-            const data = await response.json();
-
-            const reviewsList = document.querySelector("#Reviews-list");
-            reviewsList.innerHTML = ""; // Vide la liste
-
-            data.forEach((review) => {
-                const tr = document.createElement("tr");
-                tr.innerHTML = `
-                    <td>${review.id || ''}</td>
-                    <td>${review.pseudo}</td>
-                    <td>${review.message}</td>
-                    <td>${review.rating}</td>
-                    <td>${review.date ? new Date(review.date).toLocaleString() : ""}</td>
-                `;
-                reviewsList.appendChild(tr);
-            });
-        } catch (error) {
-            console.error("Erreur lors du chargement des reviews :", error);
-        }
-    }
-
-    // Appel une seule fois
-    loadReviews();
 });
+
 
 
 
