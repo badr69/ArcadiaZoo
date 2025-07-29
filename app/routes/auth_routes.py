@@ -12,13 +12,13 @@ def test():
     return "OK"
 
 @auth_bp.route('/login', methods=['GET', 'POST'])
+
 def login():
     print("Route /auth/login appelée")
     return AuthController.login()
 
-
 @auth_bp.route('/logout', methods=['POST'])
-@login_required
+
 def logout():
     logout_user()
     flash("You are disconected", "success")
