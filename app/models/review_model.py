@@ -6,13 +6,15 @@ reviews_collection = db["reviews"]
 
 
 class ReviewModel:
-    def __init__(self, pseudo, message, rating, element_id=None, date=None, _id=None):
+    def __init__(self, pseudo, message, rating, element_id=None, date=None, _id=None,  published=False):
         self.id = str(_id) if _id else None
         self.pseudo = pseudo
         self.message = message
         self.rating = int(rating)
         self.element_id = element_id
+        self.published = published
         self.date = date if date else datetime.now()
+
 
     @staticmethod
     def from_dict(data):
@@ -22,6 +24,7 @@ class ReviewModel:
             rating=data.get("rating"),
             element_id=data.get("element_id"),
             date=data.get("date"),
+            published=data.get("published", False),
             _id=data.get("_id")
         )
 
@@ -32,7 +35,8 @@ class ReviewModel:
             "message": self.message,
             "rating": self.rating,
             "element_id": self.element_id,
-            "date": self.date.isoformat() if self.date else None
+            "date": self.date.isoformat() if self.date else None,
+            "published": self.published
         }
 
     @staticmethod
@@ -41,6 +45,7 @@ class ReviewModel:
         message = data.get("message")
         rating = data.get("rating")
         element_id = data.get("element_id")
+
 
         if not all([pseudo, message, rating, element_id]):
             raise ValueError("Champs manquants")
@@ -51,6 +56,7 @@ class ReviewModel:
             "rating": int(rating),
             "element_id": element_id,
             "date": datetime.utcnow(),
+            "published": False
         }
         try:
             result = reviews_collection.insert_one(review)
@@ -100,15 +106,14 @@ class ReviewModel:
 
     @staticmethod
     def publish_review(review_id):
-        """Marque une review comme publiée"""
         try:
             result = reviews_collection.update_one(
                 {"_id": ObjectId(review_id)},
-                {"$set": {"published": True}}
+                {"$set": {"published": True, "status": "published"}}
             )
             return result.modified_count > 0
         except Exception as e:
-            print(f"Erreur publish_review: {e}")
+            print("Erreur publish_review:", e)
             return False
 
     @staticmethod

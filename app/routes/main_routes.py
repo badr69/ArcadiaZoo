@@ -33,7 +33,14 @@ def index():
 
     # Charger les reviews
     reviews_data = ReviewController.get_review_by_element_id("global")
-    return render_template("index.html", form=form, animals=animals, habitats=habitats, services=services, reviews=reviews_data)
+    return render_template(
+        "index.html",
+                           form=form,
+                           animals=animals,
+                           habitats=habitats,
+                           services=services,
+                           reviews=reviews_data
+                           )
 
 @main_bp.route('/services/')
 def services():
@@ -92,31 +99,6 @@ def login():
     form = LoginForm()
     return render_template("auth/login.html", form=form)
 
-
 @main_bp.route('/employee_dash', methods=['GET', 'POST'])
 def employee_dash():
-    form = ReviewForm()
-    animals = AnimalModel.list_all_animals()
-    habitats = Habitat.list_all_habitats()
-    services = ServiceModel.list_all_services()
-
-    if form.validate_on_submit():
-        review = Review(
-            pseudo=form.pseudo.data,
-            message=form.message.data,
-            rating=form.rating.data,
-            element_id="global"
-        )
-        review.save()
-        flash("Merci pour votre avis !", "success")
-        return redirect(url_for('main.employee_dash'))
-
-    reviews_data = ReviewController.get_review_by_element_id("global")
-    return render_template(
-        "employee_dash.html",
-        form=form,
-        animals=animals,
-        habitats=habitats,
-        services=services,
-        reviews=reviews_data
-    )
+    return render_template("dash/employee_dash.html")

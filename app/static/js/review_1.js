@@ -1,10 +1,14 @@
+const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+console.log("CSRF Token détecté :", csrfToken);
+
+// --- Exécution après chargement du DOM ---
 document.addEventListener("DOMContentLoaded", () => {
-    const reviewsList = document.querySelector("#Reviews-list");
+
+    const reviewsList = document.querySelector("#Employee-Reviews-list");
+    console.log("reviewsList trouvé :", reviewsList);
     if (!reviewsList) return;
 
-    // Récupération du token CSRF si nécessaire
-    const csrfToken = document.querySelector('input[name="csrf_token"]')?.value || '';
-
+    // --- Fonction pour charger les reviews ---
     async function loadReviews() {
         try {
             const response = await fetch("/reviews/get_all_reviews");
@@ -12,6 +16,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const data = await response.json();
 
             reviewsList.innerHTML = "";
+
             data.forEach((review) => {
                 const tr = document.createElement("tr");
                 tr.innerHTML = `
@@ -22,8 +27,11 @@ document.addEventListener("DOMContentLoaded", () => {
                     <td>${review.date ? new Date(review.date).toLocaleString() : ""}</td>
                     <td>
                       <div class="btn-group" role="group" aria-label="Actions">
+                        <button class="btn-publish btn btn-primary btn-sm me-2" data-id="${review.id}" 
+                            ${review.published ? "disabled" : ""}>
+                            ${review.published ? "Publié" : "Publier"}
+                        </button>
                         <button class="btn-delete btn btn-danger btn-sm me-2" data-id="${review.id}">Delete</button>
-                        <button class="btn-publish btn btn-primary btn-sm me-2" data-id="${review.id}">Publish</button>
                       </div>
                     </td>
                 `;
@@ -34,29 +42,32 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    loadReviews();
-
-    // Gestion des clics sur les boutons Publish et Delete
+    // --- Gestion des clics sur les boutons Delete et Publish ---
     reviewsList.addEventListener("click", async (event) => {
         const target = event.target;
+        const id = target.getAttribute("data-id");
+        if (!id) return;
 
+        // --- Publication d'une review ---
         if (target.classList.contains("btn-publish")) {
-            const id = target.getAttribute("data-id");
-            if (!id) return;
-
             if (confirm("Publier cette review ?")) {
                 try {
                     const response = await fetch(`/reviews/publish/${id}`, {
-                        method: "POST",
+                        method: "PATCH",
                         headers: {
                             "Content-Type": "application/json",
                             "X-CSRFToken": csrfToken,
                         },
                     });
+
                     if (response.ok) {
                         alert("✅ Review publiée !");
-                        target.disabled = true;
+                        // Mise à jour locale du bouton
                         target.textContent = "Publié";
+                        target.disabled = true;
+
+                        // Si tu préfères recharger toute la liste, décommente la ligne suivante :
+                        // await loadReviews();
                     } else {
                         alert("❌ Erreur lors de la publication.");
                     }
@@ -67,10 +78,8 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
 
+        // --- Suppression d'une review ---
         if (target.classList.contains("btn-delete")) {
-            const id = target.getAttribute("data-id");
-            if (!id) return;
-
             if (confirm("Supprimer cette review ?")) {
                 try {
                     const response = await fetch(`/reviews/delete/${id}`, {
@@ -82,8 +91,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     });
                     if (response.ok) {
                         alert("✅ Review supprimée !");
-                        // Retirer la ligne du tableau
-                        target.closest("tr").remove();
+                        await loadReviews();
                     } else {
                         alert("❌ Erreur lors de la suppression.");
                     }
@@ -94,5 +102,23 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
     });
+    // Simple fonction d'échappement HTML pour éviter injection
+    function escapeHtml(text) {
+        if (!text) return "";
+        return text.replace(/[&<>"']/g, (m) => {
+            switch (m) {
+                case '&': return "&amp;";
+                case '<': return "&lt;";
+                case '>': return "&gt;";
+                case '"': return "&quot;";
+                case "'": return "&#039;";
+                default: return m;
+            }
+        });
+    }
+
+    // Chargement initial des reviews
+    loadReviews();
 });
+
 

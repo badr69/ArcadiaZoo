@@ -1,32 +1,40 @@
 document.addEventListener("DOMContentLoaded", () => {
+
     const form = document.querySelector("#form-review");
+    const submitBtn = document.querySelector("#submit-btn");
     const pseudoInput = document.querySelector("#pseudo");
     const messageInput = document.querySelector("#text-area-review");
     const ratingInput = document.querySelector("#rating");
-    const submitBtn = document.querySelector("#submit-btn");
-    const reviewsList = document.querySelector("#Reviews-list"); // si présent ici
+    const reviewsList = document.querySelector("#Reviews-list");
 
-    if (!form || !submitBtn) return; // stop si on est pas sur la bonne page
+    if (!form || !submitBtn || !pseudoInput || !messageInput || !ratingInput || !reviewsList) {
+        // Certains éléments ne sont pas présents, on arrête le script.
+        return;
+    }
 
     submitBtn.disabled = true;
 
+    // Fonction de validation simple
     function validateForm() {
-        submitBtn.disabled = !(pseudoInput.value.trim() && messageInput.value.trim() && ratingInput.value.trim());
+        const isValid =
+            pseudoInput.value.trim() !== "" &&
+            messageInput.value.trim() !== "" &&
+            ratingInput.value.trim() !== "";
+        submitBtn.disabled = !isValid;
     }
 
-    pseudoInput.addEventListener("keyup", validateForm);
-    messageInput.addEventListener("keyup", validateForm);
+    // Valider à chaque saisie / changement
+    pseudoInput.addEventListener("input", validateForm);
+    messageInput.addEventListener("input", validateForm);
     ratingInput.addEventListener("change", validateForm);
 
-    const csrfToken = form.querySelector('input[name="csrf_token"]').value;
+    // Récupération du token CSRF depuis la meta dans base.html
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-    form.addEventListener("submit", async function (event) {
-        event.preventDefault();
+    form.addEventListener("submit", async (e) => {
+        e.preventDefault();
 
         const element_id = form.querySelector('input[name="element_id"]').value;
-        const pseudo = pseudoInput.value.trim();
-        const message = messageInput.value.trim();
-        const rating = ratingInput.value.trim();
 
         try {
             const response = await fetch("/reviews/add_review", {
@@ -36,7 +44,12 @@ document.addEventListener("DOMContentLoaded", () => {
                     "X-Requested-With": "XMLHttpRequest",
                     "X-CSRFToken": csrfToken
                 },
-                body: JSON.stringify({ pseudo, message, rating, element_id }),
+                body: JSON.stringify({
+                    pseudo: pseudoInput.value.trim(),
+                    message: messageInput.value.trim(),
+                    rating: ratingInput.value.trim(),
+                    element_id: element_id
+                }),
             });
 
             const data = await response.json();
@@ -45,25 +58,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 alert("✅ Votre review a bien été envoyée !");
                 form.reset();
                 submitBtn.disabled = true;
-
-                // Optionnel : ajouter la review dans la liste si elle est affichée ici
-                if (reviewsList) {
-                    const newReview = document.createElement("tr");
-                    newReview.innerHTML = `
-                        <td>${data.review_id || ''}</td>
-                        <td>${pseudo}</td>
-                        <td>${message}</td>
-                        <td>${rating}</td>
-                        <td>À l'instant</td>
-                        <td>
-                          <div class="btn-group" role="group" aria-label="Actions">
-                            <button class="btn-delete btn btn-danger btn-sm me-2" data-id="${data.review_id}">Delete</button>
-                            <button class="btn-publish btn btn-primary btn-sm me-2" data-id="${data.review_id}">Publish</button>
-                          </div>
-                        </td>
-                    `;
-                    reviewsList.prepend(newReview);
-                }
+                loadReviews(); // recharge la liste
             } else {
                 alert("❌ Erreur : " + (data.message || "Impossible d’envoyer la review."));
             }
@@ -72,8 +67,52 @@ document.addEventListener("DOMContentLoaded", () => {
             console.error(err);
         }
     });
+
+    async function loadReviews() {
+        try {
+            const response = await fetch("/reviews/published");
+            if (!response.ok) throw new Error("Erreur réseau lors du chargement des reviews");
+
+            const reviews = await response.json();
+
+            if (!Array.isArray(reviews) || reviews.length === 0) {
+                reviewsList.innerHTML = `<tr><td colspan="4" class="text-center">Aucune review publiée pour le moment.</td></tr>`;
+                return;
+            }
+
+            let html = "";
+            reviews.forEach(r => {
+                html += `<tr>
+                    <td>${escapeHtml(r.pseudo)}</td>
+                    <td>${escapeHtml(r.message)}</td>
+                    <td>${escapeHtml(r.rating)}</td>
+                    <td>${r.created_at ? new Date(r.created_at).toLocaleString() : ''}</td>
+                </tr>`;
+            });
+
+            reviewsList.innerHTML = html;
+
+        } catch (err) {
+            reviewsList.innerHTML = `<tr><td colspan="4" class="text-center text-danger">Erreur lors du chargement des reviews.</td></tr>`;
+            console.error(err);
+        }
+    }
+
+    // Simple fonction d'échappement HTML pour éviter injection
+    function escapeHtml(text) {
+    if (typeof text !== "string") {
+        text = String(text ?? ""); // convertit null/undefined/number → string
+    }
+    return text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+    // Chargement initial des reviews
+    loadReviews();
 });
-
-
 
 

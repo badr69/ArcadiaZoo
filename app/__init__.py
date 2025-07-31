@@ -5,6 +5,7 @@ from flask_wtf import CSRFProtect
 from app.models.user_model import UserModel
 from app.extensions.login_manager import login_manager
 
+
 csrf = CSRFProtect()
 
 def create_app():
