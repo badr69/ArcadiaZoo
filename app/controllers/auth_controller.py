@@ -7,6 +7,7 @@ from app.utils.security import verify_password
 
 
 class AuthController:
+
     @staticmethod
     def login():
         form = LoginForm()
@@ -58,3 +59,17 @@ class AuthController:
 
         # GET → on affiche le formulaire normalement
         return render_template('auth/login.html', form=form)
+
+
+
+
+    @staticmethod
+    def logout():
+        if request.method == 'POST':
+            logout_user()
+            flash("Vous êtes déconnecté.e.", "success")
+            return redirect(url_for('auth.login'))
+
+        # Si la méthode n’est pas POST, on refuse
+        flash("Méthode non autorisée", "danger")
+        return redirect(url_for('auth.login'))

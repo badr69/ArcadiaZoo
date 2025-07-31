@@ -3,8 +3,16 @@
 {% block title %}Détail de l'utilisateur{% endblock %}
 
 {% block content %}
+    <div>
+        {% if current_user.is_authenticated and current_user.role_name == "admin" %}
+            <p class="admin-connected">Admin Connected 👌</p>
+        {% endif %}
+    </div>
     <div class="container mt-5">
-        <h2 class="mb-4">user Details</h2>
+
+        <h1 class="text-center mb-4">User Details</h1>
+        <a href="{{ url_for('user.create_user') }}" class="btn btn-primary mb-3">Create User</a>
+        <a href="{{ url_for('auth.logout') }}" class="btn btn-danger mb-3">Logout</a>
 
         <table class="table table-bordered table-hover">
             <tr>

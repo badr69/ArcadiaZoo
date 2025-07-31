@@ -20,47 +20,7 @@ class UserController:
             print(f"Erreur get_user_by_id: {e}")
             return None
 
-
-    #
-    # @staticmethod
-    # def create_user():
-    #     form = CreateUserForm()
-    #     roles = RoleService.list_all_roles()
-    #     roles = [r for r in roles if r.id != 1]  # exclure admin
-    #     form.role_name.choices = [(str(r.id), r.name) for r in roles]
-    #
-    #     if form.validate_on_submit():
-    #         username = sanitize_html(form.username.data)
-    #         email = sanitize_html(form.email.data)
-    #         password = form.password.data
-    #         role_id = int(form.role_name.data)
-    #
-    #         # Vérification SQL Injection
-    #         if detect_sql_injection(username) or detect_sql_injection(email):
-    #             flash("Invalide Input.", "danger")
-    #             return render_template("user/create_user.html", form=form)
-    #
-    #         # Validation email
-    #         if not is_valid_email(email):
-    #             flash("Adresse email invalide.", "danger")
-    #             return render_template("user/create_user.html", form=form)
-    #
-    #         # Validation mot de passe
-    #         if not is_strong_password(password):
-    #             flash(
-    #                 "Mot de passe trop faible. Il doit faire au moins 8 caractères, contenir une majuscule, un chiffre et un caractère spécial.",
-    #                 "danger")
-    #             return render_template("user/create_user.html", form=form)
-    #
-    #         success = UserService.create_user(username, email, password, role_id)
-    #         if success:
-    #             flash("User created with success", "success")
-    #             return redirect(url_for("user.list_all_users"))
-    #         else:
-    #             flash("Error when creating User", "danger")
-    #
-    #     return render_template("user/create_user.html", form=form)
-
+    @staticmethod
     def create_user():
         form = CreateUserForm()
         roles = RoleService.list_all_roles()

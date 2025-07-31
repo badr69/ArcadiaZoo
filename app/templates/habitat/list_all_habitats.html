@@ -2,9 +2,16 @@
 
 
 {% block content %}
+    <div>
+        {% if current_user.is_authenticated and current_user.role_name == "admin" %}
+            <p class="admin-connected">Admin Connected 👌</p>
+        {% endif %}
+    </div>
     <div class="container-fluid mt-4">
-        <h1>List of habitats</h1>
-        <a href="{{ url_for('habitat.create_habitat') }}" class="btn btn-primary mb-3">Create habitat</a>
+        <h1 class="text-center mb-4">List All Habitats</h1>
+        <a href="{{ url_for('habitat.create_habitat') }}" class="btn btn-primary mb-3">Create User</a>
+        <a href="{{ url_for('auth.logout') }}" class="btn btn-danger mb-3">Logout</a>
+
 
         <table class="table table-striped table-bordered">
             <thead class="table-dark">

@@ -3,7 +3,6 @@ body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-
   }
 
   main{
@@ -17,7 +16,6 @@ body {
   height: 100%;
   width: 100%;
   }
-
 
   .form-control {
     background-color: #efe8d0;
@@ -199,6 +197,32 @@ body {
   }
 }
 
+.admin-connected {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.container-footer {
+    background-color: #5d3002;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5px 0;        /* Hauteur très réduite */
+    font-size: 0.8rem;     /* Texte plus petit */
+    height: auto !important;  /* Supprime la hauteur héritée */
+}
+
+.container-footer a {
+    color: white;
+    text-decoration: none;
+    margin: 0 5px;
+    font-size: 0.8rem;
+}
+
+.container-footer a:hover {
+    text-decoration: underline;
+}
 
 
 

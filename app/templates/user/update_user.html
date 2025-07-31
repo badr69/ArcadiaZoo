@@ -3,57 +3,63 @@
 {% block title %}Update User{% endblock %}
 
 {% block content %}
-<div class="container mt-5">
-    <h2 class="mb-4 text-center">Update User</h2>
+    <div>
+        {% if current_user.is_authenticated and current_user.role_name == "admin" %}
+            <p class="admin-connected">Admin Connected 👌</p>
+        {% endif %}
+        <a href="{{ url_for('auth.logout') }}" class="btn btn-danger mb-3">Logout</a>
+    </div>
+    <div class="container mt-5">
+        <h2 class="mb-4 text-center">Update User</h2>
 
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            {% if form.errors %}
-                <div class="alert alert-danger">
-                    {% for field, errors in form.errors.items() %}
-                        {% for error in errors %}
-                            <div>{{ error }}</div>
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                {% if form.errors %}
+                    <div class="alert alert-danger">
+                        {% for field, errors in form.errors.items() %}
+                            {% for error in errors %}
+                                <div>{{ error }}</div>
+                            {% endfor %}
                         {% endfor %}
-                    {% endfor %}
-                </div>
-            {% endif %}
+                    </div>
+                {% endif %}
 
-            <form method="POST" action="{{ url_for('user.update_user', user_id=user.id) }}">
-                {{ form.hidden_tag() }}
+                <form method="POST" action="{{ url_for('user.update_user', user_id=user.id) }}">
+                    {{ form.hidden_tag() }}
 
-                <div class="mb-3">
-                    {{ form.username.label(class="form-label") }}
-                    {{ form.username(class="form-control", value=user.username) }}
-                    {% for error in form.username.errors %}
-                        <span style="color:#ff0000;">{{ error }}</span>
-                    {% endfor %}
-                </div>
+                    <div class="mb-3">
+                        {{ form.username.label(class="form-label") }}
+                        {{ form.username(class="form-control", value=user.username) }}
+                        {% for error in form.username.errors %}
+                            <span style="color:#ff0000;">{{ error }}</span>
+                        {% endfor %}
+                    </div>
 
-                <div class="mb-3">
-                    {{ form.email.label(class="form-label") }}
-                    {{ form.email(class="form-control", value=user.email) }}
-                </div>
+                    <div class="mb-3">
+                        {{ form.email.label(class="form-label") }}
+                        {{ form.email(class="form-control", value=user.email) }}
+                    </div>
 
-                <div class="mb-3">
-                    {{ form.role_name.label(class="form-label") }}
-                    {{ form.role_name(class="form-select") }}
-                </div>
+                    <div class="mb-3">
+                        {{ form.role_name.label(class="form-label") }}
+                        {{ form.role_name(class="form-select") }}
+                    </div>
 
-                <div class="mb-3">
-                    {{ form.password.label(class="form-label") }}
-                    {{ form.password(class="form-control") }}
-                </div>
+                    <div class="mb-3">
+                        {{ form.password.label(class="form-label") }}
+                        {{ form.password(class="form-control") }}
+                    </div>
 
-                <div class="mb-3">
-                    {{ form.confirm_password.label(class="form-label") }}
-                    {{ form.confirm_password(class="form-control") }}
-                </div>
+                    <div class="mb-3">
+                        {{ form.confirm_password.label(class="form-label") }}
+                        {{ form.confirm_password(class="form-control") }}
+                    </div>
 
-                {{ form.submit(class="btn btn-primary") }}
-                <a href="{{ url_for('user.list_all_users') }}" class="btn btn-secondary">Back</a>
-                {#<a href="{{ url_for('user.get_user_by_id', user_id=user.id) }}" class="btn btn-secondary">Delete</a>#}
-            </form>
+                    {{ form.submit(class="btn btn-primary") }}
+                    <a href="{{ url_for('user.list_all_users') }}" class="btn btn-secondary">Back</a>
+                    {#<a href="{{ url_for('user.get_user_by_id', user_id=user.id) }}" class="btn btn-secondary">Delete</a>#}
+                </form>
+            </div>
         </div>
     </div>
-</div>
 {% endblock %}

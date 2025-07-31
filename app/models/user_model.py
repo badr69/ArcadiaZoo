@@ -15,13 +15,8 @@ class UserModel(UserMixin):
         self.role_name = role_name
         self.created_at = created_at
 
-        # Flask-Login utilise cette propriété pour récupérer l'id unique
-
-    # def get_id(self):
-    #         return str(self.id)  # doit être une chaîne
 
     # ========== GETTERS (instanciation d'un objet) ==========
-    from werkzeug.security import check_password_hash
 
     @classmethod
     def authenticate(cls, email, password):
