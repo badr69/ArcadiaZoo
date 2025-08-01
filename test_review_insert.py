@@ -1,6 +1,6 @@
-from app.models.review_model import Review
+from app.models.review_model import ReviewModel
 
-review = Review("Alice", "Très bon habitat", 5, "123")
+review = ReviewModel("Alice", "Très bon habitat", 5, "123")
 review.save()
 
 print("Avis sauvegardé avec succès !")

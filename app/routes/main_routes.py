@@ -36,12 +36,13 @@ def index():
     reviews_data = ReviewController.get_review_by_element_id("global")
     return render_template(
         "index.html",
-                           form=form,
-                           animals=animals,
-                           habitats=habitats,
-                           services=services,
-                           reviews=reviews_data
-                           )
+        form=form,
+        animals=animals,
+        habitats=habitats,
+        services=services,
+        reviews=reviews_data
+    )
+
 
 @main_bp.route('/services/')
 def services():
@@ -67,13 +68,14 @@ def animals():
         animals.append({
             'id': a.id,
             'name': a.name,
-            'url_image': a.url_image,# chemin relatif depuis static
+            'url_image': a.url_image,  # chemin relatif depuis static
             'description': a.description,
             'created_at': a.created_at,
             'updated_at': a.updated_at
             # autres champs si besoin
         })
     return render_template('animals.html', animals=animals)
+
 
 @main_bp.route('/habitats/')
 def habitats():
@@ -90,25 +92,30 @@ def habitats():
         })
     return render_template('habitats.html', habitats=habitats)
 
+
 @main_bp.route("/contact")
 def contact():
     form = ContactForm()
     return render_template("contact.html", form=form)
+
 
 @main_bp.route("/login")
 def login():
     form = LoginForm()
     return render_template("auth/login.html", form=form)
 
+
 @main_bp.route("/admin_dash")
 @admin_required
 def admin_dash():
     return render_template("dash/admin_dash.html")
 
+
 @main_bp.route('/employee_dash', methods=['GET', 'POST'])
 @login_required
 def employee_dash():
-     return render_template("dash/employee_dash.html")
+    return render_template("dash/employee_dash.html")
+
 
 @main_bp.route('/vet_dash', methods=['GET', 'POST'])
 @login_required

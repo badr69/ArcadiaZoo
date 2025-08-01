@@ -24,7 +24,6 @@ class ServiceController:
         return render_template('service/service_details.html', service=service)
 
 
-
     @staticmethod
     def create_service():
         form = ServiceCreateForm()

@@ -7,7 +7,7 @@
         {% if current_user.is_authenticated and current_user.role_name == "admin" %}
             <p class="admin-connected">Admin Connected 👌</p>
         {% endif %}
-         <h1 class="text-center mb-4">List All Animals</h1>
+        <h1 class="text-center mb-4">List All Animals</h1>
         <a href="{{ url_for('animal.create_animal') }}" class="btn btn-primary mb-3">Create an Animal</a>
         <a href="{{ url_for('auth.logout') }}" class="btn btn-danger mb-3">Logout</a>
 
@@ -19,8 +19,6 @@
                 <th>race</th>
                 <th>description</th>
                 <th>url_image</th>
-
-
                 <th>Actions</th>
             </tr>
             </thead>
@@ -32,8 +30,6 @@
                     <td>{{ animal.race }}</td>
                     <td>{{ animal.description }}</td>
                     <td>{{ animal.url_image }}</td>
-
-
                     <td>
                         <a href="{{ url_for('animal.update_animal', animal_id=animal.id) }}"
                            class="btn btn-warning btn-sm">Modifier</a>
@@ -47,7 +43,6 @@
                         </form>
                         <a href="{{ url_for('animal.get_animal_by_id', animal_id=animal.id) }}"
                            class="btn btn-warning btn-sm">Details</a>
-
                     </td>
                 </tr>
             {% else %}
@@ -58,9 +53,6 @@
             </tbody>
         </table>
     </div>
-
-
-
 {% endblock %}
 
 

@@ -1,8 +1,8 @@
-from dotenv import load_dotenv
-load_dotenv()  # Charge les variables .env
-
 import psycopg2
+from dotenv import load_dotenv
 from app.config import Config
+
+load_dotenv()
 
 try:
     conn = psycopg2.connect(

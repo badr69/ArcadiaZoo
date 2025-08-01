@@ -2,7 +2,6 @@ from app.services.role_service import RoleService
 from flask import render_template
 
 
-
 class RoleController:
     @staticmethod
     def list_all_roles():

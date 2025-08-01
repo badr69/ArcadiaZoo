@@ -15,7 +15,6 @@ if not uri:
 
 # Connexion Atlas
 client = MongoClient(uri, server_api=ServerApi('1'))
-
 try:
     client.admin.command('ping')
     print("✅ Connexion réussie à MongoDB Atlas")

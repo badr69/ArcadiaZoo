@@ -1,5 +1,4 @@
 import psycopg2
-from werkzeug.security import generate_password_hash
 from app.db.psql import get_db_connection
 from flask_login import UserMixin
 from app.utils.security import verify_password

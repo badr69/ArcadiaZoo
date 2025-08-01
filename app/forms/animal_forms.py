@@ -26,7 +26,6 @@ class AnimalCreateForm(BaseForm):
             Length(max=300, message="Description must be 300 characters max.")
     ])
 
-
 # TODO: Formulaire de création d'animal
 class AnimalUpdateForm(BaseForm):
     race = StringField("Race", validators=[
@@ -36,6 +35,4 @@ class AnimalUpdateForm(BaseForm):
     description = TextAreaField("Description", validators=[
         Length(max=300, message="Description must be 300 characters max.")
     ])
-    # habitat = SelectField("Habitat", coerce=int, validators=[
-    #     DataRequired(message="Habitat is required.")
-    # ])
+
