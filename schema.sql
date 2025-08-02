@@ -1,6 +1,6 @@
 -- creation table roles
 CREATE TABLE IF NOT EXISTS roles (
-    id SERIAL PRIMARY KEY,
+    id SERIAL NOT NULL PRIMARY KEY,
     name VARCHAR(100) UNIQUE NOT NULL
 );
 
@@ -108,7 +108,7 @@ CREATE TABLE IF NOT EXISTS foods (
     id SERIAL PRIMARY KEY,
     animal_id INTEGER NOT NULL,
     type_nourriture VARCHAR(100) NOT NULL,
-    quantite VARCHAR(50) NOT NULL,
+    quantite DECIMAL NOT NULL,
     date_nourriture TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -136,7 +136,7 @@ CREATE TABLE IF NOT EXISTS report_vet (
     user_id INTEGER,
     state VARCHAR(100) NOT NULL,
     food VARCHAR(100) NOT NULL,
-    quantity_food VARCHAR(100) NOT NULL,
+    quantity_food DECIMAL NOT NULL,
     description_state TEXT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -214,26 +214,4 @@ BEFORE UPDATE ON report_vet
 FOR EACH ROW
 EXECUTE FUNCTION update_updated_at_column();
 
-
--- Création des rôles une seule fois (admin, employee, vet):
-INSERT INTO roles (name)
-VALUES
-    ('admin'),
-    ('employee'),
-    ('vet')
-ON CONFLICT (name) DO NOTHING;
-
--- Récupérer l'id du rôle 'admin'
-SELECT id FROM roles WHERE name = 'admin';
-
-
--- Insértion de l'utilisateur admin (exécution après avoir vérifié l'id)
-INSERT INTO users (username, email, password, role_id)
-VALUES (
-  'badreddine',
-  'manoudb@yahoo.fr',
-  'scrypt:32768:8:1$AkHoEIrDx2ZvfEAR$27abaead494269f6a60b9b42cf307216085cd6bde45f8d6e989017db663c9dbf316a1bd3ddba747c9054047fb2e504ff21c51122dcac9f355dcc50c09fc5a2ee',
-  1
-)
-ON CONFLICT (email) DO NOTHING;
 

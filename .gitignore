@@ -3,7 +3,7 @@ __pycache__/
 *.py[codz]
 *$py.class
 .idea/
-
+script_role.sql
 # C extensions
 *.so
 
