@@ -4,6 +4,13 @@
 
 {% block content %}
 <h2>Create Animal</h2>
+    <div>
+        {% if current_user.is_authenticated and current_user.role_name == "admin" %}
+            <p class="admin-connected">Admin Connected 👌</p>
+        {% endif %}
+        <a href="{{ url_for('admin.admin_dash') }}" class="btn btn-dark mb-3">admin_dash</a>
+        <a href="{{ url_for('auth.logout') }}" class="btn btn-danger mb-3">Logout</a>
+    </div>
 <div class="container mt-5">
 <form method="POST" enctype="multipart/form-data">
     {{ form.hidden_tag() }}

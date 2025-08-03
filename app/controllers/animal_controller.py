@@ -94,9 +94,11 @@ class AnimalController:
 
             if isinstance(file, FileStorage) and file.filename:
                 filename = secure_filename(file.filename)
-                upload_path = Path(current_app.root_path) / 'static' / 'uploads' / filename
-                upload_path.parent.mkdir(parents=True, exist_ok=True)
-                file.save(upload_path)
+                upload_dir = Path(current_app.config['ANIMAL_IMG_FOLDER'])
+                upload_dir.mkdir(parents=True, exist_ok=True)
+
+                filepath = upload_dir / filename
+                file.save(filepath)
                 url_image = f'uploads/animal_img/{filename}'
             else:
                 url_image = animal.url_image

@@ -96,9 +96,11 @@ class HabitatController:
 
             if hasattr(file, 'filename') and file.filename != '':
                 filename = secure_filename(file.filename)
-                upload_path = os.path.join(current_app.root_path, 'static/uploads', filename)
-                os.makedirs(os.path.dirname(upload_path), exist_ok=True)
-                file.save(upload_path)
+                upload_dir = Path(current_app.config['HABITAT_IMG_FOLDER'])
+                upload_dir.mkdir(parents=True, exist_ok=True)
+
+                filepath = upload_dir / filename
+                file.save(filepath)
                 url_image = f'uploads/habitat_img/{filename}'
             else:
                 url_image = habitat.url_image  # garder l'ancienne image

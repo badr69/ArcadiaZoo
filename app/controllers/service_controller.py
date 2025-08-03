@@ -37,7 +37,7 @@ class ServiceController:
 
             if detect_sql_injection(name) or detect_sql_injection(description):
                 flash("Invalide Input.", "danger")
-                return render_template("animal/create_animal.html", form=form)
+                return render_template("service/create_service.html", form=form)
 
             file = form.url_image.data  # FileStorage ou None
 
@@ -64,7 +64,6 @@ class ServiceController:
                     url_image=url_image,
                     description=description
                 )
-
                 if result.get("status"):
                     flash("service created with success.", "success")
                     return redirect(url_for("service.list_all_services"))
@@ -74,8 +73,6 @@ class ServiceController:
             except Exception:
                 current_app.logger.exception("Erreur lors de la création de l'service")
                 flash("Une erreur est survenue pendant la création de l’service.", "danger")
-
-
         return render_template("service/create_service.html", form=form)
 
 
@@ -95,16 +92,17 @@ class ServiceController:
 
             if detect_sql_injection(name) or detect_sql_injection(description):
                 flash("Invalide Input.", "danger")
-                return render_template("animal/create_animal.html", form=form)
+                return render_template("service/create_service.html", form=form)
 
             file = form.url_image.data
 
             if isinstance(file, FileStorage) and file.filename:  # vérifie si un fichier est uploadé
                 filename = secure_filename(file.filename)
-                upload_path = os.path.join(current_app.root_path, 'static/uploads', filename)
-                os.makedirs(os.path.dirname(upload_path), exist_ok=True)
+                upload_dir = Path(current_app.config['SERVICE_IMG_FOLDER'])
+                upload_dir.mkdir(parents=True, exist_ok=True)
 
-                file.save(upload_path)
+                filepath = upload_dir / filename
+                file.save(filepath)
                 url_image = f'uploads/service.img{filename}'
             else:
                 url_image = service.url_image  # garder l'image existante

@@ -3,8 +3,15 @@
 {% block title %}Détail Utilisateur{% endblock %}
 
 {% block content %}
+    <div>
+        {% if current_user.is_authenticated and current_user.role_name == "admin" %}
+            <p class="admin-connected">Admin Connected 👌</p>
+        {% endif %}
+        <a href="{{ url_for('admin.admin_dash') }}" class="btn btn-dark mb-3">admin_dash</a>
+        <a href="{{ url_for('auth.logout') }}" class="btn btn-danger mb-3">Logout</a>
+    </div>
     <div class="container mt-5">
-        <h2 class="mb-4">Service details</h2>
+         <h1 class="text-center mb-4">List All Services</h1>
 
         <table class="table table-bordered table-striped">
             <thead>

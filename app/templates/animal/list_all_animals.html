@@ -2,14 +2,16 @@
 
 
 {% block content %}
-    <div class="container-fluid mt-4">
     <div>
         {% if current_user.is_authenticated and current_user.role_name == "admin" %}
             <p class="admin-connected">Admin Connected 👌</p>
         {% endif %}
+        <a href="{{ url_for('admin.admin_dash') }}" class="btn btn-dark mb-3">admin_dash</a>
+        <a href="{{ url_for('auth.logout') }}" class="btn btn-danger mb-3">Logout</a>
+    </div>
+    <div class="container-fluid mt-4">
         <h1 class="text-center mb-4">List All Animals</h1>
         <a href="{{ url_for('animal.create_animal') }}" class="btn btn-primary mb-3">Create an Animal</a>
-        <a href="{{ url_for('auth.logout') }}" class="btn btn-danger mb-3">Logout</a>
 
         <table class="table table-striped table-bordered">
             <thead class="table-dark">
@@ -52,6 +54,7 @@
             {% endfor %}
             </tbody>
         </table>
+    </div>
     </div>
 {% endblock %}
 
