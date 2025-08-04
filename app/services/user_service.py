@@ -7,54 +7,25 @@ class UserService:
 
     @staticmethod
     def create_user(username: str, email: str, password: str, role_id: int):
-
         try:
             if UserModel.get_by_email(email):
                 return {"error": "Email déjà utilisé."}, 400
-
             # Hasher le mot de passe avant la création
             hashed_password = generate_password_hash(password, method="scrypt")
-
             # Utiliser le mot de passe hashé pour créer l'utilisateur
             user = UserModel.create_user(username, email, hashed_password, role_id)
             if not user:
                 raise Exception("Création utilisateur échouée.")
-
             return {
                 "message": "Utilisateur créé avec succès.",
                 "user_id": user.id
             }, 201
-
         except psycopg2.Error as db_err:
             print("[PostgreSQL] create_user:", db_err)
             return {"error": "Erreur lors de la création de l'utilisateur."}, 500
         except Exception as exc:
             print("[Service] create_user:", exc)
             return {"error": "Erreur serveur."}, 500
-
-    # @staticmethod
-    # def create_user(username: str, email: str, password: str, role_id: int):
-    #
-    #     try:
-    #         if UserModel.get_by_email(email):
-    #             return {"error": "Email déjà utilisé."}, 400
-    #
-    #         user = UserModel.create_user(username, email, password, role_id)
-    #         if not user:
-    #             raise Exception("Création utilisateur échouée.")
-    #
-    #         return {
-    #             "message": "Utilisateur créé avec succès.",
-    #             "user_id": user.id
-    #         }, 201
-    #
-    #     except psycopg2.Error as db_err:
-    #         print("[PostgreSQL] create_user:", db_err)
-    #         return {"error": "Erreur lors de la création de l'utilisateur."}, 500
-    #     except Exception as exc:
-    #         print("[Service] create_user:", exc)
-    #         return {"error": "Erreur serveur."}, 500
-    #
 
     @staticmethod
     def list_all_users():
@@ -73,7 +44,6 @@ class UserService:
         except Exception as exc:
             print("[Service] get_user_by_id:", exc)
             return None
-
     #
     @staticmethod
     def update_user(user_id, username, email, role_id):
@@ -84,10 +54,8 @@ class UserService:
             print("[Service] get_user_by_id:", exc)
             return None
 
-
     @staticmethod
     def delete_user(user_id: int):
-
         try:
             success = UserModel.delete_user(user_id)
             if not success:
