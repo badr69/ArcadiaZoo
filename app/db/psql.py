@@ -6,6 +6,7 @@ def get_db_connection():
     try:
         # Récupère l'URL de la BDD depuis la variable d'environnement
         database_url = os.getenv("DATABASE_URL")
+        print("Database URL:", database_url)
 
         conn = psycopg2.connect(database_url)
         return conn
