@@ -8,15 +8,11 @@ from app.extensions.login_manager import login_manager
 
 csrf = CSRFProtect()
 
-def create_app():
-    # Charger .env uniquement si en local
-    if os.getenv("FLASK_ENV") == "development":
-        from dotenv import load_dotenv
-        load_dotenv()  # Charge les variables depuis .env
+load_dotenv()  # Charge les variables depuis .env
 
+def create_app():
     app = Flask(__name__, template_folder="templates", static_folder="static")
     app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'change_me')  # Bonne pratique
-
     upload_folder = os.path.join('app', 'static', 'uploads')
     app.config['upload_folder'] = upload_folder
 

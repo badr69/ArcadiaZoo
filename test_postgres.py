@@ -5,6 +5,7 @@ from app.config import Config
 load_dotenv()
 
 try:
+    print("✅ Connexion réussie à PostgreSQL")
     conn = psycopg2.connect(
         host=Config.POSTGRES_HOST,
         port=Config.POSTGRES_PORT,

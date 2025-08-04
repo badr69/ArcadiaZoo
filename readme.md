@@ -3,28 +3,30 @@ ArcadiaZoo
 Arcadia est un zoo situé en France près de la forêt de Brocéliande, en Bretagne depuis 1960.
 Ils possèdent tout un panel d’animaux, répartis par habitat (savane, jungle, marais) et font extrêmement attention à leur santé.
 
----
+-requirements.txt
+python-dotenv~=1.1.0
+Flask~=3.1.1
+pip~=25.1
+Jinja2~=3.1.6
+MarkupSafe~=3.0.2
+Werkzeug~=3.1.3
+click~=8.2.1
+blinker~=1.9.0
+itsdangerous~=2.2.0
+gunicorn~=23.0.0
+flask_wtf~=1.2.2
+psycopg2~=2.9.10
+pymongo~=4.13.2
+Flask_Login~=0.6.3
+bleach==6.1.0
 
-Technologies utilisées
 
+instalation
 - Ubuntu 22.04
-- Python 3.12
-- Flask 3.1.1
-- Flask-WTF
-- Flask-Login
 - PostgreSQL (psycopg2-binary)
+- pgadmin
 - MongoDB (pymongo)
 - PyCharm (IDE)
-
----
-
-Installation
-
-Prérequis
-
-- Python 3.12
-- PostgreSQL
-- MongoDB
 
 Étapes
 
@@ -54,7 +56,7 @@ je ferais une procedure apart.
 
 Fonctionnalités principales
 
-- Gestion des utilisayeurs, animaux et habitats
+- Gestion des utilisateurs, animaux et habitats
 - Gestion des soins et suivi de la santé des animaux
 - Gestion des visiteurs
 - Authentification sécurisée des utilisateurs
@@ -62,38 +64,6 @@ Fonctionnalités principales
 
 ---
 
-Structure du projet
-├── app
-│   ├── config.py
-│   ├── controllers
-│   ├── dash_app
-│   ├── db
-│   ├── extensions
-│   ├── forms
-│   ├── __init__.py
-│   ├── models
-│   ├── __pycache__
-│   ├── routes
-│   ├── services
-│   ├── static
-│   ├── templates
-│   ├── tests
-│   └── utils
-├── badr.txt
-├── docker
-│   ├── docker-compose.yml
-│   └── Dockerfile
-├── main.py
-├── __pycache__
-├── Readme.md
-├── requirements.txt
-├── schema.sql
-├── test_mongo.py
-├── test_postgres.py
-└── test_review_insert.py
-
-17 directories, 12 files
-badr@badr-E6420:~/ArcadiaZoo$ tree -L 3
 .
 ├── app
 ├── config.py
@@ -212,27 +182,21 @@ badr@badr-E6420:~/ArcadiaZoo$ tree -L 3
 
 37 directories, 78 files
 
----
+
 
 Contribuer
 
-Les contributions sont les bienvenues !
+
 Merci de créer une branche dédiée, tester vos modifications, puis faire une pull request.
 
----
 
-Licence
-
-Ce projet est sous licence MIT. Voir le fichier LICENSE pour plus d'informations.
-
----
 
 Contact
 
 Derrouiche badreddine – manoudb@yahoo.fr
 Lien GitHub : https://github.com/badr69/ArcadiaZoo
 
----
 
-Made with ❤️ by derrouich Badreddine
+
+Made with ❤️ by derrouiche Badreddine
 
