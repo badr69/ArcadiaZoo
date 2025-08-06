@@ -7,8 +7,8 @@ from app.models.habitat_model import Habitat
 from app.models.service_model import ServiceModel
 from app.models.animal_model import AnimalModel
 from app.controllers.review_controller import ReviewController
-from app.utils.decorators import admin_required
-from flask_login import login_required
+from app.utils.decorators import roles_required
+
 
 main_bp = Blueprint('main', __name__)
 
@@ -101,16 +101,16 @@ def login():
     return render_template("auth/login.html", form=form)
 
 @main_bp.route("/admin_dash")
-@admin_required
+@roles_required("admin")
 def admin_dash():
     return render_template("dash/admin_dash.html")
 
 @main_bp.route('/employee_dash', methods=['GET', 'POST'])
-@login_required
+@roles_required("admin", "employee")
 def employee_dash():
      return render_template("dash/employee_dash.html")
 
 @main_bp.route('/vet_dash', methods=['GET', 'POST'])
-@login_required
+@roles_required("admin", "vet")
 def vet_dash():
     return render_template("dash/vet_dash.html")

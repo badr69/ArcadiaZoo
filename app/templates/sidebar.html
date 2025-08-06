@@ -8,7 +8,6 @@
         </form>
     </div>
 
-    <!-- Liens visibles uniquement pour Admin -->
     {% if role == 'admin' %}
         <a href="{{ url_for('user.create_user') }}" class="active">Create User</a><br>
         <a href="{{ url_for('user.list_all_users') }}" class="active">All Users</a><br>
@@ -19,9 +18,9 @@
         <a href="{{ url_for('service.create_service') }}" class="active">Create Service</a><br>
         <a href="{{ url_for('service.list_all_services') }}" class="active">All services</a><br>
     {% elif role == 'employee' %}
-        <!-- Seulement 2 liens pour Employee -->
         <a href="{{ url_for('animal.list_all_animals') }}" class="active">All animals</a><br>
         <a href="{{ url_for('service.list_all_services') }}" class="active">All services</a><br>
+      <!-- Seulement 2 liens pour Employee -->
     {% elif role == 'vet' %}
         <a href="{{ url_for('animal.list_all_animals') }}" class="active">All animals</a><br>
     {% endif %}

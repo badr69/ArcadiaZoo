@@ -1,9 +1,16 @@
 {% extends 'base.html' %}
 
-
+{% block title %}Update Habitat{% endblock %}
 
 {% block content %}
-
+    <div>
+        {% if current_user.is_authenticated and current_user.role_name == "admin" %}
+            <p class="admin-connected">Admin Connected 👌</p>
+        {% endif %}
+        <a href="{{ url_for('admin.admin_dash') }}" class="btn btn-secondary mb-3">admin dash</a>
+        <a href="{{ url_for('auth.logout') }}" class="btn btn-danger mb-3">Logout</a>
+    </div>
+    <h2 class="text-center mb-4">Update Animal</h2>
     <div class="container">
         <h1>Update Animal</h1>
         <form method="POST" enctype="multipart/form-data">

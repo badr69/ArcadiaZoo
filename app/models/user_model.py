@@ -15,6 +15,9 @@ class UserModel(UserMixin):
         self.role_name = role_name
         self.created_at = created_at
 
+    @property
+    def role(self):
+        return self.role_name
 
     # ========== GETTERS (instanciation d'un objet) ==========
 

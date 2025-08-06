@@ -1,11 +1,9 @@
 from flask import Blueprint, redirect, url_for, flash
 from app.controllers.auth_controller import AuthController
-from flask_login import logout_user
 from flask_login import login_required
 
 
 auth_bp = Blueprint('auth', __name__, url_prefix="/auth")
-
 
 @auth_bp.route('/test')
 def test():
@@ -17,26 +15,9 @@ def login():
     print("Route /auth/login appelée")
     return AuthController.login()
 
-
 @auth_bp.route("/logout", methods=["GET", "POST"])
 @login_required
 def logout():
     return AuthController.logout()
 
 
-#
-# @auth_bp.route('/logout', methods=['POST'])
-# @login_required
-# def logout():
-#     logout_user()
-#     flash("You are disconnected", "success")
-#     return redirect(url_for('auth.login'))
-
-
-#
-# @auth_bp.route('/logout')
-# @login_required
-# def logout():
-#     logout_user()
-#     flash("You are disconected", "success")
-#     return redirect(url_for('auth.login'))

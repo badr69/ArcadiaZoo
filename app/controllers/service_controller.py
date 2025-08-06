@@ -23,14 +23,9 @@ class ServiceController:
             return redirect(url_for('service.list_services'))
         return render_template('service/service_details.html', service=service)
 
-
-
     @staticmethod
     def create_service():
         form = ServiceCreateForm()
-
-        # # Debug éventuel (à supprimer en production)
-        # current_app.logger.debug("Form errors: %s", form.errors)
 
         if form.validate_on_submit():
             name = sanitize_html(form.name.data)

@@ -1,10 +1,13 @@
 from flask import Blueprint
 from app.controllers.role_controller import RoleController
-from app.utils.decorators import admin_required
+from app.utils.decorators import roles_required
+from flask_login import login_required
+
 
 role_bp = Blueprint("role_bp", __name__, url_prefix="/role")
 
 @role_bp.route("/list_all_roles", methods=["GET"])
-@admin_required
+@login_required
+@roles_required("admin")
 def list_all_roles():
     return RoleController.list_all_roles()
