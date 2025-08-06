@@ -64,139 +64,201 @@ Fonctionnalités principales
 
 ---
 
-.
 ├── app
-├── config.py
-│   ├── controllers
-│   │   ├── animal_controller.py
-│   │   ├── auth_controller.py
-│   │   ├── habitat_controller.py
-│   │   ├── __pycache__
-│   │   ├── review_controller.py
-│   │   ├── role_controller.py
-│   │   ├── service_controller.py
-│   │   └── user_controller.py
-│   ├── dash_app
-│   ├── db
-│   │   ├── mongo.py
-│   │   ├── psql.py
-│   │   └── __pycache__
-│   ├── extensions
-│   │   ├── __init__.py
-│   │   ├── login_manager.py
-│   │   └── __pycache__
-│   ├── forms
-│   │   ├── animal_forms.py
-│   │   ├── auth_forms.py
-│   │   ├── contact_forms.py
-│   │   ├── habitat_comment_forms.py
-│   │   ├── habitat_forms.py
-│   │   ├── __init__.py
-│   │   ├── __pycache__
-│   │   ├── report_forms.py
-│   │   ├── review_form.py
-│   │   ├── service_forms.py
-│   │   ├── upload_image_forms.py
-│   │   └── user_forms.py
-│   ├── __init__.py
-│   ├── models
-│   │   ├── animal_model.py
-│   │   ├── habitat_model.py
-│   │   ├── __init__.py
-│   │   ├── __pycache__
-│   │   ├── review_model.py
-│   │   ├── role_model.py
-│   │   ├── service_model.py
-│   │   └── user_model.py
-│   ├── __pycache__
-│   │   ├── config.cpython-312.pyc
-│   │   └── __init__.cpython-312.pyc
-│   ├── routes
-│   │   ├── admin_route.py
-│   │   ├── animal_routes.py
-│   │   ├── auth_routes.py
-│   │   ├── employee_route.py
-│   │   ├── habitats_routes.py
-│   │   ├── __init__.py
-│   │   ├── main_routes.py
-│   │   ├── __pycache__
-│   │   ├── review_route.py
-│   │   ├── role_routes.py
-│   │   ├── service_routes.py
-│   │   ├── user_routes.py
-│   │   └── vet_route.py
-│   ├── services
-│   │   ├── animal_service.py
-│   │   ├── habitat_service.py
-│   │   ├── __init__.py
-│   │   ├── __pycache__
-│   │   ├── review_service.py
-│   │   ├── role_service.py
-│   │   ├── service_service.py
-│   │   └── user_service.py
-│   ├── static
-│   │   ├── css
-│   │   ├── images
-│   │   ├── js
-│   │   └── uploads
-│   ├── templates
-│   │   ├── animal
-│   │   ├── animals.html
-│   │   ├── auth
-│   │   ├── base.html
-│   │   ├── contact.html
-│   │   ├── dash
-│   │   ├── habitat
-│   │   ├── habitats.html
-│   │   ├── index.html
-│   │   ├── navbar.html
-│   │   ├── role
-│   │   ├── service
-│   │   ├── services.html
-│   │   ├── user
-│   │   └── user_detail.html
-│   ├── tests
-│   │   ├── __init__.py
-│   │   ├── __pycache__
-│   │   ├── test_create_habitats.py
-│   │   └── test_demo.py
-│   └── utils
-│       ├── allowedfiles.py
-│       ├── image_upload.py
-│       ├── __init__.py
-│       ├── __pycache__
-│       ├── security.py
-│       └── validator.py
+│   ├── config.py
+│   ├── controllers
+│   │   ├── animal_controller.py
+│   │   ├── auth_controller.py
+│   │   ├── habitat_controller.py
+│   │   ├── review_controller.py
+│   │   ├── role_controller.py
+│   │   ├── service_controller.py
+│   │   └── user_controller.py
+│   ├── db
+│   │   ├── mongo.py
+│   │   └── psql.py
+│   ├── extensions
+│   │   ├── __init__.py
+│   │   └── login_manager.py
+│   ├── forms
+│   │   ├── animal_forms.py
+│   │   ├── auth_forms.py
+│   │   ├── contact_forms.py
+│   │   ├── habitat_comment_forms.py
+│   │   ├── habitat_forms.py
+│   │   ├── __init__.py
+│   │   ├── report_forms.py
+│   │   ├── review_form.py
+│   │   ├── service_forms.py
+│   │   ├── upload_image_forms.py
+│   │   └── user_forms.py
+│   ├── __init__.py
+│   ├── models
+│   │   ├── animal_model.py
+│   │   ├── habitat_model.py
+│   │   ├── __init__.py
+│   │   ├── review_model.py
+│   │   ├── role_model.py
+│   │   ├── service_model.py
+│   │   └── user_model.py
+│   ├── routes
+│   │   ├── admin_route.py
+│   │   ├── animal_routes.py
+│   │   ├── auth_routes.py
+│   │   ├── employee_route.py
+│   │   ├── habitats_routes.py
+│   │   ├── __init__.py
+│   │   ├── main_routes.py
+│   │   ├── review_route.py
+│   │   ├── role_routes.py
+│   │   ├── service_routes.py
+│   │   ├── user_routes.py
+│   │   └── vet_route.py
+│   ├── services
+│   │   ├── animal_service.py
+│   │   ├── habitat_service.py
+│   │   ├── __init__.py
+│   │   ├── review_service.py
+│   │   ├── role_service.py
+│   │   ├── service_service.py
+│   │   └── user_service.py
+│   ├── static
+│   │   ├── css
+│   │   │   ├── dash.css
+│   │   │   └── styles.css
+│   │   ├── images
+│   │   │   ├── figma
+│   │   │   │   ├── Capture d’écran du 2024-11-21 20-24-07.png
+│   │   │   │   ├── Capture d’écran du 2024-11-21 20-25-17.png
+│   │   │   │   ├── Capture d’écran du 2024-11-21 20-25-55.png
+│   │   │   │   └── Capture d’écran du 2024-11-21 20-27-07.png
+│   │   │   ├── header.jpg
+│   │   │   ├── imagesAnimaux
+│   │   │   │   ├── Babouin.jpeg
+│   │   │   │   ├── canard.jpeg
+│   │   │   │   ├── Elephant.jpeg
+│   │   │   │   ├── Flament Rose.jpeg
+│   │   │   │   ├── giraffe.jpeg
+│   │   │   │   ├── Grand heron.jpeg
+│   │   │   │   ├── jaguar.jpeg
+│   │   │   │   ├── leopard.jpeg
+│   │   │   │   ├── lion.jpeg
+│   │   │   │   ├── perroquet.jpeg
+│   │   │   │   └── zebre.jpeg
+│   │   │   ├── imagesHabitats
+│   │   │   │   ├── jungle.png
+│   │   │   │   ├── marais.jpeg
+│   │   │   │   └── Savane.png
+│   │   │   ├── imagesServices
+│   │   │   │   ├── restaurant.jpg
+│   │   │   │   └── train.jpg
+│   │   │   ├── Safari.jpeg
+│   │   │   └── Schemas
+│   │   │       ├── Flowchart Template - Cadre 1.jpg
+│   │   │       ├── Flowchart Template - Cadre 2.jpg
+│   │   │       └── schéma de donnée.jpg
+│   │   ├── js
+│   │   │   ├── login.js
+│   │   │   ├── review_1.js
+│   │   │   └── review.js
+│   │   └── uploads
+│   │       ├── animal_img
+│   │       │   ├── Babouin.jpeg
+│   │       │   ├── canard.jpeg
+│   │       │   ├── Elephant.jpeg
+│   │       │   ├── Flament_Rose.jpeg
+│   │       │   ├── giraffe.jpeg
+│   │       │   ├── jaguar.jpeg
+│   │       │   ├── leopard.jpeg
+│   │       │   └── lion.jpeg
+│   │       ├── habitat_img
+│   │       │   ├── header.jpg
+│   │       │   ├── jungle.png
+│   │       │   ├── marais.jpeg
+│   │       │   ├── Safari.jpeg
+│   │       │   └── Savane.png
+│   │       ├── jungle.png
+│   │       ├── lion.jpeg
+│   │       ├── marais.jpeg
+│   │       ├── Savane.png
+│   │       └── service_img
+│   │           ├── restaurant.jpg
+│   │           └── train.jpg
+│   ├── templates
+│   │   ├── animal
+│   │   │   ├── animal_detail.html
+│   │   │   ├── animal_details.html
+│   │   │   ├── create_animal.html
+│   │   │   ├── list_all_animals.html
+│   │   │   └── update_animal.html
+│   │   ├── animals.html
+│   │   ├── auth
+│   │   │   ├── login.html
+│   │   │   └── logout.html
+│   │   ├── base_dashboard.html
+│   │   ├── base.html
+│   │   ├── contact.html
+│   │   ├── dash
+│   │   │   ├── admin_dash.html
+│   │   │   ├── employee_dash.html
+│   │   │   └── vet_dash.html
+│   │   ├── footer.html
+│   │   ├── habitat
+│   │   │   ├── create_habitat.html
+│   │   │   ├── habitat_details.html
+│   │   │   ├── list_all_habitats.html
+│   │   │   └── update_habitat.html
+│   │   ├── habitats.html
+│   │   ├── index.html
+│   │   ├── navbar.html
+│   │   ├── role
+│   │   │   ├── __init__.py
+│   │   │   └── list_all_roles.html
+│   │   ├── service
+│   │   │   ├── create_service.html
+│   │   │   ├── list_all_services.html
+│   │   │   ├── service_details.html
+│   │   │   └── update_service.html
+│   │   ├── services.html
+│   │   ├── sidebar.html
+│   │   ├── user
+│   │   │   ├── create_user.html
+│   │   │   ├── list_all_users.html
+│   │   │   ├── update_user.html
+│   │   │   └── user_detail.html
+│   │   └── user_detail.html
+│   ├── tests
+│   │   ├── __init__.py
+│   │   ├── test_create_habitats.py
+│   │   └── test_demo.py
+│   └── utils
+│       ├── allowedfiles.py
+│       ├── decorators.py
+│       ├── image_upload.py
+│       ├── __init__.py
+│       ├── security.py
+│       └── validator.py
 ├── badr.txt
 ├── docker
-│   ├── docker-compose.yml
-│   └── Dockerfile
+│   ├── docker-compose.yml
+│   └── Dockerfile
 ├── main.py
-├── __pycache__
-├── Readme.md
+├── readme.md
 ├── requirements.txt
 ├── schema.sql
+├── test_collection.py
+├── test_get.py
 ├── test_mongo.py
 ├── test_postgres.py
 └── test_review_insert.py
-
-37 directories, 78 files
-
-
-
-Contribuer
 
 
 Merci de créer une branche dédiée, tester vos modifications, puis faire une pull request.
 
 
-
 Contact
-
 Derrouiche badreddine – manoudb@yahoo.fr
 Lien GitHub : https://github.com/badr69/ArcadiaZoo
-
-
 
 Made with ❤️ by derrouiche Badreddine
 

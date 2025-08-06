@@ -39,7 +39,9 @@ def create_app():
 
     from app.routes.employee_route import employee_bp
     app.register_blueprint(employee_bp)
+
     from app.routes.vet_route import vet_bp
+    app.register_blueprint(vet_bp)
 
     from app.routes.auth_routes import auth_bp
     app.register_blueprint(auth_bp)

@@ -3,47 +3,48 @@
 {% block title %}Create Animal{% endblock %}
 
 {% block content %}
-<h2>Create Animal</h2>
-    <div>
+      <div>
         {% if current_user.is_authenticated and current_user.role_name == "admin" %}
             <p class="admin-connected">Admin Connected 👌</p>
         {% endif %}
-        <a href="{{ url_for('admin.admin_dash') }}" class="btn btn-dark mb-3">admin_dash</a>
+        <a href="{{ url_for('admin.admin_dash') }}" class="btn btn-secondary mb-3">admin dash</a>
         <a href="{{ url_for('auth.logout') }}" class="btn btn-danger mb-3">Logout</a>
     </div>
-<div class="container mt-5">
-<form method="POST" enctype="multipart/form-data">
-    {{ form.hidden_tag() }}
 
-    <div class="mb-3">
-        {{ form.name.label }} {{ form.name(class="form-control") }}
-        {% for error in form.name.errors %}
-            <div class="text-danger">{{ error }}</div>
-        {% endfor %}
+  <h2 class="text-center mb-4">Create Animals</h2>
+
+    <div class="container mt-5">
+        <form method="POST" enctype="multipart/form-data">
+            {{ form.hidden_tag() }}
+
+            <div class="mb-3">
+                {{ form.name.label }} {{ form.name(class="form-control") }}
+                {% for error in form.name.errors %}
+                    <div class="text-danger">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            <div class="mb-3">
+                {{ form.race.label }} {{ form.race(class="form-control") }}
+                {% for error in form.race.errors %}
+                    <div class="text-danger">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            <div class="mb-3">
+                {{ form.url_image.label }} {{ form.url_image(class="form-control", multiple=True) }}
+                {% for error in form.url_image.errors %}
+                    <div class="text-danger">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            <div class="mb-3">
+                {{ form.description.label }} {{ form.description(class="form-control", rows=4) }}
+                {% for error in form.description.errors %}
+                    <div class="text-danger">{{ error }}</div>
+                {% endfor %}
+            </div>
+            {{ form.submit(class="btn btn-primary") }}
+        </form>
     </div>
-
-    <div class="mb-3">
-        {{ form.race.label }} {{ form.race(class="form-control") }}
-        {% for error in form.race.errors %}
-            <div class="text-danger">{{ error }}</div>
-        {% endfor %}
-    </div>
-
-    <div class="mb-3">
-        {{ form.url_image.label }} {{ form.url_image(class="form-control", multiple=True) }}
-        {% for error in form.url_image.errors %}
-            <div class="text-danger">{{ error }}</div>
-        {% endfor %}
-    </div>
-
-    <div class="mb-3">
-        {{ form.description.label }} {{ form.description(class="form-control", rows=4) }}
-        {% for error in form.description.errors %}
-            <div class="text-danger">{{ error }}</div>
-        {% endfor %}
-    </div>
-
-    {{ form.submit(class="btn btn-primary") }}
-</form>
-</div>
 {% endblock %}

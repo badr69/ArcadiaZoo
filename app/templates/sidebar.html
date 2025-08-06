@@ -1,0 +1,27 @@
+<nav class="sidebar">
+    <!-- Affichage du nom + bouton logout -->
+    <div class="admin-info">
+        <strong>{{ role | capitalize }}: {{ current_user.username }}</strong>
+        <form action="{{ url_for('auth.logout') }}" method="POST">
+            {{ form.hidden_tag() }}
+            <button type="submit" class="btn btn-danger logout-button w-100">Logout</button>
+        </form>
+    </div>
+
+    {% if role == 'admin' %}
+        <a href="{{ url_for('user.create_user') }}" class="active">Create User</a><br>
+        <a href="{{ url_for('user.list_all_users') }}" class="active">All Users</a><br>
+        <a href="{{ url_for('habitat.create_habitat') }}" class="active">Create Habitat</a><br>
+        <a href="{{ url_for('habitat.list_all_habitats') }}" class="active">All habitats</a><br>
+        <a href="{{ url_for('animal.create_animal') }}" class="active">Create animal</a><br>
+        <a href="{{ url_for('animal.list_all_animals') }}" class="active">All animals</a><br>
+        <a href="{{ url_for('service.create_service') }}" class="active">Create Service</a><br>
+        <a href="{{ url_for('service.list_all_services') }}" class="active">All services</a><br>
+    {% elif role == 'employee' %}
+        <a href="{{ url_for('animal.list_all_animals') }}" class="active">All animals</a><br>
+        <a href="{{ url_for('service.list_all_services') }}" class="active">All services</a><br>
+      <!-- Seulement 2 liens pour Employee -->
+    {% elif role == 'vet' %}
+        <a href="{{ url_for('animal.list_all_animals') }}" class="active">All animals</a><br>
+    {% endif %}
+</nav>

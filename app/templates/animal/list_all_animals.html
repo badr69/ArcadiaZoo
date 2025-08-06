@@ -1,17 +1,20 @@
 {% extends "base.html" %}
 
+{% block title %}List All Animals{% endblock %}
 
 {% block content %}
     <div>
         {% if current_user.is_authenticated and current_user.role_name == "admin" %}
             <p class="admin-connected">Admin Connected 👌</p>
         {% endif %}
-        <a href="{{ url_for('admin.admin_dash') }}" class="btn btn-dark mb-3">admin_dash</a>
+        <a href="{{ url_for('admin.admin_dash') }}" class="btn btn-secondary mb-3">admin dash</a>
         <a href="{{ url_for('auth.logout') }}" class="btn btn-danger mb-3">Logout</a>
     </div>
+    <h2 class="text-center mb-4">List all Animals</h2>
+    <div>
+        <a href="{{ url_for('animal.create_animal') }}" class="btn btn-primary mb-3">Create User</a>
+    </div>
     <div class="container-fluid mt-4">
-        <h1 class="text-center mb-4">List All Animals</h1>
-        <a href="{{ url_for('animal.create_animal') }}" class="btn btn-primary mb-3">Create an Animal</a>
 
         <table class="table table-striped table-bordered">
             <thead class="table-dark">
@@ -32,6 +35,8 @@
                     <td>{{ animal.race }}</td>
                     <td>{{ animal.description }}</td>
                     <td>{{ animal.url_image }}</td>
+
+
                     <td>
                         <a href="{{ url_for('animal.update_animal', animal_id=animal.id) }}"
                            class="btn btn-warning btn-sm">Modifier</a>
@@ -45,6 +50,7 @@
                         </form>
                         <a href="{{ url_for('animal.get_animal_by_id', animal_id=animal.id) }}"
                            class="btn btn-warning btn-sm">Details</a>
+
                     </td>
                 </tr>
             {% else %}
@@ -55,7 +61,7 @@
             </tbody>
         </table>
     </div>
-    </div>
+
 {% endblock %}
 
 

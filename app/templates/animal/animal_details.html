@@ -1,40 +1,40 @@
 {% extends "base.html" %}
 
-{% block title %}Détail Utilisateur{% endblock %}
+{% block title %}Détail Animal{% endblock %}
 
 {% block content %}
     <div>
         {% if current_user.is_authenticated and current_user.role_name == "admin" %}
             <p class="admin-connected">Admin Connected 👌</p>
         {% endif %}
-        <a href="{{ url_for('admin.admin_dash') }}" class="btn btn-dark mb-3">admin_dash</a>
+        <a href="{{ url_for('admin.admin_dash') }}" class="btn btn-secondary mb-3">admin dash</a>
         <a href="{{ url_for('auth.logout') }}" class="btn btn-danger mb-3">Logout</a>
     </div>
     <div class="container mt-5">
         <h2 class="mb-4">Animal Details</h2>
-        <table class="table table-bordered table-striped">
-            <thead>
-            <tr>
-                <th>ID</th>
-                <th>name</th>
-                <th>race</th>
-                <th>description</th>
-                <th>url_image</th>
-                <th>update_at</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td>{{ animal.id }}</td>
-                <td>{{ animal.name }}</td>
-                <td>{{ animal.race }}</td>
-                <td>{{ animal.description }}</td>
-                <td>{{ animal.url_image }}
-                <td>{{ animal.created_at }}</td>
-            </tr>
-            </tbody>
-        </table>
-        <a href="{{ url_for('animal.list_all_animals') }}" class="btn btn-secondary">Back</a>
+            <table class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>name</th>
+                    <th>race</th>
+                    <th>description</th>
+                    <th>url_image</th>
+                    <th>update_at</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>{{ animal.id }}</td>
+                    <td>{{ animal.name }}</td>
+                    <td>{{ animal.race }}</td>
+                    <td>{{ animal.description }}</td>
+                    <td>{{ animal.url_image }}
+                    <td>{{ animal.created_at }}</td>
+                </tr>
+                </tbody>
+            </table>
+            <a href="{{ url_for('animal.list_all_animals') }}" class="btn btn-secondary">Back</a>
     </div>
 {% endblock %}
 

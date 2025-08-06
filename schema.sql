@@ -1,6 +1,6 @@
 -- creation table roles
 CREATE TABLE IF NOT EXISTS roles (
-    id SERIAL NOT NULL PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     name VARCHAR(100) UNIQUE NOT NULL
 );
 
@@ -108,7 +108,7 @@ CREATE TABLE IF NOT EXISTS foods (
     id SERIAL PRIMARY KEY,
     animal_id INTEGER NOT NULL,
     type_nourriture VARCHAR(100) NOT NULL,
-    quantite DECIMAL NOT NULL,
+    quantite VARCHAR(50) NOT NULL,
     date_nourriture TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -136,7 +136,7 @@ CREATE TABLE IF NOT EXISTS report_vet (
     user_id INTEGER,
     state VARCHAR(100) NOT NULL,
     food VARCHAR(100) NOT NULL,
-    quantity_food DECIMAL NOT NULL,
+    quantity_food VARCHAR(100) NOT NULL,
     description_state TEXT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -213,5 +213,4 @@ CREATE TRIGGER trg_update_report_vet_updated_at
 BEFORE UPDATE ON report_vet
 FOR EACH ROW
 EXECUTE FUNCTION update_updated_at_column();
-
 

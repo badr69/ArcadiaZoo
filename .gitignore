@@ -3,7 +3,8 @@ __pycache__/
 *.py[codz]
 *$py.class
 .idea/
-script_role.sql
+creation_de_role.sql
+
 # C extensions
 *.so
 
