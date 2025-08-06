@@ -6,7 +6,7 @@ animal_bp = Blueprint('animal', __name__, url_prefix="/animal")
 
 
 @animal_bp.route('/list_all_animals', methods=['GET'])
-@roles_required('admin', 'employee')
+@roles_required('admin', 'employee', 'vet')
 def list_all_animals():
     return AnimalController.list_all_animals()
 
