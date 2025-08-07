@@ -3,14 +3,14 @@
 {% block title %}List All Users{% endblock %}
 
 {% block content %}
-    <div>
+   <div>
         {% if current_user.is_authenticated and current_user.role_name == "admin" %}
-            <p class="admin-connected">Admin Connected 👌</p>
+            <p>Welcome {{ current_user.username }} 👌 </p>
         {% endif %}
-        <a href="{{ url_for('admin.admin_dash') }}" class="btn btn-secondary mb-3">admin dash</a>
+        <a href="{{ url_for('admin.admin_dash') }}" class="btn btn-dark mb-3">admin Dash</a>
         <a href="{{ url_for('auth.logout') }}" class="btn btn-danger mb-3">Logout</a>
-
     </div>
+
     <div class="container-fluid mt-4">
         <h1 class="text-center mb-4">List All Users</h1>
         <div>

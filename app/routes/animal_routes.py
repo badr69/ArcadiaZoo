@@ -11,7 +11,7 @@ def list_all_animals():
     return AnimalController.list_all_animals()
 
 @animal_bp.route('/create_animal', methods=['GET', 'POST'])
-@roles_required('admin', 'employee')
+@roles_required('admin')
 def create_animal():
     return AnimalController.create_animal()
 

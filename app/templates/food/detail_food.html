@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Détail Animal{% endblock %}
+{% block title %}Food Details{% endblock %}
 
 {% block content %}
     <div>
@@ -23,32 +23,36 @@
             <a href="{{ url_for('auth.login') }}" class="btn btn-success mb-3">Login</a>
         {% endif %}
     </div>
-    <div class="container mt-5">
-        <h2 class="mb-4">Animal Details</h2>
-            <table class="table table-bordered table-striped">
-                <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>name</th>
-                    <th>race</th>
-                    <th>description</th>
-                    <th>url_image</th>
-                    <th>update_at</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>{{ animal.id }}</td>
-                    <td>{{ animal.name }}</td>
-                    <td>{{ animal.race }}</td>
-                    <td>{{ animal.description }}</td>
-                    <td>{{ animal.url_image }}
-                    <td>{{ animal.created_at }}</td>
-                </tr>
-                </tbody>
-            </table>
-            <a href="{{ url_for('animal.list_all_animals') }}" class="btn btn-secondary">Back</a>
-    </div>
+
+<div class="container mt-4">
+    <h2 class="text-center mb-4">deatails Foods</h2>
+
+    <table class="table table-bordered">
+        <tbody>
+            <tr>
+                <th>ID</th>
+                <td>{{ food.id }}</td>
+            </tr>
+            <tr>
+                <th>Animal</th>
+                <td>{{ food.animal_name }}</td>
+            </tr>
+            <tr>
+                <th>Type of Food</th>
+                <td>{{ food.type_food }}</td>
+            </tr>
+            <tr>
+                <th>Quantity</th>
+                <td>{{ food.quantity }}</td>
+            </tr>
+            <tr>
+                <th>Feeding Date</th>
+                <td>{{ food.date_food.strftime('%Y-%m-%d %H:%M') if food.date_food else '' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ url_for('food_routes.edit_food', food_id=food.id) }}" class="btn btn-warning">Edit</a>
+    <a href="{{ url_for('food_routes.list_foods') }}" class="btn btn-secondary">Back to list</a>
+</div>
 {% endblock %}
-
-
