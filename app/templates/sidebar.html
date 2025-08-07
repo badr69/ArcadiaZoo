@@ -20,7 +20,10 @@
     {% elif role == 'employee' %}
         <a href="{{ url_for('animal.list_all_animals') }}" class="active">All animals</a><br>
         <a href="{{ url_for('service.list_all_services') }}" class="active">All services</a><br>
-      <!-- Seulement 2 liens pour Employee -->
+        <a href="{{ url_for('food.list_all_foods') }}" class="active">List All Foods</a><br>
+        <a href="{{ url_for('food.create_food') }}" class="active">Create Foods</a><br>
+
+        <!-- Seulement 2 liens pour Employee -->
     {% elif role == 'vet' %}
         <a href="{{ url_for('animal.list_all_animals') }}" class="active">All animals</a><br>
     {% endif %}

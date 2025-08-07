@@ -55,6 +55,9 @@ def create_app():
     from app.routes.animal_routes import animal_bp
     app.register_blueprint(animal_bp)
 
+    from app.routes.food_routes import food_bp
+    app.register_blueprint(food_bp)
+
     from app.routes.service_routes import service_bp
     app.register_blueprint(service_bp)
 
