@@ -27,7 +27,7 @@ class HabitatController:
     def create_habitat():
         form = HabitatCreateForm()
         # Debug éventuel (à supprimer en production)
-        current_app.logger.debug("Form errors: %s", form.errors)
+        # current_app.logger.debug("Form errors: %s", form.errors)
 
         if form.validate_on_submit():
             name = sanitize_html(form.name.data)

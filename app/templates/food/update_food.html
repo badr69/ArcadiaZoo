@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 
-{% block title %}Create Animal{% endblock %}
+{% block title %}Update Food{% endblock %}
 
 {% block content %}
-     <div>
+    <div>
         {% if current_user.is_authenticated %}
             {% if current_user.role_name == 'admin' %}
                 <p>Welcome {{ current_user.username }} 👑</p>
@@ -23,41 +23,47 @@
             <a href="{{ url_for('auth.login') }}" class="btn btn-success mb-3">Login</a>
         {% endif %}
     </div>
+    <div class="container mt-4">
+        <h2 class="text-center mb-4">Update Food</h2>
 
-  <h2 class="text-center mb-4">Create Animals</h2>
-
-    <div class="container mt-5">
-        <form method="POST" enctype="multipart/form-data">
+        <form method="POST" action="{{ url_for('food.update_food', food_id=food_id) }}">
             {{ form.hidden_tag() }}
 
             <div class="mb-3">
-                {{ form.name.label }} {{ form.name(class="form-control") }}
-                {% for error in form.name.errors %}
+                {{ form.animal.label(class="form-label") }}
+                {{ form.animal(class="form-select") }}
+                {% for error in form.animal.errors %}
                     <div class="text-danger">{{ error }}</div>
                 {% endfor %}
             </div>
 
             <div class="mb-3">
-                {{ form.race.label }} {{ form.race(class="form-control") }}
-                {% for error in form.race.errors %}
+                {{ form.type_food.label(class="form-label") }}
+                {{ form.type_food(class="form-control") }}
+                {% for error in form.type_food.errors %}
                     <div class="text-danger">{{ error }}</div>
                 {% endfor %}
             </div>
 
             <div class="mb-3">
-                {{ form.url_image.label }} {{ form.url_image(class="form-control", multiple=True) }}
-                {% for error in form.url_image.errors %}
+                {{ form.quantity.label(class="form-label") }}
+                {{ form.quantity(class="form-control") }}
+                {% for error in form.quantity.errors %}
                     <div class="text-danger">{{ error }}</div>
                 {% endfor %}
             </div>
 
             <div class="mb-3">
-                {{ form.description.label }} {{ form.description(class="form-control", rows=4) }}
-                {% for error in form.description.errors %}
+                {{ form.date_food.label(class="form-label") }}
+                {{ form.date_food(class="form-control") }}
+                <small class="form-text text-muted">Format: YYYY-MM-DD HH:MM</small>
+                {% for error in form.date_food.errors %}
                     <div class="text-danger">{{ error }}</div>
                 {% endfor %}
             </div>
-            {{ form.submit(class="btn btn-primary") }}
+
+            <button type="submit" class="btn btn-success">{{ form.submit.label.text }}</button>
+            <a href="{{ url_for('food.list_all_foods') }}" class="btn btn-secondary">Cancel</a>
         </form>
     </div>
 {% endblock %}
