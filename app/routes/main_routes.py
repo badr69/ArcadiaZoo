@@ -121,3 +121,7 @@ def employee_dash():
 @roles_required("admin", "vet")
 def vet_dash():
     return render_template("dash/vet_dash.html")
+
+@main_bp.route('/')
+def home():
+    return "Hello, Render! 🌟"

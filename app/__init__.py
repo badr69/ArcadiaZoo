@@ -4,13 +4,15 @@ from dotenv import load_dotenv
 from flask_wtf import CSRFProtect
 from app.models.user_model import UserModel
 from app.extensions.login_manager import login_manager
-
+from app.config import Config
 
 csrf = CSRFProtect()
 
 load_dotenv()  # Charge les variables depuis .env
 
 def create_app():
+    app = Flask(__name__)
+    app.config.from_object(Config)
     app = Flask(__name__, template_folder="templates", static_folder="static")
     app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'change_me')  # Bonne pratique
     upload_folder = os.path.join('app', 'static', 'uploads')
@@ -63,6 +65,7 @@ def create_app():
 
     from app.routes.review_route import reviews_bp
     app.register_blueprint(reviews_bp)
+
 
     return app
 

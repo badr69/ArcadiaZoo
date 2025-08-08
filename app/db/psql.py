@@ -11,7 +11,10 @@ def get_db_connection():
             password=Config.POSTGRES_PASSWORD,
             port=Config.POSTGRES_PORT
         )
+        print("Connexion réussie à PostgreSQL")
         return conn
     except Exception:
         traceback.print_exc()
         return None
+
+

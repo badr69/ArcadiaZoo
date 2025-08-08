@@ -1,7 +1,12 @@
 import os
 from pymongo.mongo_client import MongoClient
+from dotenv import load_dotenv
+
+load_dotenv()
+
 
 class Config:
+
     SECRET_KEY = os.getenv('SECRET_KEY', 'change_me')
 
     POSTGRES_HOST = os.getenv('POSTGRES_HOST', 'localhost')
