@@ -50,8 +50,10 @@ instalation
    http://localhost:5000
 
 7. Pour docker, j'utiliserai render pour le deploiement et il ne necessite le docker.
-je ferais une procedure apart.
-
+je ferais une procedure apart. render ne se connecte pas au bdd meme avec les bon parametres, j'essaye de trouver des solutions.
+8. sur la branch features/docker, j'ai nstaller docker depuis le site officiel de docker.
+j'ai Dockerfile et docker-compose et j'ai ajoute au requirements,
+l'application fonctionne avec docker.
 ---
 
 Fonctionnalités principales
