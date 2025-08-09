@@ -1,10 +1,12 @@
-import os
 from app import create_app
+from flask import Flask, jsonify
 
 
 app = create_app()
 
-
+@app.route('/api/test')
+def api_test():
+    return jsonify({"message": "API test route works!"})
 
 
 if __name__ == '__main__':
