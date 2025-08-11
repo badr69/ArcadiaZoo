@@ -1,0 +1,6 @@
+import bandit
+
+[bandit]
+exclude = .venv, tests
+targets = .
+recursive = True

@@ -1,22 +1,22 @@
--- creation table roles
+-- Table roles
 CREATE TABLE IF NOT EXISTS roles (
     id SERIAL PRIMARY KEY,
     name VARCHAR(100) UNIQUE NOT NULL
 );
 
--- creation table users
+-- Table users
 CREATE TABLE IF NOT EXISTS users (
     id SERIAL PRIMARY KEY,
     username VARCHAR(100) UNIQUE NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
-    password VARCHAR(255) NOT NULL, -- augmenter la taille pour hash
+    password VARCHAR(255) NOT NULL,
     role_id INTEGER,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (role_id) REFERENCES roles(id) ON DELETE CASCADE
 );
 
--- creation table habitats
+-- Table habitats
 CREATE TABLE IF NOT EXISTS habitats (
     id SERIAL PRIMARY KEY,
     name VARCHAR(100) UNIQUE NOT NULL,
@@ -26,25 +26,18 @@ CREATE TABLE IF NOT EXISTS habitats (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- creation table img_habitats
+-- Table images habitats
 CREATE TABLE IF NOT EXISTS img_habitats (
     id SERIAL PRIMARY KEY,
+    habitat_id INTEGER NOT NULL,
     filename VARCHAR(255) NOT NULL,
     description TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (habitat_id) REFERENCES habitats(id) ON DELETE CASCADE
 );
 
--- Table d'association (habitats et img_habitats)=habitats_images
-CREATE TABLE IF NOT EXISTS habitats_images (
-    habitat_id INTEGER NOT NULL,
-    image_id INTEGER NOT NULL,
-    PRIMARY KEY (habitat_id, image_id),
-    FOREIGN KEY (habitat_id) REFERENCES habitats(id) ON DELETE CASCADE,
-    FOREIGN KEY (image_id) REFERENCES img_habitats(id) ON DELETE CASCADE
-);
-
--- creation table animals
+-- Table animals
 CREATE TABLE IF NOT EXISTS animals (
     id SERIAL PRIMARY KEY,
     name VARCHAR(100) UNIQUE NOT NULL,
@@ -57,25 +50,18 @@ CREATE TABLE IF NOT EXISTS animals (
     FOREIGN KEY (habitat_id) REFERENCES habitats(id) ON DELETE SET NULL
 );
 
--- creation table img_animaux
+-- Table images animals
 CREATE TABLE IF NOT EXISTS img_animals (
     id SERIAL PRIMARY KEY,
+    animal_id INTEGER NOT NULL,
     filename VARCHAR(255) NOT NULL,
     description TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (animal_id) REFERENCES animals(id) ON DELETE CASCADE
 );
 
--- Table d'association (animaux et img_animals)= animals_images
-CREATE TABLE IF NOT EXISTS animals_images (
-    animal_id INTEGER NOT NULL,
-    image_id INTEGER NOT NULL,
-    PRIMARY KEY (animal_id, image_id),
-    FOREIGN KEY (animal_id) REFERENCES animals(id) ON DELETE CASCADE,
-    FOREIGN KEY (image_id) REFERENCES img_animals(id) ON DELETE CASCADE
-);
-
--- creation table services
+-- Table services
 CREATE TABLE IF NOT EXISTS services (
     id SERIAL PRIMARY KEY,
     name VARCHAR(100) UNIQUE NOT NULL,
@@ -85,25 +71,18 @@ CREATE TABLE IF NOT EXISTS services (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- creation table img_services
+-- Table images services
 CREATE TABLE IF NOT EXISTS img_services (
     id SERIAL PRIMARY KEY,
+    service_id INTEGER NOT NULL,
     filename VARCHAR(255) NOT NULL,
     description TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (service_id) REFERENCES services(id) ON DELETE CASCADE
 );
 
--- Table d'association (services et img_services)= services_images
-CREATE TABLE IF NOT EXISTS services_images (
-    service_id INTEGER NOT NULL,
-    image_id INTEGER NOT NULL,
-    PRIMARY KEY (service_id, image_id),
-    FOREIGN KEY (service_id) REFERENCES services(id) ON DELETE CASCADE,
-    FOREIGN KEY (image_id) REFERENCES img_services(id) ON DELETE CASCADE
-);
-
--- creation table nourriture
+-- Table foods
 CREATE TABLE IF NOT EXISTS foods (
     id SERIAL PRIMARY KEY,
     animal_id INTEGER NOT NULL,
@@ -115,7 +94,7 @@ CREATE TABLE IF NOT EXISTS foods (
     FOREIGN KEY (animal_id) REFERENCES animals(id) ON DELETE CASCADE
 );
 
--- creation table care
+-- Table care (soins)
 CREATE TABLE IF NOT EXISTS care (
     id SERIAL PRIMARY KEY,
     animal_id INTEGER NOT NULL,
@@ -129,7 +108,7 @@ CREATE TABLE IF NOT EXISTS care (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
 );
 
--- creation table report_vet
+-- Table report_vet
 CREATE TABLE IF NOT EXISTS report_vet (
     id SERIAL PRIMARY KEY,
     animal_id INTEGER NOT NULL,
