@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}Animal_click{% endblock %}
+
+{% block content %}
+<div>
+        {% if current_user.is_authenticated and current_user.role_name == "admin" %}
+            <p>Welcome {{ current_user.username }} 👌 </p>
+        {% endif %}
+        <a href="{{ url_for('admin.admin_dash') }}" class="btn btn-dark mb-3">admin Dash</a>
+        <a href="{{ url_for('auth.logout') }}" class="btn btn-danger mb-3">Logout</a>
+    </div>
+<div class="container mt-5">
+
+    <table class="table table-striped table-bordered">
+        <thead>
+        <tr>
+            <th>name</th>
+            <th>count</th>
+        </tr>
+        </thead>
+        <tbody id="Animal_click">
+        <!-- les lignes seront insérées ici -->
+        </tbody>
+    </table>
+
+</div>
+
+{% endblock %}

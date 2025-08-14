@@ -65,5 +65,8 @@ def create_app():
     from app.routes.review_route import reviews_bp
     app.register_blueprint(reviews_bp)
 
+    from app.routes.animal_click_routes import animal_click_bp
+    app.register_blueprint(animal_click_bp)
+
     return app
 

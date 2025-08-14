@@ -5,5 +5,9 @@ class RoleService:
     def list_all_roles():
         return RoleModel.list_all_roles()
 
+    @staticmethod
+    def create_role():
+        return RoleModel.create_role()
+
 
 
