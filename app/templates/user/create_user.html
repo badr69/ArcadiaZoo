@@ -4,7 +4,6 @@
 
 
 {% block content %}
-    <h1>badreddine</h1>
     {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 <ul>
@@ -21,6 +20,8 @@
         {% endif %}
         <a href="{{ url_for('admin.admin_dash') }}" class="btn btn-dark mb-3">admin Dash</a>
         <a href="{{ url_for('auth.logout') }}" class="btn btn-danger mb-3">Logout</a>
+        <a href="{{ url_for('user.list_all_users') }}" class="btn btn-primary mb-3">All Users</a>
+
     </div>
     <div class="container mt-5">
         <h1 class="text-center mb-4">Create User</h1>

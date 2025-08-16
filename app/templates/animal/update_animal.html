@@ -22,6 +22,7 @@
             <p>You are not cennected.</p>
             <a href="{{ url_for('auth.login') }}" class="btn btn-success mb-3">Login</a>
         {% endif %}
+        <a href="{{ url_for('animal.list_all_animals') }}" class="btn btn-secondary">All Aimals</a>
     </div>
     <h2 class="text-center mb-4">Update Animal</h2>
     <div class="container">
@@ -65,7 +66,7 @@
             </div>
 
             {{ form.submit(class="btn btn-primary") }}
-            <a href="{{ url_for('animal.list_all_animals') }}" class="btn btn-secondary">Back</a>
+            Back</a>
 
         </form>
     </div>

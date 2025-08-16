@@ -9,3 +9,7 @@ class CreateRoleForm(FlaskForm):
         Length(min=3, max=15)
     ])
     submit = SubmitField("Submit")
+
+class UpdateRoleForm(FlaskForm):
+    name = StringField("Nom du rôle", validators=[DataRequired()])
+    submit = SubmitField("Delete")

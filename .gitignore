@@ -4,6 +4,7 @@ __pycache__/
 *$py.class
 .idea/
 creation_de_role.sql
+Procfile.
 
 # C extensions
 *.so
