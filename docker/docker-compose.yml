@@ -1,23 +1,42 @@
+version: "3.9"
+
 services:
   flask_app:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: flask_app
     ports:
-      - "5000:5000"
+      - "${APP_PORT}:${APP_PORT}"
+    environment:
+      # Flask
+      - FLASK_ENV=${FLASK_ENV}
+      - SECRET_KEY=${SECRET_KEY}
+      # PostgreSQL local
+      - POSTGRES_HOST=${POSTGRES_HOST}
+      - POSTGRES_PORT=${POSTGRES_PORT}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      # MongoDB Atlas
+      - MONGO_URI=${MONGO_URI}
     depends_on:
       - postgres
-      - mongo
+
   postgres:
     image: postgres:15
+    container_name: postgres
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    ports:
+      - "${POSTGRES_PORT}:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
-  mongo:
-    image: mongo:6.0
-    volumes:
-      - mongodata:/data/db
 
 volumes:
   pgdata:
-  mongodata:
 
 
 #version: "3.9"
