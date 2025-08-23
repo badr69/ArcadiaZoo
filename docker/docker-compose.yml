@@ -1,0 +1,86 @@
+version: "3.9"
+
+services:
+  flask_app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: flask_app
+    ports:
+      - "${APP_PORT}:${APP_PORT}"
+    environment:
+      # Flask
+      - FLASK_ENV=${FLASK_ENV}
+      - SECRET_KEY=${SECRET_KEY}
+      # PostgreSQL local
+      - POSTGRES_HOST=${POSTGRES_HOST}
+      - POSTGRES_PORT=${POSTGRES_PORT}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      # MongoDB Atlas
+      - MONGO_URI=${MONGO_URI}
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:15
+    container_name: postgres
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    ports:
+      - "${POSTGRES_PORT}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
+
+
+#version: "3.9"
+#
+#services:
+#  flask_app:
+#    build:
+##      context: ..
+#      dockerfile: docker/Dockerfile
+#    container_name: flask_app
+#    ports:
+#      - "5000:5000"
+#    environment:
+#      - FLASK_ENV=development
+#      - POSTGRES_HOST=postgresql-badr.alwaysdata.net
+#      - POSTGRES_PORT=5432
+#      - POSTGRES_DB=badr_dzdb
+#      - POSTGRES_USER=badr
+#      - POSTGRES_PASSWORD=Setif_19000
+#      - MONGO_URI="mongodb+srv://badreddine:Setif_19000@cluster0.jrwe40w.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+#    depends_on:
+#      - postgres
+#      - mongo
+#
+#  postgres:
+#    image: postgres:15
+#    container_name: postgres
+#    environment:
+#      - POSTGRES_DB=badr_dzdb
+#      - POSTGRES_USER=badr
+#      - POSTGRES_PASSWORD=Setif_19000
+#    ports:
+#      - "5432:5432"
+#    volumes:
+#      - postgres_data:/var/lib/postgresql/data
+#
+#  mongo:
+#    image: mongo:6
+#    container_name: mongo
+#    ports:
+#      - "27017:27017"
+#    volumes:
+#      - mongo_data:/data/db
+#
+#volumes:
+#  postgres_data:
+#  mongo_data:

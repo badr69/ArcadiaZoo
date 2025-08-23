@@ -11,7 +11,4 @@ gunicorn~=23.0.0
 flask_wtf~=1.2.2
 psycopg2~=2.9.10
 pymongo~=4.13.2
-Flask_Login~=0.6.3
-bleach==6.1.0
-
-
+docker~=7.1.0
