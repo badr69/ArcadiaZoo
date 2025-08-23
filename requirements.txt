@@ -12,3 +12,4 @@ flask_wtf~=1.2.2
 psycopg2~=2.9.10
 pymongo~=4.13.2
 docker~=7.1.0
+flask-login~=0.6.3
