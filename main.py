@@ -1,6 +1,6 @@
 from app import create_app
 from flask import Flask, jsonify
-
+import os
 
 app = create_app()
 
@@ -10,8 +10,8 @@ def api_test():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
-    # app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+    # app.run(debug=True)
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
 
 
 
