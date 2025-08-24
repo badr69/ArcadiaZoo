@@ -26,4 +26,4 @@ COPY . /app
 EXPOSE 5000
 
 # Commande pour lancer ton app Flask
-CMD ["python", "main.py"]
+CMD ["gunicorn", "--bind", "0.0.0.0:5000", "main:app"]
