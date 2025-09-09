@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
             pseudoInput.value.trim() !== "" &&
             messageInput.value.trim() !== "" &&
             ratingInput.value.trim() !== "";
-        submitBtn.disabled = !isValid;
+            submitBtn.disabled = !isValid;
     }
 
     // Valider à chaque saisie / changement
@@ -86,7 +86,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     <td>${escapeHtml(r.pseudo)}</td>
                     <td>${escapeHtml(r.message)}</td>
                     <td>${escapeHtml(r.rating)}</td>
-                    <td>${r.created_at ? new Date(r.created_at).toLocaleString() : ''}</td>
+                    <td>${r.date ? new Date(r.date).toLocaleString() : ''}</td>
                 </tr>`;
             });
 
