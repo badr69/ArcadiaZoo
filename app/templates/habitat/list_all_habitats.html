@@ -46,13 +46,13 @@
 
                     <td>
                         <a href="{{ url_for('habitat.update_habitat', habitat_id=habitat.id) }}"
-                           class="btn btn-warning btn-sm">Modifier</a>
+                           class="btn btn-warning btn-sm">Update</a>
                         <form action="{{ url_for('habitat.delete_habitat', habitat_id=habitat.id) }}" method="POST"
                               style="display:inline;">
                             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                             <button type="submit" class="btn btn-danger btn-sm"
                                     onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?');">
-                                Supprimer
+                                Delete
                             </button>
                         </form>
                         <a href="{{ url_for('habitat.get_habitat_by_id', habitat_id=habitat.id) }}"

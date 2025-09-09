@@ -1,4 +1,41 @@
-<nav class="sidebar">
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>Admin Dashboard - Gestion Zoo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <style>
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: row;
+        }
+
+        #sidebar {
+            width: 250px;
+            min-height: 100vh;
+            background-color: #495057;
+            color: white;
+        }
+
+        #sidebar .nav-link {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        #sidebar .nav-link.active {
+            background-color: #495057;
+            color: white;
+        }
+
+        #content {
+            flex-grow: 1;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+<nav id="sidebar" class="d-flex flex-column p-3">
     <!-- Affichage du nom + bouton logout -->
     <div class="admin-info">
         <strong>{{ role | capitalize }}: {{ current_user.username }}</strong>
@@ -9,22 +46,27 @@
     </div>
 
     {% if role == 'admin' %}
-        <a href="{{ url_for('user.create_user') }}" class="active">Create User</a><br>
-        <a href="{{ url_for('user.list_all_users') }}" class="active">All Users</a><br>
-        <a href="{{ url_for('habitat.create_habitat') }}" class="active">Create Habitat</a><br>
-        <a href="{{ url_for('habitat.list_all_habitats') }}" class="active">All habitats</a><br>
-        <a href="{{ url_for('animal.create_animal') }}" class="active">Create animal</a><br>
-        <a href="{{ url_for('animal.list_all_animals') }}" class="active">All animals</a><br>
-        <a href="{{ url_for('service.create_service') }}" class="active">Create Service</a><br>
-        <a href="{{ url_for('service.list_all_services') }}" class="active">All services</a><br>
+        <a href="{{ url_for('role.list_all_roles') }}" class="btn btn-dark">All Roles</a><br>
+        <a href="{{ url_for('user.list_all_users') }}" class="btn btn-dark">All Users</a><br>
+        <a href="{{ url_for('habitat.list_all_habitats') }}" class="btn btn-dark">All Habitats</a><br>
+        <a href="{{ url_for('animal.list_all_animals') }}" class="btn btn-dark">All Animals</a><br>
+        <a href="{{ url_for('service.list_all_services') }}" class="btn btn-dark">All services</a><br>
+        {#        <a href="{{ url_for('employee.list_all_employees') }}" class="btn btn-dark">All Employees</a><br>#}
+        {#        <a href="{{ url_for('vet.list_all_vets') }}" class="btn btn-dark">All Vets</a><br>#}
     {% elif role == 'employee' %}
-        <a href="{{ url_for('animal.list_all_animals') }}" class="active">All animals</a><br>
-        <a href="{{ url_for('service.list_all_services') }}" class="active">All services</a><br>
-        <a href="{{ url_for('food.list_all_foods') }}" class="active">List All Foods</a><br>
-        <a href="{{ url_for('food.create_food') }}" class="active">Create Foods</a><br>
-
-        <!-- Seulement 2 liens pour Employee -->
+        <a href="{{ url_for('animal.list_all_animals') }}" class="btn btn-dark">All animals</a><br>
+        <a href="{{ url_for('service.list_all_services') }}" class="btn btn-dark">All services</a><br>
+        <a href="{{ url_for('food.list_all_foods') }}" class="btn btn-dark">List All Foods</a><br>
     {% elif role == 'vet' %}
-        <a href="{{ url_for('animal.list_all_animals') }}" class="active">All animals</a><br>
+        <a href="{{ url_for('animal.list_all_animals') }}" class="btn btn-dark">All animals</a><br>
     {% endif %}
 </nav>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+
+
+
+
+

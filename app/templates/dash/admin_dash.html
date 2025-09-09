@@ -4,10 +4,56 @@
 
 
 {% block content %}
-<div class="main-content">
-    <h2>Welcom to your Admin Dashboard</h2>
-    <p>Select an option in the sidebar.</p>
+
+<div id="content">
+    <h1>Bienvenue sur le tableau de bord Admin</h1>
+    <p>Gérez les animaux, visiteurs, soigneurs et employés du zoo.</p>
+
+    <div class="row g-3 mt-4">
+        <div class="col-auto">
+            <div class="card text-white bg-success" style="width: 10rem;">
+                <div class="card-body p-2 text-center">
+                    <h6 class="card-title mb-1">Animals</h6>
+                    <h4 id="animalCount" class="mb-1">0</h4>
+                    <a href="/animal_click" class="btn btn-light btn-sm">Detail</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-auto">
+            <div class="card text-white bg-success" style="width: 10rem;">
+                <div class="card-body p-2 text-center">
+                    <h6 class="card-title mb-1">Habitat</h6>
+                    <h4 id="animalCount" class="mb-1">0</h4>
+                    <a href="/admin/animals" class="btn btn-light btn-sm">Gérer</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-auto">
+            <div class="card text-white bg-success" style="width: 10rem;">
+                <div class="card-body p-2 text-center">
+                    <h6 class="card-title mb-1">Services</h6>
+                    <h4 id="animalCount" class="mb-1">0</h4>
+                    <a href="/admin/animals" class="btn btn-light btn-sm">Gérer</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+<h1>badreddine</h1>
 </div>
+
+{##}
+{#<div class="card bg-info text-white p-3">#}
+{#    <h6>Animal le plus populaire</h6>#}
+{#    {% if top_animal_name %}#}
+{#        <p><strong>{{ top_animal_name }}</strong> - {{ total_clicks }} clics</p>#}
+{#    {% else %}#}
+{#        <p>Aucun clic enregistré</p>#}
+{#    {% endif %}#}
+{#    <a href="{{ url_for('admin.animal_clicks') }}" class="btn btn-light btn-sm">Voir détails</a>#}
+{#</div>#}
 
 {% endblock %}
 

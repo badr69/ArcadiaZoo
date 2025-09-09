@@ -4,21 +4,7 @@ __pycache__/
 *$py.class
 .idea/
 creation_de_role.sql
-# Docker
-docker-compose.override.yml
-**/__pycache__/
-**/*.pyc
-
-# Volumes Docker (données persistantes)
-docker/postgres_data/
-docker/mongo_data/
-
-# Conteneurs, images, logs Docker (générés localement)
-*.log
-*.pid
-
-# Parfois les dossiers de données de Docker (si tu les as en local)
-volumes/
+Procfile.
 
 # C extensions
 *.so

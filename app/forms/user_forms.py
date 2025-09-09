@@ -19,7 +19,7 @@ class BaseForm(FlaskForm):
         DataRequired(message="Password is required"),
         Length(min=4, max=25)
     ])
-    submit = SubmitField("Créer l'utilisateur")
+    submit = SubmitField("Create User")
 
 class CreateUserForm(BaseForm):
         username = StringField("Username", validators=[

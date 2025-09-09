@@ -21,6 +21,7 @@
         {% else %}
             <p>You are not cennected.</p>
             <a href="{{ url_for('auth.login') }}" class="btn btn-success mb-3">Login</a>
+            <a href="{{ url_for('user.animal_all_animals') }}" class="btn btn-primary mb-3">All Aimals</a>
         {% endif %}
     </div>
     <div class="container mt-5">
