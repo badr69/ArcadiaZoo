@@ -6,6 +6,10 @@ __pycache__/
 creation_de_role.sql
 Procfile.
 
+dev.crt
+dev.key
+
+
 # C extensions
 *.so
 
