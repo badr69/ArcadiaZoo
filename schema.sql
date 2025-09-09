@@ -1,7 +1,9 @@
 -- Table roles
 CREATE TABLE IF NOT EXISTS roles (
     id SERIAL PRIMARY KEY,
-    name VARCHAR(100) UNIQUE NOT NULL
+    name VARCHAR(100) UNIQUE NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Table users
@@ -133,6 +135,12 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- triggers
+-- Trigger pour la table roless
+CREATE TRIGGER trg_update_roles_updated_at
+BEFORE UPDATE ON roles
+FOR EACH ROW
+EXECUTE FUNCTION update_updated_at_column();
+
 -- Trigger pour la table users
 CREATE TRIGGER trg_update_users_updated_at
 BEFORE UPDATE ON users

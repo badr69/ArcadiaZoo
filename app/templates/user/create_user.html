@@ -4,14 +4,25 @@
 
 
 {% block content %}
+    {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <ul>
+                    {% for category, message in messages %}
+                        <li style="color: {% if category == 'danger' %}red{% else %}green{% endif %};">{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+
     <div>
         {% if current_user.is_authenticated and current_user.role_name == "admin" %}
             <p>Welcome {{ current_user.username }} 👌 </p>
         {% endif %}
         <a href="{{ url_for('admin.admin_dash') }}" class="btn btn-dark mb-3">admin Dash</a>
         <a href="{{ url_for('auth.logout') }}" class="btn btn-danger mb-3">Logout</a>
-    </div>
+        <a href="{{ url_for('user.list_all_users') }}" class="btn btn-primary mb-3">All Users</a>
 
+    </div>
     <div class="container mt-5">
         <h1 class="text-center mb-4">Create User</h1>
 
@@ -48,19 +59,8 @@
                 {% endfor %}
             </div>
             {{ form.submit(class="btn btn-primary") }}
-            <a href="{{ url_for('admin.admin_dash') }}" class="btn btn-secondary">Back</a>
-
         </form>
 
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                <ul>
-                    {% for category, message in messages %}
-                        <li style="color: {% if category == 'danger' %}red{% else %}green{% endif %};">{{ message }}</li>
-                    {% endfor %}
-                </ul>
-            {% endif %}
-        {% endwith %}
 
     </div>
 

@@ -9,8 +9,10 @@
             {% for service in services %}
                 <div class="col-lg-4 col-md-6 col-sm-12">
                     <div class="card h-100 shadow">
-                        <img src="{{ url_for('static', filename=service.url_image.lstrip('/')) }}" class="card-img-top"
-                             alt="{{ service.name }}">
+                        <img src="{{ url_for('static', filename=service.url_image.lstrip('/')) }}" class="card-img-top" class="card-img-top animal-clickable"
+                         alt="{{ service.name }}"
+                         data-service-id="{{ service.id }}"
+                         style="cursor:pointer;">
                         <div class="card-body">
                             <h5 class="card-title">{{ service.name }}</h5>
                             <p class="card-text">{{ service.description[:120] }}...</p>
