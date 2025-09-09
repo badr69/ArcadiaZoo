@@ -1,4 +1,4 @@
-from flask import Blueprint, redirect, url_for, flash
+from flask import Blueprint
 from app.controllers.auth_controller import AuthController
 from flask_login import login_required
 
