@@ -1,7 +1,3 @@
-
-
-
-
 // Récupération sécurisée du token CSRF
 const csrfMeta = document.querySelector('meta[name="csrf-token"]');
 const csrfToken = csrfMeta ? csrfMeta.getAttribute('content') : null;

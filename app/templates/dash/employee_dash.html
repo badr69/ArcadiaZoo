@@ -29,6 +29,8 @@
     </div>
     </div>
 
-
+  {% block scripts %}
+        <script src="{{ url_for('static', filename='js/review_1.js') }}"></script>
+    {% endblock %}
 {% endblock %}
 

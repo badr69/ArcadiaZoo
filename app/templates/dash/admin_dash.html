@@ -54,7 +54,10 @@
 {#    {% endif %}#}
 {#    <a href="{{ url_for('admin.animal_clicks') }}" class="btn btn-light btn-sm">Voir détails</a>#}
 {#</div>#}
+{% block scripts %}
 
+    <script src="{{ url_for('static', filename='js/count.js') }}"></script>
+{% endblock %}
 {% endblock %}
 
 
