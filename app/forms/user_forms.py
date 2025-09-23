@@ -5,7 +5,6 @@ from wtforms import SubmitField
 from wtforms.validators import DataRequired, Email, Length, NumberRange, EqualTo
 
 
-
 class BaseForm(FlaskForm):
     email = StringField("Email", validators=[
         DataRequired(message="Email address is required"),
@@ -32,7 +31,6 @@ class CreateUserForm(BaseForm):
     ])
 
         role_name = SelectField("Rôle", validators=[DataRequired()], choices=[])  # ← dynamique
-
 
 class UpdateUserForm(BaseForm):
         username = StringField('Nom', validators=[DataRequired()])

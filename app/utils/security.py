@@ -10,7 +10,6 @@ def hash_password(password: str) -> str:
     # Hash avec un salt et un algorithme sécurisé (pbkdf2:sha256 par défaut)
     return generate_password_hash(password)
 
-
 def verify_password(hashed_password: str, password: str) -> bool:
     # Vérifie si le mot de passe correspond au hash
     return check_password_hash(hashed_password, password)

@@ -12,7 +12,7 @@ def create_app():
     load_dotenv()  # Charge les variables depuis .env
 
     app = Flask(__name__, template_folder="templates", static_folder="static")
-    app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'change_me')  # Bonne pratique
+    app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'change_me')
 
     upload_folder = os.path.join('app', 'static', 'uploads')
     app.config['upload_folder'] = upload_folder
@@ -26,7 +26,7 @@ def create_app():
     csrf.init_app(app)  # Protection CSRF via Flask-WTF
 
     login_manager.init_app(app)  # Init login manager **après** la création de l'app
-    login_manager.login_view = 'auth.login'  # nom de ta route de login
+    login_manager.login_view = 'auth.login'  # nom de la route de login
 
     # Enregistrement des blueprints
     from app.routes.role_routes import role_bp
