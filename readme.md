@@ -257,6 +257,86 @@ Fonctionnalités principales
 
 Merci de créer une branche dédiée, tester vos modifications, puis faire une pull request.
 
+Déploiement:
+# 1️⃣ Connexion et préparation du serveur
+ssh root@84.46.241.76
+apt update && apt upgrade -y
+apt install git curl wget unzip -y
+
+# 2️⃣ Installer Docker et Docker Compose
+curl -fsSL https://get.docker.com -o get-docker.sh
+sh get-docker.sh
+docker --version
+apt install docker-compose -y
+docker-compose --version
+
+# 3️⃣ Récupération du projet et variables
+cd /var/www
+git clone https://github.com/badr69/ArcadiaZoo.git
+cd ArcadiaZoo
+echo "DATABASE_URL='postgresql://user:password@postgres:5432/dbname'
+MONGO_URI='mongodb+srv://user:password@cluster.mongodb.net/dbname'
+FLASK_APP='main.py'
+FLASK_ENV='production'" > .env
+
+# 4️⃣ Dockeriser l’application
+# Dockerfile : place dans le projet
+cat > Dockerfile <<EOL
+FROM python:3.12-slim
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+WORKDIR /app
+RUN apt-get update && apt-get install -y libpq-dev gcc && rm -rf /var/lib/apt/lists/*
+COPY requirements.txt /app/requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
+COPY . /app
+EXPOSE 5000
+CMD ["gunicorn","--bind","0.0.0.0:5000","main:app"]
+EOL
+
+# docker-compose.yml : place dans le projet
+cat > docker-compose.yml <<EOL
+version: "3.9"
+services:
+  flask_app:
+    build: .
+    container_name: flask_app
+    ports:
+      - "5000:5000"
+    environment:
+      - FLASK_ENV=production
+      - DATABASE_URL=\${DATABASE_URL}
+      - MONGO_URI=\${MONGO_URI}
+EOL
+
+# 5️⃣ Lancer les conteneurs
+docker-compose up -d --build
+docker ps
+
+# 6️⃣ Configurer Nginx comme reverse proxy
+apt install nginx -y
+cat > /etc/nginx/sites-available/ArcadiaZoo <<EOL
+server {
+    listen 80;
+    server_name ton-domaine.com;
+    location / {
+        proxy_pass http://127.0.0.1:5000;
+        proxy_set_header Host \$host;
+        proxy_set_header X-Real-IP \$remote_addr;
+    }
+}
+EOL
+ln -s /etc/nginx/sites-available/ArcadiaZoo /etc/nginx/sites-enabled/
+nginx -t
+systemctl restart nginx
+apt install certbot python3-certbot-nginx -y
+certbot --nginx -d ton-domaine.com
+
+# 7️⃣ Vérification
+Accéder à http://84.46.241.76
+docker-compose logs -f
+L'app est disponible sur cette adrese 84.46.241.76
+
 
 Contact
 Derrouiche badreddine – manoudb@yahoo.fr
