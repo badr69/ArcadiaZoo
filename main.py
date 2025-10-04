@@ -5,9 +5,9 @@ from flask import jsonify
 
 app = create_app()
 
-@app.route('/api/test')
-def api_test():
-    return jsonify({"message": "API test route works!"})
+# @app.route('/api/test')
+# def api_test():
+#     return jsonify({"message": "API test route works!"})
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000, debug=True)
