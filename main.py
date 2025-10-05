@@ -10,7 +10,7 @@ app = create_app()
 #     return jsonify({"message": "API test route works!"})
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    # app.run(host="0.0.0.0", port=5000, debug=True)
     # app.run(debug=True)
 
     # app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)), debug=True)
@@ -21,3 +21,8 @@ if __name__ == '__main__':
     #
     # app.run(host="0.0.0.0", port=port, debug=True, ssl_context=context)
 
+    app.run(
+        host='0.0.0.0',
+        port=5000,
+        ssl_context=('dev.crt', 'dev.key')  # <-- fichiers à la racine
+    )

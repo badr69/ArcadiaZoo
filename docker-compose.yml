@@ -6,6 +6,9 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: flask_app
+    env_file:
+      - .env
+
     ports:
       - "${APP_PORT}:${APP_PORT}"
     environment:
