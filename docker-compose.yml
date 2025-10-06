@@ -5,7 +5,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: flask_app
+    container_name: arcadia_flask
     env_file:
       - .env
 
