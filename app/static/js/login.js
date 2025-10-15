@@ -49,7 +49,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (result.success) {
         console.log("Login réussi ! Redirection vers :", result.redirect);
-        window.location.href = result.redirect; // <- commenter pour debug
+        // window.location.href = result.redirect; // <- commenter pour debug
       } else {
         console.log("Erreur login :", result);
         if (result.message) {
