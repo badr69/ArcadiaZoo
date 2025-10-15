@@ -52,7 +52,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (result.success) {
         console.log("Login réussi ! Redirection vers :", result.redirect);
-        window.location.href = result.redirect; // redirection
+            setTimeout(() => {
+        window.location.href = result.redirect;
+        }, 2000); // attend 2 secondes avant de rediriger
+       
       } else {
         console.log("Erreur login :", result);
         if (result.message) {
