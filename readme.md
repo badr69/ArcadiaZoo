@@ -289,10 +289,11 @@ cd ArcadiaZoo
 ```
 
 ## 6. Création du fichier `.env`
+dans ArcadiaZoo, touche .env
 
 ```bash
-nano .env
-# Ajouter les variables d'environnement
+nano .env # pour ouvrir le fichier .env
+coller le fichier .env de mon projet
 # CTRL+O pour enregistrer, CTRL+X pour quitter
 ```
 
