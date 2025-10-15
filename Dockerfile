@@ -11,7 +11,7 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copie du projet avec git clone....
-git clone....
+COPY . .
 
 # Expose le port de Flask
 EXPOSE 5000
