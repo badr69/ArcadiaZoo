@@ -1,29 +1,20 @@
-# Utilise Python 3.12 slim
+# Utilisation d'une image Python légère
 FROM python:3.12-slim
 
-# Ne pas créer de fichiers .pyc et forcer l'affichage des logs
-ENV PYTHONDONTWRITEBYTECODE=1
-ENV PYTHONUNBUFFERED=1
-
-# Dossier de travail dans le conteneur
+# Définition du répertoire de travail dans le conteneur
 WORKDIR /app
 
-# Installer les dépendances système (pour psycopg2, etc.)
-RUN apt-get update && apt-get install -y \
-    libpq-dev gcc && \
-    rm -rf /var/lib/apt/lists/*
+# Copie des fichiers de dépendances
+COPY requirements.txt .
 
-# Copier le fichier des dépendances
-COPY requirements.txt /app/requirements.txt
-
-# Installer les dépendances Python
+# Installation les dépendances sans cache
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copier tout le code du projet
-COPY . /app
+# Copie du projet avec git clone....
+git clone....
 
-# Exposer le port Flask
+# Expose le port de Flask
 EXPOSE 5000
 
-# Commande pour lancer ton app Flask
+# Commande pour lancer l'app avec Gunicorn (production)
 CMD ["gunicorn", "--bind", "0.0.0.0:5000", "main:app"]
