@@ -30,41 +30,32 @@ instalation
 
 Étapes
 
-1. Cloner le dépôt :
+1. Clonage le dépôt :
    git clone https://github.com/badr69/ArcadiaZoo
    cd ArcadiaZoo
 
-2. Créer et activer un environnement virtuel :
+2. Création et activation d'un environnement virtuel :
    python3 -m venv .venv
    source .venv/bin/activate
 
-3. Installer les dépendances :
+3. Installation les dépendances :
    pip install -r requirements.txt
 
-4. Configurer la base de données PostgreSQL et MongoDB (ajouter les paramètres dans un fichier .env)
+4. Configuration de la base de données PostgreSQL dans alwaysdata et MongoDB dans mongodb atlas
 
-5. Lancer l’application :
+5. Lancement de l’application :
    flask run
 
-6. Ouvrir dans le navigateur :
+6. dans le navigateur au choix :
    http://localhost:5000
 
-7. Pour docker, j'utiliserai render pour le deploiement et il ne necessite le docker.
-je ferais une procedure apart. render ne se connecte pas au bdd meme avec les bon parametres, j'essaye de trouver des solutions.
-8. sur la branch features/docker, j'ai nstaller docker depuis le site officiel de docker.
-j'ai Dockerfile et docker-compose et j'ai ajoute au requirements,
-l'application fonctionne avec docker.
----
-
 Fonctionnalités principales
-
-- Gestion des utilisateurs, animaux et habitats
+- Gestion des utilisateurs(admin, employee et vetirinaire, animaux et habitats
 - Gestion des soins et suivi de la santé des animaux
 - Gestion des visiteurs
 - Authentification sécurisée des utilisateurs
 - Utilisation conjointe de PostgreSQL et MongoDB pour les données
 
----
 
 ├── app
 │   ├── config.py
@@ -257,90 +248,147 @@ Fonctionnalités principales
 
 Merci de créer une branche dédiée, tester vos modifications, puis faire une pull request.
 
-Déploiement:
-# 1️⃣ Connexion et préparation du serveur
+
+# Déploiement
+
+# Déploiement du projet Flask ArcadiaZoo sur VPS Contabo avec Docker et Nginx
+
+## 1. Connexion au VPS
+```bash
 ssh root@84.46.241.76
+````
+
+## 2. Mise à jour du système
+
+```bash
 apt update && apt upgrade -y
-apt install git curl wget unzip -y
+```
 
-# 2️⃣ Installer Docker et Docker Compose
-curl -fsSL https://get.docker.com -o get-docker.sh
-sh get-docker.sh
+## 3. Installation de Docker et Docker Compose
+
+```bash
+apt install docker.io docker-compose -y
+systemctl enable docker
+systemctl start docker
 docker --version
-apt install docker-compose -y
-docker-compose --version
+docker compose version
+```
 
-# 3️⃣ Récupération du projet et variables
-cd /var/www
+## 4. Installation de Git
+
+```bash
+apt install git -y
+```
+
+## 5. Clonage du projet depuis GitHub
+
+```bash
+cd /var/www/
 git clone https://github.com/badr69/ArcadiaZoo.git
 cd ArcadiaZoo
-echo "DATABASE_URL='postgresql://user:password@postgres:5432/dbname'
-MONGO_URI='mongodb+srv://user:password@cluster.mongodb.net/dbname'
-FLASK_APP='main.py'
-FLASK_ENV='production'" > .env
+```
 
-# 4️⃣ Dockeriser l’application
-# Dockerfile : place dans le projet
-cat > Dockerfile <<EOL
-FROM python:3.12-slim
-ENV PYTHONDONTWRITEBYTECODE=1
-ENV PYTHONUNBUFFERED=1
-WORKDIR /app
-RUN apt-get update && apt-get install -y libpq-dev gcc && rm -rf /var/lib/apt/lists/*
-COPY requirements.txt /app/requirements.txt
-RUN pip install --no-cache-dir -r requirements.txt
-COPY . /app
-EXPOSE 5000
-CMD ["gunicorn","--bind","0.0.0.0:5000","main:app"]
-EOL
+## 6. Création du fichier `.env`
 
-# docker-compose.yml : place dans le projet
-cat > docker-compose.yml <<EOL
-version: "3.9"
-services:
-  flask_app:
-    build: .
-    container_name: flask_app
-    ports:
-      - "5000:5000"
-    environment:
-      - FLASK_ENV=production
-      - DATABASE_URL=\${DATABASE_URL}
-      - MONGO_URI=\${MONGO_URI}
-EOL
+```bash
+nano .env
+# Ajouter les variables d'environnement
+# CTRL+O pour enregistrer, CTRL+X pour quitter
+```
 
-# 5️⃣ Lancer les conteneurs
-docker-compose up -d --build
-docker ps
+## 7. Construction du conteneur Docker
 
-# 6️⃣ Configurer Nginx comme reverse proxy
+```bash
+docker compose build
+```
+
+## 8. Lancement de l’application Flask
+
+```bash
+docker compose up -d
+docker compose ps
+docker compose logs -f flask_app
+```
+
+## 9. Installation et configuration de Nginx
+
+```bash
 apt install nginx -y
-cat > /etc/nginx/sites-available/ArcadiaZoo <<EOL
+systemctl enable nginx
+systemctl start nginx
+rm /etc/nginx/sites-enabled/default
+nano /etc/nginx/sites-available/ArcadiaZoo
+```
+
+Contenu du fichier Nginx :
+
+```
 server {
     listen 80;
-    server_name ton-domaine.com;
+    server_name 84.46.241.76;
+
     location / {
         proxy_pass http://127.0.0.1:5000;
-        proxy_set_header Host \$host;
-        proxy_set_header X-Real-IP \$remote_addr;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
     }
 }
-EOL
+```
+
+Activation du site et redémarrage Nginx :
+
+```bash
 ln -s /etc/nginx/sites-available/ArcadiaZoo /etc/nginx/sites-enabled/
 nginx -t
 systemctl restart nginx
+```
+
+Ouvrir le navigateur :
+
+```
+http://84.46.241.76
+```
+
+## 10. Commandes Docker utiles
+
+```bash
+docker ps
+docker compose restart
+docker compose logs -f
+docker compose down
+```
+
+## 11. (Optionnel) Activer le HTTPS avec Certbot
+
+```bash
 apt install certbot python3-certbot-nginx -y
-certbot --nginx -d ton-domaine.com
+certbot --nginx -d mon-domaine.fr
+systemctl reload nginx
+```
 
-# 7️⃣ Vérification
-Accéder à http://84.46.241.76
-docker-compose logs -f
-L'app est disponible sur cette adrese 84.46.241.76
+## 12. Structure finale du serveur
 
+```
+/var/www/
+└── ArcadiaZoo/
+    ├── app/
+    ├── Dockerfile
+    ├── docker-compose.yml
+    ├── requirements.txt
+    ├── .env
+    └── README.md
+```
 
-Contact
-Derrouiche badreddine – manoudb@yahoo.fr
-Lien GitHub : https://github.com/badr69/ArcadiaZoo
+## 13. Auteur
 
-Made with ❤️ by derrouiche Badreddine
+Projet réalisé pour l’ECF Développement Web
+Technologies utilisées : Flask, Docker, Nginx, PostgreSQL (AlwaysData), MongoDB Atlas.
+
+Contact : Derrouiche Badreddine – [manoudb@yahoo.fr](mailto:manoudb@yahoo.fr)
+GitHub : https://github.com/badr69/ArcadiaZoo
+
+Made with ❤️
+
 
