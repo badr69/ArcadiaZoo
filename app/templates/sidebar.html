@@ -59,6 +59,8 @@
         <a href="{{ url_for('food.list_all_foods') }}" class="btn btn-dark">List All Foods</a><br>
     {% elif role == 'vet' %}
         <a href="{{ url_for('animal.list_all_animals') }}" class="btn btn-dark">All animals</a><br>
+        <a href="{{ url_for('care.list_all_cares') }}" class="btn btn-dark">All cares</a><br>
+
     {% endif %}
 </nav>
 

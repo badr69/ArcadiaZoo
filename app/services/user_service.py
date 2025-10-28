@@ -5,9 +5,35 @@ from werkzeug.security import generate_password_hash
 
 class UserService:
 
+    @classmethod
+    def list_all_users(cls):
+        """Retourne la liste des utilisateurs (ou [] en cas d'erreur)."""
+        try:
+            return UserModel.list_all_users()
+        except Exception as exc:
+            print("[Service] list_all_users:", exc)
+            return []
+
+    @classmethod
+    def list_all_vets(cls):
+        """Retourne la liste des vétérinaires (ou [] en cas d'erreur)."""
+        try:
+            return UserModel.list_all_vets()
+        except Exception as exc:
+            print("[Service] list_all_vets:", exc)
+            return []
+
+    @classmethod
+    def get_user_by_id(cls, user_id: int):
+        """Retourne un objet User ou None."""
+        try:
+            return UserModel.get_user_by_id(user_id)
+        except Exception as exc:
+            print("[Service] get_user_by_id:", exc)
+            return None
+
     @staticmethod
     def create_user(username: str, email: str, password: str, role_id: int):
-
         try:
             if UserModel.get_by_email(email):
                 return {"error": "Email déjà utilisé."}, 400
@@ -33,36 +59,16 @@ class UserService:
             return {"error": "Erreur serveur."}, 500
 
     @staticmethod
-    def list_all_users():
-        """Retourne la liste des utilisateurs (ou [] en cas d'erreur)."""
-        try:
-            return UserModel.list_all_users()
-        except Exception as exc:
-            print("[Service] list_all_users:", exc)
-            return []
-
-    @staticmethod
-    def get_user_by_id(user_id: int):
-        """Retourne un objet User ou None."""
-        try:
-            return UserModel.get_user_by_id(user_id)
-        except Exception as exc:
-            print("[Service] get_user_by_id:", exc)
-            return None
-
-    #
-    @staticmethod
     def update_user(user_id, username, email, role_id):
         """Retourne un objet User ou None."""
         try:
             return UserModel.update_user(user_id, username, email, role_id)
         except Exception as exc:
-            print("[Service] get_user_by_id:", exc)
+            print("[Service] update_user:", exc)
             return None
 
     @staticmethod
     def delete_user(user_id: int):
-
         try:
             success = UserModel.delete_user(user_id)
             if not success:

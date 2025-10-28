@@ -44,6 +44,12 @@ def create_app():
     from app.routes.vet_route import vet_bp
     app.register_blueprint(vet_bp)
 
+    from app.routes.care_routes import care_bp
+    app.register_blueprint(care_bp)
+
+    from app.routes.care_routes import api_bp
+    app.register_blueprint(api_bp)
+
     from app.routes.auth_routes import auth_bp
     app.register_blueprint(auth_bp)
 

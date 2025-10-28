@@ -1,4 +1,6 @@
 from flask import Blueprint, render_template,abort
+
+from app.controllers.care_controller import CareController
 from app.controllers.user_controller import UserController
 from app.utils.decorators import roles_required
 
@@ -9,6 +11,12 @@ user_bp = Blueprint('user', __name__, url_prefix="/user")
 @roles_required("admin")
 def list_all_users():
      return UserController.list_all_users()
+
+# Lister tous les vets
+@user_bp.route("/list_all_vets", methods=["GET"])
+@roles_required("admin", "vet")
+def list_all_vets():
+    return CareController.list_all_vets()
 
 @user_bp.route("/<int:user_id>")
 @roles_required("admin")

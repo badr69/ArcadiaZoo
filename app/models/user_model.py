@@ -6,7 +6,7 @@ from app.utils.security import verify_password
 
 class UserModel(UserMixin):
     def __init__(self, id, username, email, password_hash=None, role_id=None, role_name=None, created_at=None):
-        self.id = id
+        self.id = id  # noinspection PyShadowingBuiltins
         self.username = username
         self.email = email
         self.password_hash = password_hash
@@ -89,6 +89,31 @@ class UserModel(UserMixin):
         finally:
             if cur: cur.close()
             if conn: conn.close()
+
+    @classmethod
+    def list_all_vets(cls):
+        """
+        Retourne tous les utilisateurs qui ont le rôle 'vet'
+        """
+        conn = cur = None
+        try:
+            conn = get_db_connection()
+            cur = conn.cursor()
+            cur.execute("""
+                        SELECT u.id, u.username, u.email, u.password, u.role_id, r.name AS role_name, u.created_at
+                        FROM users u
+                                 LEFT JOIN roles r ON u.role_id = r.id
+                        WHERE r.name = 'vet'
+                        """)
+            rows = cur.fetchall()
+            return [cls(*row) for row in rows]
+        except Exception as e:
+            print(f"[list_all_vets error]: {e}")
+            return []
+        finally:
+            if cur: cur.close()
+            if conn: conn.close()
+
 
     # ========== CREATE / UPDATE / DELETE ==========
 

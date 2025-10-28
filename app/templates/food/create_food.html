@@ -12,8 +12,8 @@
                 <p>Welcome {{ current_user.username }} 👌</p>
                 <a href="{{ url_for('employee.employee_dash') }}" class="btn btn-dark mb-3">Employee Dash</a>
             {% elif current_user.role_name == 'vet' %}
-                <p>Welcome {{ current_user.username }} 🩺</p>
-                <a href="{{ url_for('vet.vet_dash') }}" class="btn btn-info mb-3">Vet Dash</a>
+                <p>Welcome {{ current_user.username }} 👌</p>
+                <a href="{{ url_for('vet.vet_dash') }}" class="btn btn-dark mb-3">Vet Dash</a>
             {% else %}
                 <p>Welcome {{ current_user.username }}</p>
             {% endif %}

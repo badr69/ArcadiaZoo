@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block title %}Créer un rapport de soin{% endblock %}
+
+{% block content %}
+    <div>
+        {% if current_user.is_authenticated %}
+            {% if current_user.role_name == 'admin' %}
+                <p>Welcome {{ current_user.username }} 👑</p>
+                <a href="{{ url_for('admin.admin_dash') }}" class="btn btn-dark mb-3">Admin Dash</a>
+            {% elif current_user.role_name == 'employee' %}
+                <p>Welcome {{ current_user.username }} 👌</p>
+                <a href="{{ url_for('employee.employee_dash') }}" class="btn btn-dark mb-3">Employee Dash</a>
+            {% elif current_user.role_name == 'vet' %}
+                <p>Welcome {{ current_user.username }} 👌</p>
+                <a href="{{ url_for('vet.vet_dash') }}" class="btn btn-info mb-3">Vet Dash</a>
+            {% else %}
+                <p>Welcome {{ current_user.username }}</p>
+            {% endif %}
+            <a href="{{ url_for('auth.logout') }}" class="btn btn-danger mb-3">Logout</a>
+        {% else %}
+            <p>You are not cennected.</p>
+            <a href="{{ url_for('auth.login') }}" class="btn btn-success mb-3">Login</a>
+            <a href="{{ url_for('user.animal_all_animals') }}" class="btn btn-primary mb-3">All Aimals</a>
+        {% endif %}
+    </div>
+
+{#    <div class="text-center mb-4">#}
+        <h1 class="text-center mb-4">Create a new Care</h1>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div>
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+    <div class="container mt-5">
+        <form method="POST">
+            {{ form.hidden_tag() }}
+
+            <div class="mb-3">
+                {{ form.animal_id.label(class="form-label") }}
+                {{ form.animal_id(class="form-select") }}
+            </div>
+
+            <div class="mb-3">
+                {{ form.vet_id.label(class="form-label") }}
+                {{ form.vet_id(class="form-select") }}
+            </div>
+
+            <div class="mb-3">
+                {{ form.type_care.label(class="form-label") }}
+                {{ form.type_care(class="form-select") }}
+            </div>
+
+            <div class="mb-3">
+                {{ form.description.label(class="form-label") }}
+                {{ form.description(class="form-control", rows="4") }}
+            </div>
+
+            <div class="mb-3">
+                {{ form.date_care.label(class="form-label") }}
+                {{ form.date_care(class="form-control", type="date") }}
+            </div>
+
+            <button type="submit" class="btn btn-primary">{{ form.submit.label.text }}</button>
+        </form>
+    </div>
+{#    </div>#}
+{% endblock %}
+
+

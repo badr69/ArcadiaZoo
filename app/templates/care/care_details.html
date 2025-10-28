@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block title %}Détail du care{% endblock %}
+
+{% block content %}
+    <div class="container mt-5">
+        <div>
+            {% if current_user.is_authenticated %}
+                {% if current_user.role_name == 'admin' %}
+                    <p>Welcome {{ current_user.username }} 👑</p>
+                    <a href="{{ url_for('admin.admin_dash') }}" class="btn btn-dark mb-3">Admin Dash</a>
+                {% elif current_user.role_name == 'employee' %}
+                    <p>Welcome {{ current_user.username }} 👌</p>
+                    <a href="{{ url_for('employee.employee_dash') }}" class="btn btn-dark mb-3">Employee Dash</a>
+                {% elif current_user.role_name == 'vet' %}
+                    <p>Welcome {{ current_user.username }} 👌</p>
+                    <a href="{{ url_for('vet.vet_dash') }}" class="btn btn-dark mb-3">Vet Dash</a>
+                {% else %}
+                    <p>Welcome {{ current_user.username }}</p>
+                {% endif %}
+                <a href="{{ url_for('auth.logout') }}" class="btn btn-danger mb-3">Logout</a>
+            {% else %}
+                <p>You are not cennected.</p>
+                <a href="{{ url_for('auth.login') }}" class="btn btn-success mb-3">Login</a>
+                <a href="{{ url_for('user.animal_all_animals') }}" class="btn btn-primary mb-3">All Aimals</a>
+            {% endif %}
+        </div>
+
+        <div class="container mt-5">
+            <h1 class="mb-4">Détail du care</h1>
+            <!-- Flash messages -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div>
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category }}">{{ message }}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+
+            <div class="card">
+                <div class="card-header">
+                    Care #{{ care.id }}
+                </div>
+                <div class="card-body">
+                    <p><strong>Animal ID :</strong> {{ care.animal_id }}</p>
+                    <p><strong>Vétérinaire ID :</strong> {{ care.vet_id }}</p>
+                    <p><strong>Type de care :</strong> {{ care.type_care }}</p>
+                    <p><strong>Description :</strong> {{ care.description }}</p>
+                    <p><strong>Date du care
+                        :</strong> {{ care.date_care.strftime('%Y-%m-%d %H:%M') if care.date_care else '' }}</p>
+                    <p><strong>Créé le
+                        :</strong> {{ care.created_at.strftime('%Y-%m-%d %H:%M') if care.created_at else '' }}</p>
+                    <p><strong>Mis à jour le
+                        :</strong> {{ care.updated_at.strftime('%Y-%m-%d %H:%M') if care.updated_at else '' }}</p>
+                </div>
+                <div class="card-footer">
+                    <a href="{{ url_for('care.update_care', care_id=care.id) }}" class="btn btn-primary">Modifier</a>
+                    <form action="{{ url_for('care.delete_care', care_id=care.id) }}" method="POST"
+                          style="display:inline-block;">
+                        <button type="submit" class="btn btn-danger"
+                                onclick="return confirm('Confirmer la suppression ?')">
+                            Supprimer
+                        </button>
+                    </form>
+                    <a href="{{ url_for('care.list_all_cares') }}" class="btn btn-secondary">Retour à la liste</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
