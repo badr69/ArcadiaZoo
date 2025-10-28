@@ -115,6 +115,7 @@ CREATE TABLE IF NOT EXISTS report_vet (
     id SERIAL PRIMARY KEY,
     animal_id INTEGER NOT NULL,
     user_id INTEGER,
+    care_id INTEGER,
     state VARCHAR(100) NOT NULL,
     food VARCHAR(100) NOT NULL,
     quantity_food VARCHAR(100) NOT NULL,
@@ -122,7 +123,8 @@ CREATE TABLE IF NOT EXISTS report_vet (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (animal_id) REFERENCES animals(id) ON DELETE CASCADE,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL,
+    FOREIGN KEY (care_id) REFERENCES cares(id) ON DELETE SET NULL
 );
 
 -- Fonction commune pour tous les triggers
