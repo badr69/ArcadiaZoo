@@ -14,7 +14,11 @@
             {% else %}
                 <p>Welcome {{ current_user.username }}</p>
             {% endif %}
-            <a href="{{ url_for('auth.logout') }}" class="btn btn-danger mb-3">Logout</a>
+            <form action="{{ url_for('auth.logout') }}" method="POST" style="display:inline;">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button type="submit" class="btn btn-danger mb-3">Logout</button>
+            </form>
+{#            <a href="{{ url_for('auth.logout') }}" class="btn btn-danger mb-3">Logout</a>#}
         {% else %}
             <p>You are not cennected.</p>
             <a href="{{ url_for('auth.login') }}" class="btn btn-success mb-3">Login</a>
@@ -23,7 +27,7 @@
     </div>
 
     <div class="container">
-     <h2 class="mb-4 text-center">Update Service</h2>
+        <h2 class="mb-4 text-center">Update Service</h2>
         <form method="POST" enctype="multipart/form-data">
             {{ form.hidden_tag() }}
 

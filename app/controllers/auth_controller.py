@@ -70,7 +70,7 @@ class AuthController:
         # TODO: Accepter uniquement POST pour déconnexion pour éviter les attaques CSRF
         if request.method == 'POST':
             logout_user()
-            flash("Vous êtes déconnecté.e.", "success")
+            flash("You are disconnected", "success")
             return redirect(url_for('auth.login'))
 
         # TODO: Pour toute autre méthode HTTP, refuser la requête avec message et rediriger
