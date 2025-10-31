@@ -12,30 +12,24 @@
                 <p>Welcome {{ current_user.username }} 👌</p>
                 <a href="{{ url_for('employee.employee_dash') }}" class="btn btn-dark mb-3">Employee Dash</a>
             {% elif current_user.role_name == 'vet' %}
-                <p>Welcome {{ current_user.username }} 👌</p>
+                <p>Welcome {{ current_user.username }} 🩺</p>
                 <a href="{{ url_for('vet.vet_dash') }}" class="btn btn-info mb-3">Vet Dash</a>
             {% else %}
                 <p>Welcome {{ current_user.username }}</p>
             {% endif %}
-            <a href="{{ url_for('auth.logout') }}" class="btn btn-danger mb-3">Logout</a>
+            <form action="{{ url_for('auth.logout') }}" method="POST" style="display:inline;">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button type="submit" class="btn btn-danger mb-3">Logout</button>
+            </form>
+{#            <a href="{{ url_for('auth.logout') }}" class="btn btn-danger mb-3">Logout</a>#}
         {% else %}
-            <p>You are not cennected.</p>
+            <p>You are not connected.</p>
             <a href="{{ url_for('auth.login') }}" class="btn btn-success mb-3">Login</a>
         {% endif %}
-        <a href="{{ url_for('user.animal_all_animals') }}" class="btn btn-primary mb-3">All Aimals</a>
+        <a href="{{ url_for('animal.list_all_animals') }}" class="btn btn-primary mb-3">All Animals</a>
     </div>
 
-    <h1 class="text-center mb-4">Create Animals</h1>
-
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            <div>
-                {% for category, message in messages %}
-                    <div class="alert alert-{{ category }}">{{ message }}</div>
-                {% endfor %}
-            </div>
-        {% endif %}
-    {% endwith %}
+    <h1 class="text-center mb-4">Create Animal</h1>
 
     <div class="container mt-5">
         <form method="POST" enctype="multipart/form-data">
@@ -56,7 +50,7 @@
             </div>
 
             <div class="mb-3">
-                {{ form.url_image.label }} {{ form.url_image(class="form-control", multiple=True) }}
+                {{ form.url_image.label }} {{ form.url_image(class="form-control") }}
                 {% for error in form.url_image.errors %}
                     <div class="text-danger">{{ error }}</div>
                 {% endfor %}
@@ -68,7 +62,10 @@
                     <div class="text-danger">{{ error }}</div>
                 {% endfor %}
             </div>
+
             {{ form.submit(class="btn btn-primary") }}
         </form>
     </div>
 {% endblock %}
+
+

@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Désactiver le bouton
     submitButton.disabled = true;
-    submitButton.value = "Connexion...";
+    submitButton.textContent = "Connexion...";
 
     try {
       const response = await fetch(form.action, {
@@ -89,7 +89,7 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error("Fetch error:", error);
     } finally {
       submitButton.disabled = false;
-      submitButton.value = "Se connecter";
+      submitButton.textContent = "Login";
     }
   });
 });

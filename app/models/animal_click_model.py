@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, UTC
 from app.db.mongo import db  # db est la base de données, pas le client
 
 clicks_collection = db["animal_clicks"]  # collection dédiée aux clics
@@ -22,7 +22,7 @@ class AnimalClickModel:
         """Enregistre un clic avec timestamp"""
         collection.insert_one({
             "animal_id": animal_id,
-            "date": datetime.utcnow()
+            "date": datetime.now(UTC)
         })
 
     @staticmethod

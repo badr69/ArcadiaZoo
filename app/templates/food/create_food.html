@@ -17,53 +17,57 @@
             {% else %}
                 <p>Welcome {{ current_user.username }}</p>
             {% endif %}
-            <a href="{{ url_for('auth.logout') }}" class="btn btn-danger mb-3">Logout</a>
+            <form action="{{ url_for('auth.logout') }}" method="POST" style="display:inline;">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button type="submit" class="btn btn-danger mb-3">Logout</button>
+            </form>
+{#            <a href="{{ url_for('auth.logout') }}" class="btn btn-danger mb-3">Logout</a>#}
         {% else %}
             <p>You are not cennected.</p>
             <a href="{{ url_for('auth.login') }}" class="btn btn-success mb-3">Login</a>
         {% endif %}
     </div>
-<div class="container mt-4">
-     <h2 class="text-center mb-4">Create Food</h2>
+    <div class="container mt-4">
+        <h2 class="text-center mb-4">Create Food</h2>
 
-    <form method="POST" action="{{ url_for('food.create_food') }}">
-        {{ form.hidden_tag() }}
+        <form method="POST" action="{{ url_for('food.create_food') }}">
+            {{ form.hidden_tag() }}
 
-        <div class="mb-3">
-            {{ form.animal.label(class="form-label") }}
-            {{ form.animal(class="form-select") }}
-            {% for error in form.animal.errors %}
-                <div class="text-danger">{{ error }}</div>
-            {% endfor %}
-        </div>
+            <div class="mb-3">
+                {{ form.animal.label(class="form-label") }}
+                {{ form.animal(class="form-select") }}
+                {% for error in form.animal.errors %}
+                    <div class="text-danger">{{ error }}</div>
+                {% endfor %}
+            </div>
 
-        <div class="mb-3">
-            {{ form.type_food.label(class="form-label") }}
-            {{ form.type_food(class="form-control") }}
-            {% for error in form.type_food.errors %}
-                <div class="text-danger">{{ error }}</div>
-            {% endfor %}
-        </div>
+            <div class="mb-3">
+                {{ form.type_food.label(class="form-label") }}
+                {{ form.type_food(class="form-control") }}
+                {% for error in form.type_food.errors %}
+                    <div class="text-danger">{{ error }}</div>
+                {% endfor %}
+            </div>
 
-        <div class="mb-3">
-            {{ form.quantity.label(class="form-label") }}
-            {{ form.quantity(class="form-control") }}
-            {% for error in form.quantity.errors %}
-                <div class="text-danger">{{ error }}</div>
-            {% endfor %}
-        </div>
+            <div class="mb-3">
+                {{ form.quantity.label(class="form-label") }}
+                {{ form.quantity(class="form-control") }}
+                {% for error in form.quantity.errors %}
+                    <div class="text-danger">{{ error }}</div>
+                {% endfor %}
+            </div>
 
-        <div class="mb-3">
-            {{ form.date_food.label(class="form-label") }}
-            {{ form.date_food(class="form-control") }}
-            <small class="form-text text-muted">Format: YYYY-MM-DD HH:MM</small>
-            {% for error in form.date_food.errors %}
-                <div class="text-danger">{{ error }}</div>
-            {% endfor %}
-        </div>
+            <div class="mb-3">
+                {{ form.date_food.label(class="form-label") }}
+                {{ form.date_food(class="form-control") }}
+                <small class="form-text text-muted">Format: YYYY-MM-DD HH:MM</small>
+                {% for error in form.date_food.errors %}
+                    <div class="text-danger">{{ error }}</div>
+                {% endfor %}
+            </div>
 
-        <button type="submit" class="btn btn-success">{{ form.submit.label.text }}</button>
-        <a href="{{ url_for('food.list_all_foods') }}" class="btn btn-secondary">Cancel</a>
-    </form>
-</div>
+            <button type="submit" class="btn btn-success">{{ form.submit.label.text }}</button>
+            <a href="{{ url_for('food.list_all_foods') }}" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
 {% endblock %}
