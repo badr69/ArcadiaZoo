@@ -25,31 +25,45 @@
         {% endif %}
         <a href="{{ url_for('habitat.list_all_habitats') }}" class="btn btn-primary mb-3">All Habitats</a>
     </div>
-    <div class="container mt-5">
-        <h2 class="text-center mb-4">Habitat detail</h2>
 
-        <table class="table table-bordered table-striped">
-            <thead>
-            <tr>
-                <th>ID</th>
-                <th>name</th>
-                <th>description</th>
-                <th>url_image</th>
-                <th>created_at</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td>{{ habitat.id }}</td>
-                <td>{{ habitat.name }}</td>
-                <td>{{ habitat.description }}</td>
-                <td>{{ habitat.url_image }}</td>
-                <td>{{ habitat.created_at }}</td>
-            </tr>
-            </tbody>
-        </table>
-        <a href="{{ url_for('habitat.list_all_habitats') }}" class="btn btn-secondary">Back</a>
+    <div class="container mt-4">
+        <ul class="list-group">
+            <li class="list-group-item"><strong>ID:</strong> {{ habitat.id }}</li>
+            <li class="list-group-item"><strong>Name:</strong> {{ habitat.name }}</li>
+            <li class="list-group-item"><strong>url_image:</strong> {{ habitat.url_image }}</li>
+            <li class="list-group-item"><strong>Description:</strong> {{ habitat.description }}</li>
+            <li class="list-group-item">
+                <strong>Image:</strong>
+                <img src="{{ url_for('static', filename=habitat.url_image.lstrip('/')) }}" alt="{{ habitat.name }}"
+                     class="img-fluid">
+            </li>
+        </ul>
     </div>
+{#    <div class="container mt-5">#}
+{#        <h2 class="text-center mb-4">Habitat detail</h2>#}
+{##}
+{#        <table class="table table-bordered table-striped">#}
+{#            <thead>#}
+{#            <tr>#}
+{#                <th>ID</th>#}
+{#                <th>name</th>#}
+{#                <th>description</th>#}
+{#                <th>url_image</th>#}
+{#                <th>created_at</th>#}
+{#            </tr>#}
+{#            </thead>#}
+{#            <tbody>#}
+{#            <tr>#}
+{#                <td>{{ habitat.id }}</td>#}
+{#                <td>{{ habitat.name }}</td>#}
+{#                <td>{{ habitat.description }}</td>#}
+{#                <td>{{ habitat.url_image }}</td>#}
+{#                <td>{{ habitat.created_at }}</td>#}
+{#            </tr>#}
+{#            </tbody>#}
+{#        </table>#}
+{#        <a href="{{ url_for('habitat.list_all_habitats') }}" class="btn btn-secondary">Back</a>#}
+{#    </div>#}
 {% endblock %}
 
 

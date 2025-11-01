@@ -37,6 +37,7 @@
                 <th>Name Habitat</th>
                 <th>url_image</th>
                 <th>description</th>
+                <th>Image</th>
                 <th>Actions</th>
             </tr>
             </thead>
@@ -47,6 +48,11 @@
                     <td>{{ habitat.name }}</td>
                     <td>{{ habitat.url_image }}</td>
                     <td>{{ habitat.description }}</td>
+                      <td class="list-group-item">
+                    <strong>Image:</strong>
+                    <img src="{{ url_for('static', filename=habitat.url_image.lstrip('/')) }}" alt="{{ habitat.name }}"
+                         style="width:100px; height:auto;">
+                </td>
 
                     <td>
                         <a href="{{ url_for('habitat.update_habitat', habitat_id=habitat.id) }}"

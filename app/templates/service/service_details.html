@@ -26,29 +26,43 @@
         <a href="{{ url_for('service.list_all_services') }}" class="btn btn-secondary mb-3">All Services</a>
     </div>
 
-    <div class="container mt-5">
-        <h2 class="mb-4 text-center">Service detail</h2>
-
-        <table class="table table-bordered table-striped">
-            <thead>
-            <tr>
-                <th>ID</th>
-                <th>name</th>
-                <th>description</th>
-                <td>created_at</td>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td>{{ service.id }}</td>
-                <td>{{ service.name }}</td>
-                <td>{{ service.description }}</td>
-                <td>{{ service.created_at }}</td>
-            </tr>
-            </tbody>
-        </table>
-        <a href="{{ url_for('service.list_all_services') }}" class="btn btn-secondary">back</a>
+    <div class="container mt-4">
+        <ul class="list-group">
+            <li class="list-group-item"><strong>ID:</strong> {{ service.id }}</li>
+            <li class="list-group-item"><strong>Name:</strong> {{ service.name }}</li>
+            <li class="list-group-item"><strong>url_image:</strong> {{ service.url_image }}</li>
+            <li class="list-group-item"><strong>Description:</strong> {{ service.description }}</li>
+            <li class="list-group-item">
+                <strong>Image:</strong>
+                <img src="{{ url_for('static', filename=service.url_image.lstrip('/')) }}" alt="{{ service.name }}"
+                     class="img-fluid">
+            </li>
+        </ul>
     </div>
+
+{#    <div class="container mt-5">#}
+{#        <h2 class="mb-4 text-center">Service detail</h2>#}
+{##}
+{#        <table class="table table-bordered table-striped">#}
+{#            <thead>#}
+{#            <tr>#}
+{#                <th>ID</th>#}
+{#                <th>name</th>#}
+{#                <th>description</th>#}
+{#                <td>created_at</td>#}
+{#            </tr>#}
+{#            </thead>#}
+{#            <tbody>#}
+{#            <tr>#}
+{#                <td>{{ service.id }}</td>#}
+{#                <td>{{ service.name }}</td>#}
+{#                <td>{{ service.description }}</td>#}
+{#                <td>{{ service.created_at }}</td>#}
+{#            </tr>#}
+{#            </tbody>#}
+{#        </table>#}
+{#        <a href="{{ url_for('service.list_all_services') }}" class="btn btn-secondary">back</a>#}
+{#    </div>#}
 {% endblock %}
 
 
