@@ -17,7 +17,6 @@ CREATE TABLE IF NOT EXISTS users (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (role_id) REFERENCES roles(role_id) ON DELETE CASCADE
 );
-
 -- Table habitats
 CREATE TABLE IF NOT EXISTS habitats (
     habitat_id SERIAL PRIMARY KEY,
@@ -28,9 +27,9 @@ CREATE TABLE IF NOT EXISTS habitats (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Table images habitats
+-- Table images des habitats
 CREATE TABLE IF NOT EXISTS img_habitats (
-    id SERIAL PRIMARY KEY,
+    img_hab_id SERIAL PRIMARY KEY,
     habitat_id INTEGER NOT NULL,
     filename VARCHAR(255) NOT NULL,
     description TEXT,
@@ -52,9 +51,9 @@ CREATE TABLE IF NOT EXISTS animals (
     FOREIGN KEY (habitat_id) REFERENCES habitats(habitat_id) ON DELETE SET NULL
 );
 
--- Table images animals
+-- Table images des animaux
 CREATE TABLE IF NOT EXISTS img_animals (
-    id SERIAL PRIMARY KEY,
+    img_ani_id SERIAL PRIMARY KEY,
     animal_id INTEGER NOT NULL,
     filename VARCHAR(255) NOT NULL,
     description TEXT,
@@ -63,19 +62,19 @@ CREATE TABLE IF NOT EXISTS img_animals (
     FOREIGN KEY (animal_id) REFERENCES animals(animal_id) ON DELETE CASCADE
 );
 
--- Table services
+-- Table services (exemple)
 CREATE TABLE IF NOT EXISTS services (
     service_id SERIAL PRIMARY KEY,
     name VARCHAR(100) UNIQUE NOT NULL,
-    url_image VARCHAR(255) NOT NULL,
-    description TEXT NOT NULL,
+    description TEXT,
+    url_image VARCHAR(255),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Table images services
+-- Table images des services
 CREATE TABLE IF NOT EXISTS img_services (
-    id SERIAL PRIMARY KEY,
+    img_serv_id SERIAL PRIMARY KEY,
     service_id INTEGER NOT NULL,
     filename VARCHAR(255) NOT NULL,
     description TEXT,
