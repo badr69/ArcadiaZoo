@@ -1,69 +1,62 @@
-from app.models.habitat_model import Habitat
+from app.models.habitat_model import HabitatModel
 
 class HabitatService:
-    @classmethod
-    def create_habitat(cls, name, url_image, description):
-        habitat = Habitat.create_habitat(name, url_image, description)
-        if habitat is None:
-            return {"status": False, "message": "Erreur lors de la création de l'habitat."}
-        return {"status": True, "habitat": habitat}
-
 
     @classmethod
     def list_all_habitats(cls):
-        return Habitat.list_all_habitats()
+        """Récupère tous les habitats"""
+        habitats = HabitatModel.list_all_habitats()
+        # TODO : appliquer un filtre si nécessaire (ex : habitats actifs)
+        return habitats
 
     @classmethod
     def get_habitat_by_id(cls, habitat_id):
-        return Habitat.get_habitat_by_id(habitat_id)
+        """Récupère un habitat par son id"""
+        habitat = HabitatModel.get_habitat_by_id(habitat_id)
+        if not habitat:
+            # TODO : gérer l'erreur si habitat inexistant
+            print(f"Habitat avec id {habitat_id} introuvable")
+        return habitat
 
     @classmethod
-    def update_habitat(cls, habitat_id, name, url_image, description):
-        success = Habitat.update_habitat(habitat_id, name, url_image, description)
-        if not success:
-            return {"status": False, "message": "Erreur lors de la mise à jour."}
-        return {"status": True, "message": "Habitat mis à jour."}
+    def create_habitat(cls, name, description, url_image):
+        """Création d'un nouvel habitat"""
+        # Vérification que le nom n'existe pas déjà
+        existing = [h for h in HabitatModel.list_all_habitats() if h.name == name]
+        if existing:
+            # TODO : retourner un message d'erreur plus structuré
+            print(f"Un habitat avec le nom '{name}' existe déjà")
+            return None
+
+        # TODO : vérifier que url_image est valide ou respecter certaines règles
+        habitat = HabitatModel.create_habitat(name, description, url_image)
+        return habitat
+
+    @classmethod
+    def update_habitat(cls, habitat_id, name, description, url_image):
+        """Met à jour un habitat existant"""
+        habitat = HabitatModel.get_habitat_by_id(habitat_id)
+        if not habitat:
+            # TODO : retourner une exception ou message d'erreur
+            print(f"Aucun habitat trouvé avec l'id {habitat_id}")
+            return False
+
+        # TODO : vérifier que le nouveau nom n'est pas déjà utilisé par un autre habitat
+        all_habitats = HabitatModel.list_all_habitats()
+        if any(h.name == name and h.habitat_id != habitat_id for h in all_habitats):
+            print(f"Le nom '{name}' est déjà utilisé par un autre habitat")
+            return False
+
+        return HabitatModel.update_habitat(habitat_id, name, description, url_image)
 
     @classmethod
     def delete_habitat(cls, habitat_id):
-        success = Habitat.delete_habitat(habitat_id)
-        if not success:
-            return {"status": False, "message": "Erreur lors de la suppression."}
-        return {"status": True, "message": "Habitat supprimé."}
+        """Supprime un habitat"""
+        habitat = HabitatModel.get_habitat_by_id(habitat_id)
+        if not habitat:
+            # TODO : gérer le cas où l'habitat n'existe pas
+            print(f"Aucun habitat trouvé avec l'id {habitat_id} à supprimer")
+            return False
 
-
-
-
-
-# from app.models.habitat_model import Habitat
-#
-#
-# class HabitatService:
-#     @staticmethod
-#     def create_habitat(name, url_image, description):
-#         habitat = Habitat.create_habitat(name, url_image, description)
-#         if habitat is None:
-#             return {"status": False, "message": "Erreur lors de la création de l'habitat."}
-#         return {"status": True, "habitat": habitat}
-#
-#     @staticmethod
-#     def list_all_habitats():
-#         return Habitat.list_all_habitats()
-#
-#     @staticmethod
-#     def get_habitat_by_id(habitat_id):
-#         return Habitat.get_habitat_by_id(habitat_id)
-#
-#     @staticmethod
-#     def update_habitat(habitat_id, name, url_image, description):
-#         success = Habitat.update_habitat(habitat_id, name, url_image, description)
-#         if not success:
-#             return {"status": False, "message": "Erreur lors de la mise à jour."}
-#         return {"status": True, "message": "Habitat mis à jour."}
-#
-#     @staticmethod
-#     def delete_habitat(habitat_id):
-#         success = Habitat.delete_habitat(habitat_id)
-#         if not success:
-#             return {"status": False, "message": "Erreur lors de la suppression."}
-#         return {"status": True, "message": "Habitat supprimé."}
+        # TODO : vérifier si des animaux ou images dépendent de cet habitat avant suppression
+        return HabitatModel.delete_habitat(habitat_id)
