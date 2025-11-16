@@ -59,6 +59,9 @@ def create_app():
     from app.routes.habitats_routes import habitat_bp
     app.register_blueprint(habitat_bp)
 
+    from app.routes.img_habitat_route import img_habitat_bp
+    app.register_blueprint(img_habitat_bp)
+
     from app.routes.animal_routes import animal_bp
     app.register_blueprint(animal_bp)
 

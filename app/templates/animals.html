@@ -1,29 +1,72 @@
 {% extends "base.html" %}
 
 {% block content %}
+    <style>
+        .card-img-top {
+            height: 180px;
+            object-fit: cover;
+            width: 100%;
+        }
 
-<div class="container-fluid mt-5">
-    <h1 class="text-center mb-4">Welcome To Our Zoo's Animals </h1>
+        .card {
+            width: 100%;
+        }
 
-    <div class="row gx-4 gy-4">
-        {% for animal in animals %}
-            <div class="col-lg-4 col-md-6 col-sm-12">
-                <div class="card h-100 shadow">
-                    <img src="{{ url_for('static', filename=animal.url_image.lstrip('/')) }}"
-                         class="card-img-top animal-clickable"
-                         alt="{{ animal.name }}"
-                         data-animal-id="{{ animal.id }}"
-                         style="cursor:pointer;">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ animal.name }}</h5>
-                        <p class="card-text">{{ animal.description[:120] }}...</p>
+    </style>
+    <div class="container-fluid mt-5">
+        <h2 class="text-center mb-4">Welcome To Our Zoo's Animals </h2>
+
+        <div class="row gx-4 gy-4">
+            {% for animal in animals %}
+                <div class="col-lg-4 col-md-6 col-sm-12">
+                    <div class="card h-100 shadow">
+                        <img src="{{ url_for('static', filename=animal.url_image.lstrip('/')) }}" class="card-img-top"
+                             alt="{{ animal.name }}">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ animal.name }}</h5>
+                            <p class="card-text">{{ animal.description[:120] }}...</p>
+                        </div>
                     </div>
                 </div>
-            </div>
-        {% endfor %}
+            {% endfor %}
+        </div>
     </div>
-</div>
 
 {% endblock %}
 
 
+
+
+
+
+
+
+
+{#{% extends "base.html" %}#}
+{##}
+{#{% block content %}#}
+{#<div id="animalsCarousel" class="carousel slide" data-bs-ride="carousel">#}
+{##}
+{#  <div class="carousel-inner">#}
+{#    {% for animal in animals %}#}
+{#    <div class="carousel-item {% if loop.first %}active{% endif %}">#}
+{#      <img src="{{ url_for('static', filename=animal.image_url) }}" class="d-block w-100" alt="{{ animal.name }}" style="height: 400px; object-fit: cover;">#}
+{#      <div class="carousel-caption d-none d-md-block">#}
+{#        <h5>{{ animal.name }}</h5>#}
+{#        <!-- tu peux ajouter d'autres infos ici -->#}
+{#      </div>#}
+{#    </div>#}
+{#    {% endfor %}#}
+{#  </div>#}
+{##}
+{#  <button class="carousel-control-prev" type="button" data-bs-target="#animalsCarousel" data-bs-slide="prev">#}
+{#    <span class="carousel-control-prev-icon" aria-hidden="true"></span>#}
+{#    <span class="visually-hidden">Précédent</span>#}
+{#  </button>#}
+{#  <button class="carousel-control-next" type="button" data-bs-target="#animalsCarousel" data-bs-slide="next">#}
+{#    <span class="carousel-control-next-icon" aria-hidden="true"></span>#}
+{#    <span class="visually-hidden">Suivant</span>#}
+{#  </button>#}
+{#</div>#}
+{##}
+{#{% endblock %}#}

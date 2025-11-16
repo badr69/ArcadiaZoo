@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+    <div>
+        {% if current_user.is_authenticated and current_user.role_name == "admin" %}
+            <p class="admin-connected">Admin Connected 👌</p>
+        {% endif %}
+    </div>
+    <div class="container-fluid mt-4">
+        <h1 class="text-center mb-4">List All images habitat</h1>
+        <a href="{{ url_for('img_habitat.create_habitat') }}" class="btn btn-primary mb-3">Create img_habitat</a>
+        <a href="{{ url_for('auth.logout') }}" class="btn btn-danger mb-3">Logout</a>
+
+
+        <table class="table table-striped table-bordered">
+            <thead class="table-dark">
+            <tr>a
+                <th>id</th>
+                <th>Name img_Habitat</th>
+                <th>url_image</th>
+                <th>description</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for img_habitat in img_habitats %}
+                <tr>
+                    <td>{{ img_habitat.id }}</td>
+                    <td>{{ img_habitat.name }}</td>
+                    <td>{{ img_habitat.url_image }}</td>
+                    <td>{{ img_habitat.description }}</td>
+
+                    <td>
+                        <a href="{{ url_for('img_habitat.update_habitat', habitat_id=habitat.id) }}"
+                           class="btn btn-warning btn-sm">Modifier</a>
+                        <form action="{{ url_for('img_habitat.delete_habitat', habitat_id=habitat.id) }}" method="POST"
+                              style="display:inline;">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                            <button type="submit" class="btn btn-danger btn-sm"
+                                    onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?');">
+                                Supprimer
+                            </button>
+                        </form>
+                        <a href="{{ url_for('habitat.get_img_habitat_by_id', habitat_id=habitat.id) }}"
+                           class="btn btn-warning btn-sm">Detail</a>
+
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="5" class="text-center">No Habitat</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
+
+
+
+
+
+
+
+
+
