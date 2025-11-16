@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Détails Habitat{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>{{ habitat.name }}</h1>
+
+    <div class="mb-3">
+        <strong>Description :</strong>
+        <p>{{ habitat.description }}</p>
+    </div>
+
+    <h3>Images de l'habitat</h3>
+    {% if images %}
+        <div class="row">
+            {% for img in images %}
+                <div class="col-md-4 mb-3">
+                    <div class="card">
+                        <img src="{{ url_for('static', filename=img.filename) }}"
+                             class="card-img-top" alt="Image Habitat">
+                        <div class="card-body">
+                            {% if img.description %}
+                                <p class="card-text">{{ img.description }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>Aucune image pour cet habitat.</p>
+    {% endif %}
+
+    <a href="{{ url_for('habitat.list_all_habitats') }}" class="btn btn-secondary mt-3">Retour</a>
+</div>
+{% endblock %}

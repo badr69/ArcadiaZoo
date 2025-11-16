@@ -1,15 +1,17 @@
 from app.db.psql import get_db_connection
 
 
-class Role:
-    def __init__(self, id, name):
-        self.id = id
+class RoleModel:
+    def __init__(self, role_id, name):
+        self.role_id = role_id
         self.name = name
 
     def __repr__(self):
-        return f"<Role id={self.id} name={self.name}>"
+        return f"<Role id={self.role_id} name={self.name}>"
 
-class RoleModel:
+    @property
+    def id(self):
+        return self.role_id
 
     @classmethod
     def list_all_roles(cls):

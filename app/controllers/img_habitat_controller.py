@@ -1,111 +1,69 @@
-from pathlib import Path
-from app.forms.img_habitat_form import ImgHabitatCreateForm, ImgHabitatUpdateForm
+from flask import render_template, redirect, url_for, flash
 from app.services.img_habitat_service import ImgHabitatService
-from flask import render_template, redirect, url_for, flash, current_app
-from werkzeug.utils import secure_filename
-from app.utils.security import detect_sql_injection, sanitize_html
-
+from app.forms.img_habitat_forms import ImgHabitatCreateForm, ImgHabitatUpdateForm
+from app.utils.security import sanitize_html, detect_sql_injection
 
 class ImgHabitatController:
-    @staticmethod
-    def get_all():
-        images = ImgHabitatService.get_all()
-        return render_template('img_habitat/list_all.html', images=images)
 
     @staticmethod
-    def get_by_id(image_id):
+    def list_all_ha_img():
+        images = ImgHabitatService.list_all_ha_img()
+        return render_template("img_habitat/list_all_ha_img.html", images=images)
+
+    @staticmethod
+    def get_ha_img_by_id(img_ha_id):
         try:
-            image = ImgHabitatService.get_by_id(image_id)
-            return render_template('img_habitat/details.html', image=image)
+            img = ImgHabitatService.get_ha_img_by_id(img_ha_id)
         except LookupError:
-            flash("Image non trouvée.", "danger")
-            return redirect(url_for('img_habitat.list_all'))
+            flash("Image introuvable.", "danger")
+            return redirect(url_for("img_habitat.list_all_ha_img"))
+        return render_template("img_habitat/details_ha_img_.html", img=img)
 
     @staticmethod
-    def create():
+    def create_ha_img():
         form = ImgHabitatCreateForm()
-
         if form.validate_on_submit():
-            name = form.name.data
             description = sanitize_html(form.description.data)
-            file = form.filename.data
+            file = form.image_file.data
+            habitat_id = form.habitat_id.data
 
-            if detect_sql_injection(name) or detect_sql_injection(description):
-                flash("Entrée invalide détectée.", "danger")
-                return render_template("img_habitat/create.html", form=form)
-
-            if not file or not hasattr(file, 'filename') or file.filename == '':
-                flash("Aucun fichier sélectionné.", "danger")
-                return render_template("img_habitat/create.html", form=form)
+            if detect_sql_injection(description):
+                flash("Input invalide.", "danger")
+                return render_template("img_habitat/create_ha_img.html", form=form)
 
             try:
-                filename = secure_filename(file.filename)
-                upload_dir = Path(current_app.config['HABITAT_IMG_FOLDER'])
-                upload_dir.mkdir(parents=True, exist_ok=True)
-                filepath = upload_dir / filename
-                file.save(filepath)
+                ImgHabitatService.create_ha_img(habitat_id, file, description)
+                flash("Image créée avec succès.", "success")
+                return redirect(url_for("img_habitat.list_all_ha_img"))
+            except Exception as e:
+                flash(str(e), "danger")
 
-                file_url = f"uploads/img_habitat/{filename}"
-
-                ImgHabitatService.create(name, file_url, description)
-
-                flash("Image ajoutée avec succès.", "success")
-                return redirect(url_for("img_habitat.list_all"))
-
-            except Exception:
-                current_app.logger.exception("Erreur lors de l’ajout de l'image")
-                flash("Une erreur est survenue pendant l’ajout.", "danger")
-
-        return render_template("img_habitat/create.html", form=form)
+        return render_template("img_habitat/create_ha_img.html", form=form)
 
     @staticmethod
-    def update(image_id):
-        try:
-            img = ImgHabitatService.get_by_id(image_id)
-        except LookupError:
-            flash("Image non trouvée.", "danger")
-            return redirect(url_for('img_habitat.list_all'))
-
+    def update_ha_img(img_id):
+        img = ImgHabitatService.get_ha_img_by_id(img_id)
         form = ImgHabitatUpdateForm(obj=img)
 
         if form.validate_on_submit():
-            name = form.name.data
             description = sanitize_html(form.description.data)
-            file = form.filename.data
-
-            if detect_sql_injection(name) or detect_sql_injection(description):
-                flash("Entrée invalide détectée.", "danger")
-                return render_template("img_habitat/update.html", form=form)
-
-            if file and hasattr(file, 'filename') and file.filename != '':
-                filename = secure_filename(file.filename)
-                upload_dir = Path(current_app.config['HABITAT_IMG_FOLDER'])
-                upload_dir.mkdir(parents=True, exist_ok=True)
-                filepath = upload_dir / filename
-                file.save(filepath)
-                file_url = f"uploads/img_habitat/{filename}"
-            else:
-                file_url = img.filename
+            file = form.image_file.data
+            habitat_id = form.habitat_id.data
 
             try:
-                ImgHabitatService.update(image_id, name, file_url, description)
-                flash("Image mise à jour avec succès.", "success")
-                return redirect(url_for('img_habitat.list_all'))
+                ImgHabitatService.update_ha_img(img_id, habitat_id, file, description)
+                flash("Image mise à jour.", "success")
+                return redirect(url_for("img_habitat.list_all_ha_img"))
             except Exception as e:
-                current_app.logger.exception("Erreur lors de la mise à jour de l'image")
-                flash("Une erreur est survenue pendant la mise à jour.", "danger")
-                return render_template("img_habitat/update.html", form=form)
+                flash(str(e), "danger")
 
-        return render_template("img_habitat/update.html", form=form)
+        return render_template("img_habitat/update_ha_img.html", form=form, img=img)
 
     @staticmethod
-    def delete(image_id):
+    def delete_ha_img(img_id):
         try:
-            ImgHabitatService.delete(image_id)
-            flash("Image supprimée avec succès.", "success")
-        except LookupError:
-            flash("Image non trouvée.", "danger")
-        except Exception:
-            current_app.logger.exception("Erreur lors de la suppression de l'image")
-            flash("Une erreur est survenue pendant la suppression.", "danger")
-        return redirect(url_for('img_habitat.list_all'))
+            ImgHabitatService.delete(img_id)
+            flash("Image supprimée.", "success")
+        except Exception as e:
+            flash(str(e), "danger")
+        return redirect(url_for("img_habitat.list_all_ha_img"))
