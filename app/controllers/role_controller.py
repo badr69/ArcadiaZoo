@@ -1,93 +1,80 @@
-from flask import render_template, redirect, url_for, flash, request
+from flask import render_template, url_for, redirect, flash
+from app.forms.role_forms import CreateRoleForm, UpdateRoleForm
 from app.services.role_service import RoleService
 from app.utils.security import sanitize_html, detect_sql_injection
-from app.forms.role_forms import CreateRoleForm, DeleteRoleForm, UpdateRoleForm
-
 
 class RoleController:
-    def __init__(self):
-        self.role_service = RoleService()
 
-    # ===================== CREATE =====================
+    @staticmethod
+    def list_all_roles():
+        roles = RoleService.list_all_roles()  # liste de RoleModel
+        return render_template("role/list_all_roles.html", roles=roles)
 
-    def create_role(self):
+    @staticmethod
+    def get_role_by_id(role_id):
+        """Affiche un rôle par ID"""
+        role = RoleService.get_role_by_id(role_id)
+        print("DEBUG role:", role)
+        if not role:
+            flash("Rôle non trouvé", "warning")
+            return redirect(url_for("role.list_all_roles"))
+        return render_template("role/role_detail.html", role=role)
+
+    @staticmethod
+    def create_role():
+        """Crée un rôle via formulaire"""
         form = CreateRoleForm()
-
         if form.validate_on_submit():
             name = sanitize_html(form.name.data)
-
             if detect_sql_injection(name):
                 flash("Entrée invalide détectée.", "danger")
                 return render_template("role/create_role.html", form=form)
 
-            role, message = self.role_service.create_role(name)
+            role = RoleService.create_role(name)
             if role:
-                flash(message, "success")
+                flash(f"Rôle '{role.name}' créé avec succès", "success")
                 return redirect(url_for("role.list_all_roles"))
             else:
-                flash(message, "danger")
+                flash("Erreur lors de la création du rôle", "danger")
 
         return render_template("role/create_role.html", form=form)
 
-    # ===================== UPDATE =====================
-
-    def update_role(self, role_id):
-        role = self.role_service.get_role_by_id(role_id)
+    @staticmethod
+    def update_role(role_id):
+        """Met à jour un rôle existant"""
+        role = RoleService.get_role_by_id(role_id)
         if not role:
-            flash("Rôle introuvable", "danger")
+            flash("Rôle non trouvé", "warning")
             return redirect(url_for("role.list_all_roles"))
 
-        # Préremplir le formulaire avec la valeur actuelle
         form = UpdateRoleForm(obj=role)
-
         if form.validate_on_submit():
             name = sanitize_html(form.name.data)
-
             if detect_sql_injection(name):
                 flash("Entrée invalide détectée.", "danger")
                 return render_template("role/update_role.html", form=form, role=role)
 
-            result, status = self.role_service.update_role(role, name)
-            if status == 200:
-                flash(result.get("message"), "success")
+            updated_role = RoleService.update_role(role, name)
+            if updated_role:
+                flash(f"Rôle '{updated_role.name}' mis à jour avec succès", "success")
                 return redirect(url_for("role.list_all_roles"))
             else:
-                flash(result.get("error"), "danger")
+                flash("Erreur lors de la mise à jour du rôle", "danger")
 
         return render_template("role/update_role.html", form=form, role=role)
 
-    # ===================== DELETE =====================
-
-
-    def delete_role(self, role_id):
-        role = self.role_service.get_role_by_id(role_id)
+    @staticmethod
+    def delete_role(role_id):
+        """Supprime un rôle"""
+        role = RoleService.get_role_by_id(role_id)
         if not role:
-            flash("Rôle introuvable", "danger")
+            flash("Rôle non trouvé", "warning")
             return redirect(url_for("role.list_all_roles"))
 
-        form = DeleteRoleForm()
+        success = RoleService.delete_role(role)
+        if success:
+            flash(f"Rôle '{role.name}' supprimé avec succès", "success")
+        else:
+            flash("Erreur lors de la suppression du rôle", "danger")
 
-        if form.validate_on_submit():
-            success = self.role_service.delete_role(role)
-            if success:
-                flash("Rôle supprimé avec succès", "success")
-            else:
-                flash("Erreur lors de la suppression du rôle", "danger")
-            return redirect(url_for("role.list_all_roles"))
-
-        # On affiche d'abord la page de confirmation
-        return render_template("role/delete_role.html", form=form, role=role)
-
-    # ===================== READ =====================
-    @classmethod
-    def list_all_roles(cls):
-        roles = RoleService().list_all_roles()
-        return render_template("role/list_all_roles.html", roles=roles)
-
-    @classmethod
-    def get_role_by_id(cls, role_id):
-        role = RoleService().get_role_by_id(role_id)
-        if not role:
-            flash("Rôle introuvable", "danger")
-            return redirect(url_for("role.list_all_roles"))
-        return render_template("role/role_detail.html", role=role)
+        return redirect(url_for("role.list_all_roles"))

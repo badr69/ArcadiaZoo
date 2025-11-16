@@ -15,11 +15,3 @@ def admin_dash():
     # Tu peux passer role_name au template
     return render_template("dash/admin_dash.html", form=form, role_name=role_name)
 
-
-# @admin_bp.route('/admin_dash')
-# @login_required
-# def admin_dash():
-#     form = LogoutForm()
-#     role = current_user.role if current_user else None
-#     return render_template('dash/admin_dash.html', form=form, role=role)
-#

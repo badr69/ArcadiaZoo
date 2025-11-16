@@ -3,7 +3,7 @@ from flask_login import current_user
 from app.forms.habitat_forms import HabitatCreateForm, HabitatUpdateForm
 from app.services.animal_service import AnimalService
 from app.services.habitat_service import HabitatService
-from app.services.imaage_service import ImageService
+from app.services.image_service import ImageService
 class HabitatController:
 
     @classmethod
@@ -30,7 +30,6 @@ class HabitatController:
                 name=name,
                 description=description,
                 image_id=image_id,
-
             )
 
             if new_habitat:

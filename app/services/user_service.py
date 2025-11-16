@@ -1,66 +1,90 @@
-import psycopg2
 from app.models.user_model import UserModel
-from werkzeug.security import generate_password_hash
+from app.utils.security import hash_password
+from app.db.psql import get_db_connection
 
 
 class UserService:
+    """Service OOP pour gérer la logique métier des utilisateurs."""
 
-    @staticmethod
-    def create_user(username: str, email: str, password: str, role_id: int):
-        try:
-            if UserModel.get_by_email(email):
-                return {"error": "Email déjà utilisé."}, 400
-            # Hasher le mot de passe avant la création
-            hashed_password = generate_password_hash(password, method="scrypt")
-            # Utiliser le mot de passe hashé pour créer l'utilisateur
-            user = UserModel.create_user(username, email, hashed_password, role_id)
-            if not user:
-                raise Exception("Création utilisateur échouée.")
-            return {
-                "message": "Utilisateur créé avec succès.",
-                "user_id": user.id
-            }, 201
-        except psycopg2.Error as db_err:
-            print("[PostgreSQL] create_user:", db_err)
-            return {"error": "Erreur lors de la création de l'utilisateur."}, 500
-        except Exception as exc:
-            print("[Service] create_user:", exc)
-            return {"error": "Erreur serveur."}, 500
+    def __init__(self, user: UserModel):
+        """Initialise le service pour un utilisateur spécifique."""
+        self.user = user
 
-    @staticmethod
-    def list_all_users():
-        """Retourne la liste des utilisateurs (ou [] en cas d'erreur)."""
-        try:
-            return UserModel.list_all_users()
-        except Exception as exc:
-            print("[Service] list_all_users:", exc)
-            return []
+    # ===================== CREATE / CLASSMETHOD =====================
+    @classmethod
+    def list_all_users(cls):
+        """Retourne tous les utilisateurs sous forme d'objets UserModel."""
+        return UserModel.list_all_users()
 
-    @staticmethod
-    def get_user_by_id(user_id: int):
-        """Retourne un objet User ou None."""
-        try:
-            return UserModel.get_user_by_id(user_id)
-        except Exception as exc:
-            print("[Service] get_user_by_id:", exc)
+    @classmethod
+    def get_user_by_id(cls, user_id):
+        """Retourne un objet UserModel par son ID, ou None si inexistant."""
+        user = UserModel.get_user_by_id(user_id)
+        return cls(user) if user else None
+
+    @classmethod
+    def get_user_by_email(cls, email):
+        """Retourne un objet UserService pour un utilisateur via email."""
+        user = UserModel.get_user_by_email(email)
+        return cls(user) if user else None
+
+    @classmethod
+    def create_user(cls, username, email, password, role_id):
+        """
+        Crée un nouvel utilisateur et retourne un objet UserService.
+        Retourne None si échec (ex: email déjà utilisé).
+        """
+        if UserModel.get_user_by_email(email):
+            return None  # Email déjà utilisé
+        user = UserModel.create_user(username, email, password, role_id)
+        return cls(user) if user else None
+
+    # ===================== INSTANCE METHODS =====================
+    def update_user(self, username=None, email=None, role_id=None, password=None):
+        """
+        Met à jour l'utilisateur actuel.
+        Retourne self si succès, None sinon.
+        """
+        # Vérification email unique
+        if email and email != self.user.email:
+            existing = UserModel.get_user_by_email(email)
+            if existing:
+                print("[update_user error]: email déjà utilisé")
+                return None
+
+        # Mise à jour des champs via le modèle
+        res, status = self.user.update_user(username, email, role_id)
+        if not res:
             return None
-    #
-    @staticmethod
-    def update_user(user_id, username, email, role_id):
-        """Retourne un objet User ou None."""
-        try:
-            return UserModel.update_user(user_id, username, email, role_id)
-        except Exception as exc:
-            print("[Service] get_user_by_id:", exc)
-            return None
 
-    @staticmethod
-    def delete_user(user_id: int):
-        try:
-            success = UserModel.delete_user(user_id)
-            if not success:
-                return {"error": "Utilisateur non trouvé."}, 404
-            return {"message": "Utilisateur supprimé."}, 200
-        except Exception as exc:
-            print("[Service] delete_user:", exc)
-            return {"error": "Erreur serveur."}, 500
+        # Mise à jour du mot de passe si fourni
+        if password:
+            password_hash = hash_password(password)
+            try:
+                with get_db_connection() as conn:
+                    with conn.cursor() as cur:
+                        cur.execute(
+                            "UPDATE users SET password_hash = %s WHERE user_id = %s",
+                            (password_hash, self.user.user_id)
+                        )
+                        conn.commit()
+                        self.user.password_hash = password_hash
+            except Exception as e:
+                print(f"[update password error]: {e}")
+                return None
+
+        return self
+
+    def delete_user(self):
+        """Supprime l'utilisateur actuel. Retourne True si succès, False sinon."""
+        return self.user.delete_user()
+
+    # ===================== AUTHENTICATION =====================
+    @classmethod
+    def authenticate(cls, email, password):
+        """
+        Authentifie un utilisateur.
+        Retourne un objet UserService si succès, None sinon.
+        """
+        user = UserModel.authenticate(email, password)
+        return cls(user) if user else None

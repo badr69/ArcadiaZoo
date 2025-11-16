@@ -38,17 +38,17 @@ def create_app():
     from app.routes.admin_route import admin_bp
     app.register_blueprint(admin_bp)
 
-    from app.routes.employee_route import employee_bp
-    app.register_blueprint(employee_bp)
+    # from app.routes.employee_route import employee_bp
+    # app.register_blueprint(employee_bp)
 
-    from app.routes.vet_route import vet_bp
-    app.register_blueprint(vet_bp)
+    # from app.routes.vet_route import vet_bp
+    # app.register_blueprint(vet_bp)
 
-    from app.routes.care_routes import care_bp
-    app.register_blueprint(care_bp)
-
-    from app.routes.care_routes import api_bp
-    app.register_blueprint(api_bp)
+    # from app.routes.care_routes import care_bp
+    # app.register_blueprint(care_bp)
+    #
+    # from app.routes.care_routes import api_bp
+    # app.register_blueprint(api_bp)
 
     from app.routes.auth_routes import auth_bp
     app.register_blueprint(auth_bp)
@@ -56,23 +56,23 @@ def create_app():
     from app.routes.main_routes import main_bp
     app.register_blueprint(main_bp)
 
-    from app.routes.habitats_routes import habitat_bp
-    app.register_blueprint(habitat_bp)
-
-    from app.routes.img_habitat_route import img_habitat_bp
-    app.register_blueprint(img_habitat_bp)
-
-    from app.routes.animal_routes import animal_bp
-    app.register_blueprint(animal_bp)
-
-    from app.routes.food_routes import food_bp
-    app.register_blueprint(food_bp)
-
-    from app.routes.service_routes import service_bp
-    app.register_blueprint(service_bp)
-
-    from app.routes.review_route import reviews_bp
-    app.register_blueprint(reviews_bp)
+    # from app.routes.habitats_routes import habitat_bp
+    # app.register_blueprint(habitat_bp)
+    #
+    # from app.routes.img_habitat_route import img_habitat_bp
+    # app.register_blueprint(img_habitat_bp)
+    #
+    # from app.routes.animal_routes import animal_bp
+    # app.register_blueprint(animal_bp)
+    #
+    # from app.routes.food_routes import food_bp
+    # app.register_blueprint(food_bp)
+    #
+    # from app.routes.service_routes import service_bp
+    # app.register_blueprint(service_bp)
+    #
+    # from app.routes.review_route import reviews_bp
+    # app.register_blueprint(reviews_bp)
 
     from app.routes.animal_click_routes import animal_click_bp
     app.register_blueprint(animal_click_bp)
