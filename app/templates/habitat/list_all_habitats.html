@@ -18,7 +18,7 @@
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <button type="submit" class="btn btn-danger mb-3">Logout</button>
             </form>
-{#            <a href="{{ url_for('auth.logout') }}" class="btn btn-danger mb-3">Logout</a>#}
+            {#            <a href="{{ url_for('auth.logout') }}" class="btn btn-danger mb-3">Logout</a>#}
         {% else %}
             <p>You are not cennected.</p>
             <a href="{{ url_for('auth.login') }}" class="btn btn-success mb-3">Login</a>
@@ -48,11 +48,12 @@
                     <td>{{ habitat.name }}</td>
                     <td>{{ habitat.url_image }}</td>
                     <td>{{ habitat.description }}</td>
-                      <td class="list-group-item">
-                    <strong>Image:</strong>
-                    <img src="{{ url_for('static', filename=habitat.url_image.lstrip('/')) }}" alt="{{ habitat.name }}"
-                         style="width:100px; height:auto;">
-                </td>
+                    <td class="list-group-item">
+                        <strong>Image:</strong>
+                        <img src="{{ url_for('static', filename=habitat.url_image.lstrip('/')) }}"
+                             alt="{{ habitat.name }}"
+                             style="width:100px; height:auto;">
+                    </td>
 
                     <td>
                         <a href="{{ url_for('habitat.update_habitat', habitat_id=habitat.habitat_id) }}"

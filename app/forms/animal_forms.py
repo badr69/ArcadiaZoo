@@ -33,6 +33,6 @@ class AnimalUpdateForm(BaseForm):
         Length(min=2, max=50)
     ])
     description = TextAreaField("Description", validators=[
-        Length(max=300, message="Description must be 300 characters max.")
+        Length(max=1000, message="Description must be 1000 characters max.")
     ])
 

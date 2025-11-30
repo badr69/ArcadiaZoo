@@ -21,12 +21,12 @@ class BaseForm(FlaskForm):
 class ServiceCreateForm(BaseForm):
         description = TextAreaField("Description", validators=[
         DataRequired(message="Description is required."),
-        Length(max=300, message="Description must be 300 characters max.")
+        Length(max=1000, message="Description must be 1000 characters max.")
     ])
 
 # TODO: service Update Form
 class ServiceUpdateForm(BaseForm):
         description = TextAreaField("Description", validators=[
         DataRequired(message="Description is required."),
-        Length(max=300, message="Description must be 300 characters max.")
+        Length(max=1000, message="Description must be 1000 characters max.")
     ])
