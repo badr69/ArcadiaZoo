@@ -3,104 +3,38 @@
 {% block title %}Login{% endblock %}
 
 {% block content %}
-<div class="container mt-5">
-    <h2>Login</h2>
+    <div class="container mt-3">
+        <h1>Login</h1>
 
-    <!-- Flash messages classiques (fallback) -->
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            <div>
-                {% for category, message in messages %}
-                    <div class="alert alert-{{ category }}">{{ message }}</div>
+        <form id="loginForm" action="{{ url_for('auth.login') }}" method="post">
+            {{ form.hidden_tag() }}
+
+            <div class="mb-3">
+                {{ form.email.label }}
+                {{ form.email(class="form-control", id="email") }}
+                {% for error in form.email.errors %}
+                    <div class="text-danger">{{ error }}</div>
                 {% endfor %}
             </div>
-        {% endif %}
-    {% endwith %}
 
-    <!-- Formulaire de login -->
-    <form id="loginForm" action="{{ url_for('auth.login') }}" method="post">
-        {{ form.hidden_tag() }}
+            <div class="mb-3">
+                {{ form.password.label }}
+                {{ form.password(class="form-control", id="password") }}
+                {% for error in form.password.errors %}
+                    <div class="text-danger">{{ error }}</div>
+                {% endfor %}
+            </div>
 
-        <div class="mb-3">
-            {{ form.email.label }}
-            {{ form.email(class="form-control", id="email") }}
-            {% for error in form.email.errors %}
-                <div class="text-danger">{{ error }}</div>
-            {% endfor %}
-        </div>
+            {{ form.submit(class="btn btn-primary", id="submit-btn") }}
+        </form>
 
-        <div class="mb-3">
-            {{ form.password.label }}
-            {{ form.password(class="form-control", id="password") }}
-            {% for error in form.password.errors %}
-                <div class="text-danger">{{ error }}</div>
-            {% endfor %}
-        </div>
+        <!-- Div pour messages fetch dynamiques -->
+        <div id="message-box" class="mt-3"></div>
+    </div>
 
-        {{ form.submit(class="btn btn-primary", id="submit-btn") }}
-    </form>
-
-    <!-- Div pour messages fetch dynamiques -->
-    <div id="message-box" class="mt-3"></div>
-</div>
-
-<script src="{{ url_for('static', filename='js/login.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/login.js') }}"></script>
 {% endblock %}
 
 
 
 
-
-{#{% extends "base.html" %}#}
-{##}
-{#{% block title %}Login{% endblock %}#}
-{#{% block content %}#}
-{##}
-{#<h2>Login</h2>#}
-{#<div class="container mt-5">#}
-{##}
-{#    <!-- Flash messages classiques (pour POST normal) -->#}
-{#    {% with messages = get_flashed_messages(with_categories=true) %}#}
-{#        {% if messages %}#}
-{#            <div>#}
-{#                {% for category, message in messages %}#}
-{#                    <div class="alert alert-{{ category }}">{{ message }}</div>#}
-{#                {% endfor %}#}
-{#            </div>#}
-{#        {% endif %}#}
-{#    {% endwith %}#}
-{##}
-{#    <!-- Formulaire de login -->#}
-{#    <form id="loginForm" action="{{ url_for('auth.login') }}" method="post">#}
-{#        {{ form.hidden_tag() }}#}
-{##}
-{#        <div class="mb-3">#}
-{#            {{ form.email.label }}#}
-{#            {{ form.email(class="form-control", id="email") }}#}
-{#            {% for error in form.email.errors %}#}
-{#                <div class="text-danger">{{ error }}</div>#}
-{#            {% endfor %}#}
-{#        </div>#}
-{##}
-{#        <div class="mb-3">#}
-{#            {{ form.password.label }}#}
-{#            {{ form.password(class="form-control", id="password") }}#}
-{#            {% for error in form.password.errors %}#}
-{#                <div class="text-danger">{{ error }}</div>#}
-{#            {% endfor %}#}
-{#        </div>#}
-{##}
-{#     {{ form.submit(class="btn btn-primary", id="submit-btn") }}#}
-{##}
-{#    </form>#}
-{##}
-{#    <!-- Div pour les messages fetch dynamiques -->#}
-{#    <div id="message-box" class="mt-3"></div>#}
-{##}
-{#</div>#}
-{##}
-{#<!-- Lien vers le JS fetch -->#}
-{#<script src="{{ url_for('static', filename='js/login.js') }}"></script>#}
-{#{% endblock %}#}
-{##}
-{##}

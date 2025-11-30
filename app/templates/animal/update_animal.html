@@ -23,51 +23,148 @@
                 <button type="submit" class="btn btn-danger mb-3">Logout</button>
             </form>
         {% else %}
-            <p>You are not cennected.</p>
+            <p>You are not connected.</p>
             <a href="{{ url_for('auth.login') }}" class="btn btn-success mb-3">Login</a>
-            <a href="{{ url_for('user.animal_all_animals') }}" class="btn btn-primary mb-3">All Aimals</a>
         {% endif %}
-    </div>
-    <div>
         <a href="{{ url_for('animal.list_all_animals') }}" class="btn btn-primary mb-3">All Animals</a>
+
     </div>
 
     <h1 class="text-center mb-4">Update Animal</h1>
 
-    <div class="container mt-5">
+    <div class="container mt-4">
         <form method="POST" enctype="multipart/form-data">
             {{ form.hidden_tag() }}
 
             <div class="mb-3">
-                {{ form.name.label }} {{ form.name(class="form-control") }}
+                {{ form.name.label(class="form-label") }}
+                {{ form.name(class="form-control", value=animal.name) }}
                 {% for error in form.name.errors %}
                     <div class="text-danger">{{ error }}</div>
                 {% endfor %}
             </div>
 
             <div class="mb-3">
-                {{ form.race.label }} {{ form.race(class="form-control") }}
+                {{ form.race.label(class="form-label") }}
+                {{ form.race(class="form-control", value=animal.race) }}
                 {% for error in form.race.errors %}
                     <div class="text-danger">{{ error }}</div>
                 {% endfor %}
             </div>
 
             <div class="mb-3">
-                {{ form.url_image.label }} {{ form.url_image(class="form-control") }}
-                {% for error in form.url_image.errors %}
-                    <div class="text-danger">{{ error }}</div>
-                {% endfor %}
-            </div>
-
-            <div class="mb-3">
-                {{ form.description.label }} {{ form.description(class="form-control", rows=4) }}
+                {{ form.description.label(class="form-label") }}
+                {{ form.description(class="form-control", rows=4) }}
                 {% for error in form.description.errors %}
                     <div class="text-danger">{{ error }}</div>
                 {% endfor %}
             </div>
 
-            {{ form.submit(class="btn btn-success") }}
+            <div class="mb-3">
+                <label class="form-label">Current Image</label><br>
+                {% if animal.url_image %}
+                    <img src="{{ url_for('static', filename=animal.url_image.lstrip('/')) }}"
+                         alt="{{ animal.name }}" class="img-thumbnail mb-2" style="max-width:150px;">
+                {% else %}
+                    <span>No image available</span>
+                {% endif %}
+                {{ form.url_image.label(class="form-label") }}
+                {{ form.url_image(class="form-control") }}
+                {% for error in form.url_image.errors %}
+                    <div class="text-danger">{{ error }}</div>
+                {% endfor %}
+
+            <div class="mb-3">
+                {{ form.habitat.label }} {{ form.habitat(class="form-select") }}
+                {% for error in form.habitat.errors %}
+                    <div class="text-danger">{{ error }}</div>
+                {% endfor %}
+            </div>
+            </div>
+
+            {{ form.submit(class="btn btn-primary") }}
         </form>
+
     </div>
+
 {% endblock %}
 
+
+
+
+
+
+
+{#{% extends "base.html" %}#}
+{##}
+{#{% block title %}Update Animal{% endblock %}#}
+{##}
+{#{% block content %}#}
+{##}
+{#    <div>#}
+{#        {% if current_user.is_authenticated %}#}
+{#            {% if current_user.role_name == 'admin' %}#}
+{#                <p>Welcome {{ current_user.username }} 👑</p>#}
+{#                <a href="{{ url_for('admin.admin_dash') }}" class="btn btn-dark mb-3">Admin Dash</a>#}
+{#            {% elif current_user.role_name == 'employee' %}#}
+{#                <p>Welcome {{ current_user.username }} 👌</p>#}
+{#                <a href="{{ url_for('employee.employee_dash') }}" class="btn btn-dark mb-3">Employee Dash</a>#}
+{#            {% elif current_user.role_name == 'vet' %}#}
+{#                <p>Welcome {{ current_user.username }} 🩺</p>#}
+{#                <a href="{{ url_for('vet.vet_dash') }}" class="btn btn-info mb-3">Vet Dash</a>#}
+{#            {% else %}#}
+{#                <p>Welcome {{ current_user.username }}</p>#}
+{#            {% endif %}#}
+{#            <form action="{{ url_for('auth.logout') }}" method="POST" style="display:inline;">#}
+{#                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">#}
+{#                <button type="submit" class="btn btn-danger mb-3">Logout</button>#}
+{#            </form>#}
+{#        {% else %}#}
+{#            <p>You are not cennected.</p>#}
+{#            <a href="{{ url_for('auth.login') }}" class="btn btn-success mb-3">Login</a>#}
+{#            <a href="{{ url_for('user.animal_all_animals') }}" class="btn btn-primary mb-3">All Aimals</a>#}
+{#        {% endif %}#}
+{#    </div>#}
+{#    <div>#}
+{#        <a href="{{ url_for('animal.list_all_animals') }}" class="btn btn-primary mb-3">All Animals</a>#}
+{#    </div>#}
+{##}
+{#    <h1 class="text-center mb-4">Update Animal</h1>#}
+{##}
+{#    <div class="container mt-5">#}
+{#        <form method="POST" enctype="multipart/form-data">#}
+{#            {{ form.hidden_tag() }}#}
+{##}
+{#            <div class="mb-3">#}
+{#                {{ form.name.label }} {{ form.name(class="form-control") }}#}
+{#                {% for error in form.name.errors %}#}
+{#                    <div class="text-danger">{{ error }}</div>#}
+{#                {% endfor %}#}
+{#            </div>#}
+{##}
+{#            <div class="mb-3">#}
+{#                {{ form.race.label }} {{ form.race(class="form-control") }}#}
+{#                {% for error in form.race.errors %}#}
+{#                    <div class="text-danger">{{ error }}</div>#}
+{#                {% endfor %}#}
+{#            </div>#}
+{##}
+{#            <div class="mb-3">#}
+{#                {{ form.url_image.label }} {{ form.url_image(class="form-control") }}#}
+{#                {% for error in form.url_image.errors %}#}
+{#                    <div class="text-danger">{{ error }}</div>#}
+{#                {% endfor %}#}
+{#            </div>#}
+{##}
+{#            <div class="mb-3">#}
+{#                {{ form.description.label }} {{ form.description(class="form-control", rows=4) }}#}
+{#                {% for error in form.description.errors %}#}
+{#                    <div class="text-danger">{{ error }}</div>#}
+{#                {% endfor %}#}
+{#            </div>#}
+{##}
+{#            {{ form.submit(class="btn btn-success") }}#}
+{#        </form>#}
+{#    </div>#}
+{#{% endblock %}#}
+{##}

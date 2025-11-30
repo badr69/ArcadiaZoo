@@ -21,53 +21,75 @@
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <button type="submit" class="btn btn-danger mb-3">Logout</button>
             </form>
-{#            <a href="{{ url_for('auth.logout') }}" class="btn btn-danger mb-3">Logout</a>#}
         {% else %}
             <p>You are not cennected.</p>
             <a href="{{ url_for('auth.login') }}" class="btn btn-success mb-3">Login</a>
         {% endif %}
+        <a href="{{ url_for('food.list_all_foods') }}" class="btn btn-primary">list_all_foods</a>
     </div>
+
     <div class="container mt-4">
-        <h2 class="text-center mb-4">Create Food</h2>
+        <h1 class="text-center mb-4">Create Food</h1>
 
         <form method="POST" action="{{ url_for('food.create_food') }}">
             {{ form.hidden_tag() }}
 
+            <!-- Animal -->
             <div class="mb-3">
-                {{ form.animal.label(class="form-label") }}
-                {{ form.animal(class="form-select") }}
-                {% for error in form.animal.errors %}
+                {{ form.animal_id.label(class="form-label") }}
+                {{ form.animal_id(class="form-select") }}
+                {% for error in form.animal_id.errors %}
                     <div class="text-danger">{{ error }}</div>
                 {% endfor %}
             </div>
 
+            <!-- Vet -->
             <div class="mb-3">
-                {{ form.type_food.label(class="form-label") }}
-                {{ form.type_food(class="form-control") }}
-                {% for error in form.type_food.errors %}
+                {{ form.vet_id.label(class="form-label") }}
+                {{ form.vet_id(class="form-select") }}
+                {% for error in form.vet_id.errors %}
                     <div class="text-danger">{{ error }}</div>
                 {% endfor %}
             </div>
 
+            <!-- Employee (facultatif) -->
+            <div class="mb-3">
+                {{ form.employee_id.label(class="form-label") }}
+                {{ form.employee_id(class="form-select") }}
+                {% for error in form.employee_id.errors %}
+                    <div class="text-danger">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            <!-- Type of Food -->
+            <div class="mb-3">
+                {{ form.name_food.label(class="form-label") }}
+                {{ form.name_food(class="form-control") }}
+                {% for error in form.name_food.errors %}
+                    <div class="text-danger">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            <!-- Quantity -->
             <div class="mb-3">
                 {{ form.quantity.label(class="form-label") }}
-                {{ form.quantity(class="form-control") }}
+                {{ form.quantity(class="form-control", step="0.01") }}
                 {% for error in form.quantity.errors %}
                     <div class="text-danger">{{ error }}</div>
                 {% endfor %}
             </div>
 
+            <!-- Date/Time -->
             <div class="mb-3">
                 {{ form.date_food.label(class="form-label") }}
                 {{ form.date_food(class="form-control") }}
-                <small class="form-text text-muted">Format: YYYY-MM-DD HH:MM</small>
+                <small class="form-text text-muted">Format: YYYY-MM-DD HH:MM:SS</small>
                 {% for error in form.date_food.errors %}
                     <div class="text-danger">{{ error }}</div>
                 {% endfor %}
             </div>
-
-            <button type="submit" class="btn btn-success">{{ form.submit.label.text }}</button>
-            <a href="{{ url_for('food.list_all_foods') }}" class="btn btn-secondary">Cancel</a>
+            <!-- Submit -->
+            <button type="submit" class="btn btn-primary">{{ form.submit.label.text }}</button>
         </form>
     </div>
 {% endblock %}

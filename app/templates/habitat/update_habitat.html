@@ -18,13 +18,11 @@
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <button type="submit" class="btn btn-danger mb-3">Logout</button>
             </form>
-            {#            <a href="{{ url_for('auth.logout') }}" class="btn btn-danger mb-3">Logout</a>#}
         {% else %}
-            <p>You are not cennected.</p>
+            <p>You are not connected.</p>
             <a href="{{ url_for('auth.login') }}" class="btn btn-success mb-3">Login</a>
         {% endif %}
         <a href="{{ url_for('habitat.list_all_habitats') }}" class="btn btn-primary mb-3">All Habitats</a>
-
     </div>
 
     <div class="container">
@@ -32,34 +30,44 @@
         <form method="POST" enctype="multipart/form-data">
             {{ form.hidden_tag() }}
 
-            <div>
-                {{ form.name.label }} {{ form.name(size=40) }}<br>
+            <div class="mb-3">
+                {{ form.name.label }} {{ form.name(size=40, class="form-control") }}
                 {% for error in form.name.errors %}
                     <span style="color: red;">{{ error }}</span>
                 {% endfor %}
             </div>
 
-            <div>
-                Image actuelle:<br>
-                <img src="{{ url_for('static', filename=habitat.url_image) }}" alt="habitat image {{ habitat.name }}"
-                     style="max-width: 300px;">
+            <div class="mb-3">
+                <label>Image actuelle:</label><br>
+                {% if habitat.url_image %}
+                    <img src="{{ url_for('static', filename=habitat.url_image.lstrip('/')) }}"
+                         alt="habitat image {{ habitat.name }}"
+                         style="max-width: 300px;">
+                {% else %}
+                    <p>No Image</p>
+                {% endif %}
             </div>
-            <div>
-                {{ form.url_image.label }} {{ form.url_image(class="form-control") }}<br>
+
+            <div class="mb-3">
+                {{ form.url_image.label }} {{ form.url_image(class="form-control") }}
                 {% for error in form.url_image.errors %}
                     <span style="color: red;">{{ error }}</span>
                 {% endfor %}
             </div>
 
-            <div>
-                {{ form.description.label }} {{ form.description(class="form-control", rows=4) }}<br>
+            <div class="mb-3">
+                {{ form.description.label }} {{ form.description(class="form-control", rows=4) }}
                 {% for error in form.description.errors %}
                     <span style="color: red;">{{ error }}</span>
                 {% endfor %}
             </div>
 
             {{ form.submit(class="btn btn-primary") }}
-
         </form>
     </div>
 {% endblock %}
+
+
+
+
+

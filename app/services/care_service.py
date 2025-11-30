@@ -1,111 +1,130 @@
+# app/services/care_service.py
 from app.models.care_model import CareModel
-from datetime import datetime, date
-
+from app import UserModel
+from app.utils.security import sanitize_html, detect_sql_injection
 
 class CareService:
+    """
+    Service OOP pour gérer la logique métier des soins (Care).
+    """
 
+    # ======================================================
+    # LIST ALL CARES
+    # ======================================================
     @classmethod
     def list_all_cares(cls):
-        """Retourne la liste complète des soins."""
         try:
-            return CareModel.list_all_cares()
+            cares = CareModel.list_all_cares()
+            return cares, None
         except Exception as e:
-            print(f"[CareService.list_all_cares] Erreur: {e}")
-            return []
+            print(f"[CareService.list_all_cares error]: {e}")
+            return [], "Erreur lors de la récupération des soins."
 
+    # ======================================================
+    # LIST ALL VETS
+    # ======================================================
+    @classmethod
+    def list_all_vets(cls):
+        try:
+            vets = UserModel.list_all_vets()
+            if not vets:
+                return [], "Aucun vétérinaire trouvé."
+            return vets, None
+        except Exception as e:
+            print(f"[CareService.list_all_vets error]: {e}")
+            return [], "Erreur lors de la récupération des vétérinaires."
+
+    # ======================================================
+    # GET CARE BY ID
+    # ======================================================
     @classmethod
     def get_care_by_id(cls, care_id):
-        """Récupère un soin par son identifiant."""
         try:
             care = CareModel.get_care_by_id(care_id)
             if not care:
-                print(f"[CareService.get_care_by_id] Aucun soin trouvé avec id {care_id}")
-                return None
-            return care
+                return None, "Soin introuvable."
+            return care, None
         except Exception as e:
-            print(f"[CareService.get_care_by_id] Erreur: {e}")
-            return None
+            print(f"[CareService.get_care_by_id error]: {e}")
+            return None, "Erreur lors de la récupération du soin."
 
-    @staticmethod
-    def create_care(animal_id, user_id, type_care, description, date_care=None):
-        """Crée un nouveau rapport de soin."""
+    # ======================================================
+    # CREATE CARE
+    # ======================================================
+    @classmethod
+    def create_care(cls, animal_id, user_id, type_care, description, date_care=None):
         try:
-            # Validation basique
-            if not animal_id:
-                raise ValueError("L'ID de l'animal est requis.")
-            if not user_id:
-                raise ValueError("L'ID du vétérinaire est requis.")
-            if not type_care:
-                raise ValueError("Le type de soin est requis.")
+            type_care = sanitize_html(type_care)
+            description = sanitize_html(description)
 
-            # ✅ Conversion auto en datetime si nécessaire
-            if isinstance(date_care, date) and not isinstance(date_care, datetime):
-                date_care = datetime(date_care.year, date_care.month, date_care.day)
-            elif date_care is None:
-                date_care = datetime.now()
+            if detect_sql_injection(type_care) or detect_sql_injection(description):
+                return None, "Entrée invalide détectée."
 
-            if not isinstance(date_care, datetime):
-                raise ValueError("date_care doit être un objet datetime valide.")
+            if len(type_care) < 3:
+                return None, "Le type de soin doit contenir au moins 3 caractères."
 
-            # Appel du modèle
             care = CareModel.create_care(animal_id, user_id, type_care, description, date_care)
             if not care:
-                print("[CareService.create_care] Erreur: impossible de créer le soin.")
-                return None
+                return None, "Erreur lors de la création du soin."
 
-            return care
+            return care, None
 
         except Exception as e:
-            print(f"[CareService.create_care] Erreur: {e}")
-            return None
+            print(f"[CareService.create_care error]: {e}")
+            return None, "Erreur lors de la création du soin."
 
-    @staticmethod
-    def update_care(care_id, animal_id, user_id, type_care, description, date_care=None):
-        """Met à jour un rapport de soin existant."""
+    # ======================================================
+    # INSTANCE (POUR UPDATE & DELETE)
+    # ======================================================
+    def __init__(self, care_id):
         try:
-            if not care_id:
-                raise ValueError("L'ID du soin est requis.")
-            if not animal_id:
-                raise ValueError("L'ID de l'animal est requis.")
-            if not user_id:
-                raise ValueError("L'ID du vétérinaire est requis.")
-            if not type_care:
-                raise ValueError("Le type de soin est requis.")
-
-            # ✅ Conversion auto en datetime si nécessaire
-            if isinstance(date_care, date) and not isinstance(date_care, datetime):
-                date_care = datetime(date_care.year, date_care.month, date_care.day)
-            elif date_care is None:
-                date_care = datetime.now()
-
-            if not isinstance(date_care, datetime):
-                raise ValueError("date_care doit être un objet datetime valide.")
-
-            success = CareModel.update_care(care_id, animal_id, user_id, type_care, description, date_care)
-            if not success:
-                print(f"[CareService.update_care] Impossible de mettre à jour le soin avec id {care_id}")
-                return False
-
-            return True
-
+            self.care = CareModel.get_care_by_id(care_id)
         except Exception as e:
-            print(f"[CareService.update_care] Erreur: {e}")
-            return False
+            print(f"[CareService.__init__ error]: {e}")
+            self.care = None
 
-    @staticmethod
-    def delete_care(care_id):
-        """Supprime un rapport de soin par son ID."""
+    def exists(self):
+        return self.care is not None
+
+    # ======================================================
+    # UPDATE CARE (OOP)
+    # ======================================================
+    def update_care(self, animal_id, user_id, type_care, description, date_care=None):
+        if not self.exists():
+            return False, "Soin introuvable."
         try:
-            if not care_id:
-                raise ValueError("L'ID du soin est requis.")
+            type_care = sanitize_html(type_care)
+            description = sanitize_html(description)
+            if len(type_care) < 3:
+                return False, "Le type de soin doit contenir au moins 3 caractères."
 
-            success = CareModel.delete_care(care_id)
+            success = self.care.update_care(
+                animal_id=animal_id,
+                user_id=user_id,
+                type_care=type_care,
+                description=description,
+                date_care=date_care
+            )
             if not success:
-                print(f"[CareService.delete_care] Impossible de supprimer le soin avec id {care_id}")
-                return False
-            return True
+                return False, "Erreur lors de la mise à jour du soin."
+            return True, None
+        except Exception as e:
+            print(f"[CareService.update_care error]: {e}")
+            return False, "Erreur lors de la mise à jour du soin."
+
+    # ======================================================
+    # DELETE CARE (OOP)
+    # ======================================================
+    def delete_care(self):
+        if not self.exists():
+            return False, "Soin introuvable."
+
+        try:
+            success = self.care.delete_care()
+            if not success:
+                return False, "Erreur lors de la suppression."
+            return True, None
 
         except Exception as e:
-            print(f"[CareService.delete_care] Erreur: {e}")
-            return False
-
+            print(f"[CareService.delete_care error]: {e}")
+            return False, "Erreur lors de la suppression."

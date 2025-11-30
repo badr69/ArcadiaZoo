@@ -1,48 +1,39 @@
-# TODO: Importation des dépendances
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SelectField, IntegerField
-from wtforms import SubmitField
-from wtforms.validators import DataRequired, Email, Length, NumberRange, EqualTo
+from wtforms import StringField, SelectField, SubmitField, PasswordField, IntegerField
+from wtforms.validators import DataRequired, Length, Email, EqualTo
+from app.services.role_service import RoleService
+from app.utils.security import sanitize_html
 
+class BaseUserForm(FlaskForm):
+    username = StringField(
+        "Nom d'utilisateur",
+        validators=[DataRequired(), Length(min=3, max=25)]
+    )
+    email = StringField(
+        "Email",
+        validators=[DataRequired(), Email()]
+    )
+    password = PasswordField(
+        "Mot de passe",
+        validators=[DataRequired(), Length(min=6)]
+    )
+    confirm_password = PasswordField(
+        "Confirmer le mot de passe",
+        validators=[DataRequired(), EqualTo('password', message="Les mots de passe ne correspondent pas.")]
+    )
+    role_id = SelectField("Rôle", coerce=int)
 
-class BaseForm(FlaskForm):
-    email = StringField("Email", validators=[
-        DataRequired(message="Email address is required"),
-        Email(message="Email is not valid")
-    ])
-    password = PasswordField("Password", validators=[
-        DataRequired(message="Password is required"),
-        Length(min=4, max=25)
-    ])
-    confirm_password = PasswordField("Password", validators=[
-        DataRequired(message="Password is required"),
-        Length(min=4, max=25)
-    ])
-    submit = SubmitField("Create User")
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        roles = RoleService.list_all_roles()
+        self.role_id.choices = [(role.id, role.name) for role in roles]
 
-class CreateUserForm(BaseForm):
-        username = StringField("Username", validators=[
-        DataRequired(message="Username is required."),
-        Length(min=3, max=15)
-    ])
-        confirm_password = PasswordField('Confirmer le mot de passe', validators=[
-        DataRequired(),
-        EqualTo('password', message='Les mots de passe doivent correspondre.')
-    ])
+class CreateUserForm(BaseUserForm):
+    submit = SubmitField("Créer")
 
-        role_name = SelectField("Rôle", validators=[DataRequired()], choices=[])  # ← dynamique
-
-class UpdateUserForm(BaseForm):
-        username = StringField('Nom', validators=[DataRequired()])
-        role_name = SelectField(
-        'Rôle',
-        choices=[('employee', 'Employee'), ('vet', 'Vet')],
-        validators=[DataRequired()])
-        submit = SubmitField('Submit')
+class UpdateUserForm(BaseUserForm):
+    submit = SubmitField("Mettre à jour")
 
 class DeleteUserForm(FlaskForm):
-    user_id = IntegerField("User ID", validators=[
-        DataRequired(message="User ID Required"),
-        NumberRange(min=1, message="ID must be a int")
-    ])
-    submit = SubmitField("Delete User")
+    user_id = IntegerField("User ID", validators=[DataRequired()])
+    submit = SubmitField("Confirmer la suppression")

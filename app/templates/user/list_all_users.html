@@ -8,7 +8,10 @@
             <p>Welcome {{ current_user.username }} 👌 </p>
         {% endif %}
         <a href="{{ url_for('admin.admin_dash') }}" class="btn btn-dark mb-3">admin Dash</a>
-        <a href="{{ url_for('auth.logout') }}" class="btn btn-danger mb-3">Logout</a>
+        <form action="{{ url_for('auth.logout') }}" method="POST" style="display:inline;">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button type="submit" class="btn btn-danger mb-3">Logout</button>
+        </form>
     </div>
 
     <div class="container-fluid mt-4">

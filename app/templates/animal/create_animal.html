@@ -3,6 +3,7 @@
 {% block title %}Create Animal{% endblock %}
 
 {% block content %}
+
     <div>
         {% if current_user.is_authenticated %}
             {% if current_user.role_name == 'admin' %}
@@ -21,7 +22,6 @@
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <button type="submit" class="btn btn-danger mb-3">Logout</button>
             </form>
-{#            <a href="{{ url_for('auth.logout') }}" class="btn btn-danger mb-3">Logout</a>#}
         {% else %}
             <p>You are not connected.</p>
             <a href="{{ url_for('auth.login') }}" class="btn btn-success mb-3">Login</a>
@@ -50,6 +50,13 @@
             </div>
 
             <div class="mb-3">
+                {{ form.description.label }} {{ form.description(class="form-control", rows=4) }}
+                {% for error in form.description.errors %}
+                    <div class="text-danger">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            <div class="mb-3">
                 {{ form.url_image.label }} {{ form.url_image(class="form-control") }}
                 {% for error in form.url_image.errors %}
                     <div class="text-danger">{{ error }}</div>
@@ -57,15 +64,20 @@
             </div>
 
             <div class="mb-3">
-                {{ form.description.label }} {{ form.description(class="form-control", rows=4) }}
-                {% for error in form.description.errors %}
+                {{ form.habitat.label }} {{ form.habitat(class="form-select") }}
+                {% for error in form.habitat.errors %}
                     <div class="text-danger">{{ error }}</div>
                 {% endfor %}
             </div>
 
             {{ form.submit(class="btn btn-primary") }}
         </form>
+
+
     </div>
 {% endblock %}
+
+
+
 
 

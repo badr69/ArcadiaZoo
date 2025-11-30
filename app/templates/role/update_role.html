@@ -3,30 +3,33 @@
 {% block title %}Update Role{% endblock %}
 
 {% block content %}
-<div>
-    {% if current_user.is_authenticated and current_user.role_name == "admin" %}
-        <p>Welcome {{ current_user.username }} 👌 </p>
-    {% endif %}
-    <a href="{{ url_for('admin.admin_dash') }}" class="btn btn-dark mb-3">Admin Dash</a>
-    <a href="{{ url_for('auth.logout') }}" class="btn btn-danger mb-3">Logout</a>
-    <a href="{{ url_for('role.list_all_roles') }}" class="btn btn-primary mb-3">All Roles</a>
-</div>
+    <div>
+        {% if current_user.is_authenticated and current_user.role_name == "admin" %}
+            <p>Welcome {{ current_user.username }} 👌 </p>
+        {% endif %}
+        <a href="{{ url_for('admin.admin_dash') }}" class="btn btn-dark mb-3">Admin Dash</a>
+        <form action="{{ url_for('auth.logout') }}" method="POST" style="display:inline;">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button type="submit" class="btn btn-danger mb-3">Logout</button>
+        </form>
+        <a href="{{ url_for('role.list_all_roles') }}" class="btn btn-primary mb-3">All Roles</a>
+    </div>
 
-<div>
-    <h2 class="text-center mb-4">Update Role</h2>
-</div>
+    <div>
+        <h2 class="text-center mb-4">Update Role</h2>
+    </div>
 
-<div class="container mt-5">
-    <form method="POST">
-        {{ form.hidden_tag() }}
-        <div class="mb-3">
-            {{ form.name.label(class="form-label") }}
-            {{ form.name(class="form-control") }}
-            {% for error in form.name.errors %}
-                <span class="text-danger">{{ error }}</span>
-            {% endfor %}
-        </div>
-        {{ form.submit(class="btn btn-primary") }}
-    </form>
-</div>
+    <div class="container mt-5">
+        <form method="POST">
+            {{ form.hidden_tag() }}
+            <div class="mb-3">
+                {{ form.name.label(class="form-label") }}
+                {{ form.name(class="form-control") }}
+                {% for error in form.name.errors %}
+                    <span class="text-danger">{{ error }}</span>
+                {% endfor %}
+            </div>
+            {{ form.submit(class="btn btn-primary") }}
+        </form>
+    </div>
 {% endblock %}

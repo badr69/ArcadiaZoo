@@ -1,145 +1,125 @@
-from pathlib import Path
 from flask import render_template, redirect, url_for, flash, current_app
-from psycopg2 import DatabaseError, OperationalError
+from pathlib import Path
 from werkzeug.utils import secure_filename
-from werkzeug.datastructures import FileStorage
 from app.forms.service_forms import ServiceCreateForm, ServiceUpdateForm
 from app.services.service_service import ServiceService
-from app.utils.security import detect_sql_injection, sanitize_html
+from app.utils.security import sanitize_html
+import uuid
 
+ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "gif"}
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+def generate_unique_filename(filename):
+    ext = filename.rsplit('.', 1)[1].lower()
+    return f"{uuid.uuid4().hex}.{ext}"
 
 class ServiceController:
 
+
+# ======================================================
+# LIST ALL SERVICES
+# ======================================================
     @staticmethod
     def list_all_services():
-        result = ServiceService.list_all_services()
-        if not result.get("status"):
-            flash(result.get("message", "Erreur lors du chargement des services."), "danger")
-            services = []
-        else:
-            services = result.get("services", [])
-        return render_template('service/list_all_services.html', services=services)
+        services = ServiceService.list_all_services()
+        return render_template("service/list_all_services.html", services=services)
 
+    # ======================================================
+    # GET SERVICE BY ID
+    # ======================================================
     @staticmethod
     def get_service_by_id(service_id):
-        result = ServiceService.get_service_by_id(service_id)
-        if not result.get("status"):
-            flash(result.get("message", "Service introuvable."), "danger")
-            return redirect(url_for('service.list_all_services'))
-        service = result.get("service")
-        return render_template('service/service_details.html', service=service)
+        service, error = ServiceService.get_service_by_id(service_id)
+        if error:
+            flash(error, "danger")
+            return redirect(url_for("service.list_all_services"))
+        return render_template("service/service_details.html", service=service)
 
-
-
+    # ======================================================
+    # CREATE SERVICE
+    # ======================================================
     @staticmethod
     def create_service():
         form = ServiceCreateForm()
-
         if form.validate_on_submit():
+            file = form.url_image.data
+            url_image = None
+            if file and allowed_file(file.filename):
+                filename = secure_filename(file.filename.lower())
+                filename = generate_unique_filename(filename)
+                upload_dir = Path(current_app.config['SERVICE_IMG_FOLDER'])
+                upload_dir.mkdir(parents=True, exist_ok=True)
+                filepath = upload_dir / filename
+                file.save(filepath)
+                url_image = f"uploads/service_img/{filename}"
+
             name = sanitize_html(form.name.data)
             description = sanitize_html(form.description.data)
 
-            # Vérification basique contre l'injection
-            if detect_sql_injection(name) or detect_sql_injection(description):
-                flash("Entrée invalide détectée.", "danger")
-                return render_template("service/create_service.html", form=form)
-
-            file = form.url_image.data
-
-            if not file or file.filename.strip() == "":
-                flash("Veuillez ajouter une image.", "danger")
-                return render_template("service/create_service.html", form=form)
-
-            try:
-                # Sauvegarde de l’image
-                filename = secure_filename(file.filename)
-                upload_dir = Path(current_app.config['SERVICE_IMG_FOLDER'])
-                upload_dir.mkdir(parents=True, exist_ok=True)
-
-                filepath = upload_dir / filename
-                file.save(filepath)
-
-                # Construction du chemin relatif pour la base
-                url_image = f"uploads/service_img/{filename}"
-
-                # Appel au service métier
-                result = ServiceService.create_service(name, url_image, description)
-
-                if result.get("status"):
-                    flash("Service créé avec succès.", "success")
-                    return redirect(url_for("service.list_all_services"))
-
-                flash(result.get("message", "Erreur inconnue lors de la création."), "danger")
-
-            # --- Exceptions spécifiques d'abord ---
-            except (DatabaseError, OperationalError) as db_err:
-                current_app.logger.error(f"Erreur base de données : {db_err}")
-                flash("Erreur de base de données lors de la création du service.", "danger")
-
-            except FileNotFoundError as file_err:
-                current_app.logger.error(f"Erreur fichier : {file_err}")
-                flash("Erreur lors du traitement de l'image.", "danger")
-
-            except OSError as os_err:
-                current_app.logger.error(f"Erreur système : {os_err}")
-                flash("Erreur système lors de la sauvegarde du fichier.", "danger")
-
-            # --- En dernier recours ---
-            except Exception as e:
-                current_app.logger.exception(f"Erreur inattendue : {e}")
-                flash("Une erreur interne est survenue pendant la création du service.", "danger")
+            service, error = ServiceService.create_service(name, description, url_image)
+            if error:
+                flash(error, "danger")
+            else:
+                flash("Service créé avec succès.", "success")
+                return redirect(url_for("service.list_all_services"))
 
         return render_template("service/create_service.html", form=form)
 
-    @staticmethod
-    def update_service(service_id):
-        result = ServiceService.get_service_by_id(service_id)
-        if not result.get("status"):
-            flash(result.get("message", "Service introuvable."), "danger")
-            return redirect(url_for('service.list_all_services'))
+    # ======================================================
+    # INSTANCE CONTROLLER
+    # ======================================================
+    def __init__(self, service_id):
+        self.service = ServiceService(service_id)
 
-        service = result.get("service")
-        form = ServiceUpdateForm(obj=service)
+    # ======================================================
+    # UPDATE SERVICE
+    # ======================================================
+    def update_service(self):
+        if not self.service.exists():
+            flash("Service non trouvé.", "danger")
+            return redirect(url_for("service.list_all_services"))
 
+        form = ServiceUpdateForm(obj=self.service.service)
         if form.validate_on_submit():
+            file = form.url_image.data
+            url_image = self.service.service.url_image  # par défaut garder l'ancienne image
+
+            if hasattr(file, "filename") and file.filename:
+                if allowed_file(file.filename):
+                    filename = secure_filename(file.filename.lower())
+                    filename = generate_unique_filename(filename)
+                    upload_dir = Path(current_app.config['SERVICE_IMG_FOLDER'])
+                    upload_dir.mkdir(parents=True, exist_ok=True)
+                    filepath = upload_dir / filename
+                    file.save(filepath)
+                    url_image = f"uploads/service_img/{filename}"
+                else:
+                    flash("Format d'image non autorisé.", "danger")
+                    return render_template(
+                        "service/update_service.html", form=form, service=self.service.service
+                    )
+
             name = sanitize_html(form.name.data)
             description = sanitize_html(form.description.data)
-
-            if detect_sql_injection(name) or detect_sql_injection(description):
-                flash("Entrée invalide détectée.", "danger")
-                return render_template("service/update_service.html", form=form, service=service)
-
-            file = form.url_image.data
-            url_image = service["url_image"]
-
-            if isinstance(file, FileStorage) and file.filename:
-                filename = secure_filename(file.filename)
-                upload_dir = Path(current_app.config['SERVICE_IMG_FOLDER'])
-                upload_dir.mkdir(parents=True, exist_ok=True)
-
-                filepath = upload_dir / filename
-                file.save(filepath)
-                url_image = f"uploads/service_img/{filename}"
-
-            result = ServiceService.update_service(service_id, name, url_image, description)
-            if result.get("status"):
+            success, error = self.service.update_service(name, description, url_image)
+            if success:
                 flash("Service mis à jour avec succès.", "success")
-                return redirect(url_for('service.list_all_services'))
+                return redirect(url_for("service.list_all_services"))
             else:
-                flash(result.get("message", "Erreur lors de la mise à jour."), "danger")
+                flash(error, "danger")
 
-        return render_template('service/update_service.html', form=form, service=service)
+        return render_template("service/update_service.html", form=form, service=self.service.service)
 
-    @staticmethod
-    def delete_service(service_id):
-        result = ServiceService.delete_service(service_id)
-        if result.get("status"):
-            flash("Service supprimé avec succès.", "success")
+    # ======================================================
+    # DELETE SERVICE
+    # ======================================================
+    def delete_service(self):
+        success, error = self.service.delete_service()
+        if error:
+            flash(error, "danger")
         else:
-            flash(result.get("message", "Erreur lors de la suppression."), "danger")
-        return redirect(url_for('service.list_all_services'))
-
-
-
-
+            flash("Service supprimé avec succès.", "success")
+        return redirect(url_for("service.list_all_services"))
 

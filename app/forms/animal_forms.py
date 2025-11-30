@@ -1,38 +1,35 @@
 # TODO: Importation des dépendances
 from flask_wtf import FlaskForm
-from wtforms import StringField, TextAreaField, SubmitField
-from wtforms.validators import DataRequired, Email, Length, NumberRange, EqualTo
+from wtforms import StringField, TextAreaField, SubmitField, SelectField
+from wtforms.validators import DataRequired, Length
 from flask_wtf.file import FileAllowed, FileField
+
+from app.services.habitat_service import HabitatService
 
 
 # TODO; BaseForm qui fait herite animalform
-class BaseForm(FlaskForm):
-        name = StringField("Name", validators=[
-        DataRequired(message="Name is required."),
-        Length(min=2, max=50)
-    ])
-        url_image = FileField("Images", validators=[
-        FileAllowed(['jpg', 'jpeg', 'png', 'gif'], "Only image files are allowed.")
-    ])
-        submit = SubmitField("Submit")
+class BaseAnimalForm(FlaskForm):
+    name = StringField("Nom", validators=[DataRequired(), Length(min=2, max=50)])
+    race = StringField("Race", validators=[DataRequired(), Length(min=2, max=50)])
+    description = TextAreaField("Description", validators=[Length(max=300)])
+    url_image = FileField("Image", validators=[FileAllowed(['jpg','jpeg','png','gif'])])
+    habitat = SelectField("Habitat", coerce=int, validators=[DataRequired()])
+    submit = SubmitField("Submit")
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        habitats = HabitatService.list_all_habitats()
+        self.habitat.choices = [(h.habitat_id, h.name) for h in habitats]
 
 # TODO: Formulaire de création d'animal
-class AnimalCreateForm(BaseForm):
-    race = StringField("Race", validators=[
-        DataRequired(message="Race is required."),
-        Length(min=2, max=50)
-    ])
-    description = TextAreaField("Description", validators=[
-            Length(max=300, message="Description must be 300 characters max.")
-    ])
+class AnimalCreateForm(BaseAnimalForm):
+    pass
 
 # TODO: Formulaire de création d'animal
-class AnimalUpdateForm(BaseForm):
-    race = StringField("Race", validators=[
-        DataRequired(message="Race is required."),
-        Length(min=2, max=50)
-    ])
-    description = TextAreaField("Description", validators=[
-        Length(max=1000, message="Description must be 1000 characters max.")
-    ])
+class AnimalUpdateForm(BaseAnimalForm):
+    pass
+
+
+
+
 

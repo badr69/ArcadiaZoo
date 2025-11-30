@@ -38,13 +38,29 @@ def sanitize_html(input_str: str) -> str:
     )
     return cleaned
 
+# def detect_sql_injection(input_str: str) -> bool:
+#     """
+#     Détecte des motifs simples pouvant indiquer une injection SQL.
+#     Retourne True si un motif suspect est trouvé, False sinon.
+#     """
+#     pattern = re.compile(
+#         r"(--|;|'|\"|/\*|\*/|\b(SELECT|UPDATE|DELETE|INSERT|DROP|ALTER|CREATE|EXEC|UNION|XP_)\b)",
+#         re.IGNORECASE
+#     )
+#     return bool(pattern.search(input_str))
+
+
 def detect_sql_injection(input_str: str) -> bool:
     """
     Détecte des motifs simples pouvant indiquer une injection SQL.
     Retourne True si un motif suspect est trouvé, False sinon.
+    Les caractères accentués et apostrophes typographiques sont autorisés.
     """
+    # Autorise les lettres accentuées et apostrophes typographiques
+    # On ne bloque que ' ; -- /* */ et les mots clés SQL
     pattern = re.compile(
-        r"(--|;|'|\"|/\*|\*/|\b(SELECT|UPDATE|DELETE|INSERT|DROP|ALTER|CREATE|EXEC|UNION|XP_)\b)",
+        r"(--|;|/\*|\*/|\b(SELECT|UPDATE|DELETE|INSERT|DROP|ALTER|CREATE|EXEC|UNION|XP_)\b)",
         re.IGNORECASE
     )
     return bool(pattern.search(input_str))
+

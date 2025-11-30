@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}Update img_habitat{% endblock %}
+
+{% block content %}
+    <h2>Update image d'habitat</h2>
+    <div class="container mt-5">
+        <form method="POST" enctype="multipart/form-data">
+            {{ form.hidden_tag() }}
+
+            <div class="mb-3">
+                {{ form.habitat_id.label }}
+                {{ form.habitat_id(class="form-control") }}
+                {% for error in form.habitat_id.errors %}
+                    <div class="text-danger">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            <div class="mb-3">
+                {{ form.filename.label }}
+                {{ form.filename(class="form-control") }}
+                {% for error in form.filename.errors %}
+                    <div class="text-danger">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            <div class="mb-3">
+                {{ form.description.label }}
+                {{ form.description(class="form-control", rows=4) }}
+                {% for error in form.description.errors %}
+                    <div class="text-danger">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            {{ form.submit(class="btn btn-primary") }}
+        </form>
+    </div>
+{% endblock %}
