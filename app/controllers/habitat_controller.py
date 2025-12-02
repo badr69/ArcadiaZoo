@@ -1,5 +1,4 @@
 # app/controllers/habitat_controller.py
-
 from flask import render_template, redirect, url_for, flash, current_app
 from pathlib import Path
 from werkzeug.utils import secure_filename
