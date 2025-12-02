@@ -60,8 +60,27 @@ class UserController:
             username = sanitize_html(form.username.data)
             email = sanitize_html(form.email.data).lower()
             role_id = form.role_id.data
+            password = form.password.data
+            confirm_password = form.confirm_password.data
 
-            success, error = self.user_service.update_user(username, email, role_id)
+            # Vérification obligatoire des deux champs
+            if not password or not confirm_password:
+                flash("Veuillez remplir les deux champs de mot de passe.", "danger")
+                return render_template(
+                    "user/update_user.html",
+                    form=form,
+                    user=self.user_service.user
+                )
+
+            if password != confirm_password:
+                flash("Les mots de passe ne correspondent pas.", "danger")
+                return render_template(
+                    "user/update_user.html",
+                    form=form,
+                    user=self.user_service.user
+                )
+
+            success, error = self.user_service.update_user(username, email, role_id, password=password)
             if success:
                 flash("Utilisateur mis à jour avec succès.", "success")
                 return redirect(url_for("user.list_all_users"))

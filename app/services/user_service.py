@@ -9,16 +9,13 @@ class UserService:
     Service pour gérer la logique métier des utilisateurs.
     """
 
-    # =========================================================================
-    # MÉTHODES DE CLASSE (LIST, GET, CREATE, AUTHENTICATE)
-    # =========================================================================
+    # =====================================
+    # ==== MÉTHODES DE CLASSE (CRUD) ======
+    # =====================================
 
     @classmethod
     def authenticate(cls, email, password):
-        """
-        Authentifie un utilisateur avec email et mot de passe.
-        Retourne l'objet UserModel et None si succès, ou None et message d'erreur.
-        """
+        """Authentifie un utilisateur."""
         if not email or not password:
             return None, "Email et mot de passe requis."
 
@@ -60,10 +57,7 @@ class UserService:
 
     @classmethod
     def create_user(cls, username, email, password, role_id):
-        """
-        Crée un nouvel utilisateur avec validations et sanitation.
-        Retourne l'objet UserModel et None si succès, sinon None et message.
-        """
+        """Crée un nouvel utilisateur avec validation et sanitation."""
         username = sanitize_html(username)
         email = sanitize_html(email).lower()
 
@@ -86,16 +80,16 @@ class UserService:
         # Hachage du mot de passe
         password_hash = generate_password_hash(password)
 
-        # Création de l'utilisateur dans la BDD
+        # Création de l'utilisateur
         user = UserModel.create_user(username, email, password_hash, role_id)
         if not user:
             return None, "Erreur lors de la création de l'utilisateur."
 
         return user, None
 
-    # =========================================================================
-    # MÉTHODES D’INSTANCE (UPDATE, DELETE)
-    # =========================================================================
+    # =====================================
+    # ==== MÉTHODES D’INSTANCE ============
+    # =====================================
 
     def __init__(self, user_id):
         self.user = UserModel.get_user_by_id(user_id)
@@ -123,14 +117,15 @@ class UserService:
         if existing_user and existing_user.user_id != self.user.user_id:
             return False, "Cet email est déjà utilisé."
 
-        # Hachage si mot de passe fourni
-        password_hash = None
-        if password:
-            if not is_strong_password(password):
-                return False, "Mot de passe trop faible."
-            password_hash = generate_password_hash(password)
+        # Hachage du mot de passe si fourni
+        password_hash = generate_password_hash(password) if password else None
 
-        success = self.user.update_user(username=username, email=email, role_id=role_id, password_hash=password_hash)
+        success = self.user.update_user(
+            username=username,
+            email=email,
+            role_id=role_id,
+            password_hash=password_hash
+        )
         if not success:
             return False, "Erreur lors de la mise à jour."
 
