@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block title %}Food Details{% endblock %}
+
+{% block content %}
+    <div>
+        {% if current_user.is_authenticated %}
+            {% if current_user.role_name == 'admin' %}
+                <p>Welcome {{ current_user.username }} 👑</p>
+                <a href="{{ url_for('admin.admin_dash') }}" class="btn btn-dark mb-3">Admin Dash</a>
+            {% elif current_user.role_name == 'employee' %}
+                <p>Welcome {{ current_user.username }} 👌</p>
+                <a href="{{ url_for('employee.employee_dash') }}" class="btn btn-dark mb-3">Employee Dash</a>
+            {% elif current_user.role_name == 'vet' %}
+                <p>Welcome {{ current_user.username }} 👌</p>
+                <a href="{{ url_for('vet.vet_dash') }}" class="btn btn-dark mb-3">Vet Dash</a>
+            {% else %}
+                <p>Welcome {{ current_user.username }}</p>
+            {% endif %}
+            <form action="{{ url_for('auth.logout') }}" method="POST" style="display:inline;">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button type="submit" class="btn btn-danger mb-3">Logout</button>
+            </form>
+        {% else %}
+            <p>You are not cennected.</p>
+            <a href="{{ url_for('auth.login') }}" class="btn btn-success mb-3">Login</a>
+        {% endif %}
+        <a href="{{ url_for('food.list_all_foods') }}" class="btn btn-primary mb-3">list all foods</a>
+    </div>
+
+    <div class="container mt-4">
+        <h2 class="text-center mb-4">details Foods</h2>
+
+        <table class="table table-bordered">
+            <tr>
+                <th>Food ID</th>
+                <td>{{ food.food_id }}</td>
+            </tr>
+            <tr>
+                <th>Animal ID</th>
+                <td>{{ food.animal_id }}</td>
+            </tr>
+            <tr>
+                <th>Vet ID</th>
+                <td>{{ food.vet_id }}</td>
+            </tr>
+            <tr>
+                <th>Employee ID</th>
+                <td>{{ food.employee_id }}</td>
+            </tr>
+            <tr>
+                <th>Name Food</th>
+                <td>{{ food.name_food }}</td>
+            </tr>
+            <tr>
+                <th>Quantity</th>
+                <td>{{ food.quantity }} kg</td>
+            </tr>
+            <tr>
+                <th>Date Food</th>
+                <td>{{ food.date_food.strftime('%Y-%m-%d %H:%M') if food.date_food else '' }}</td>
+            </tr>
+            <tr>
+                <th>Created At</th>
+                <td>{{ food.created_at.strftime('%Y-%m-%d %H:%M') if food.created_at else '' }}</td>
+            </tr>
+            <tr>
+                <th>Updated At</th>
+                <td>{{ food.updated_at.strftime('%Y-%m-%d %H:%M') if food.updated_at else '' }}</td>
+            </tr>
+        </table>
+    </div>
+{% endblock %}

@@ -16,16 +16,19 @@ def create_animal():
     return AnimalController.create_animal()
 
 @animal_bp.route('/<int:animal_id>', methods=['GET'])
-@roles_required('admin', 'employee')
+@roles_required('admin', 'employee', "vet")
 def get_animal_by_id(animal_id):
     return AnimalController.get_animal_by_id(animal_id)
 
 @animal_bp.route('/update_animal/<int:animal_id>', methods=['GET', 'POST'])
-@roles_required('admin', 'employee')
+@roles_required('admin', 'employee', "vet")
 def update_animal(animal_id):
-    return AnimalController.update_animal(animal_id)
+    controller = AnimalController()
+    return controller.update_animal(animal_id)
 
-@animal_bp.route('/<int:animal_id>/delete', methods=['POST'])
+
+@animal_bp.route('/delete_animal<int:animal_id>', methods=['POST'])
 @roles_required('admin', 'employee')
 def delete_animal(animal_id):
-    return AnimalController.delete_animal(animal_id)
+    controller = AnimalController()
+    return controller.delete_animal(animal_id)

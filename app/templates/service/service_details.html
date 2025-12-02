@@ -1,50 +1,44 @@
 {% extends "base.html" %}
 
-{% block title %}Service Detail{% endblock %}
+{% block title %}Détail Service{% endblock %}
 
 {% block content %}
     <div>
         {% if current_user.is_authenticated %}
-            {% if current_user.role_name == 'admin' %}
-                <p>Welcome {{ current_user.username }} 👑</p>
+            {% if current_user.role_name == 'admin' %} <p>Welcome {{ current_user.username }} 👑</p>
                 <a href="{{ url_for('admin.admin_dash') }}" class="btn btn-dark mb-3">Admin Dash</a>
-            {% elif current_user.role_name == 'employee' %}
-                <p>Welcome {{ current_user.username }} 👌</p>
+            {% elif current_user.role_name == 'employee' %} <p>Welcome {{ current_user.username }} 👌</p>
                 <a href="{{ url_for('employee.employee_dash') }}" class="btn btn-dark mb-3">Employee Dash</a>
-            {% else %}
-                <p>Welcome {{ current_user.username }}</p>
+            {% else %} <p>Welcome {{ current_user.username }} 👌</p>
             {% endif %}
-            <a href="{{ url_for('auth.logout') }}" class="btn btn-danger mb-3">Logout</a>
-        {% else %}
-            <p>You are not cennected.</p>
+            <form action="{{ url_for('auth.logout') }}" method="POST" style="display:inline;"><input type="hidden"
+                                                                                                     name="csrf_token"
+                                                                                                 value="{{ csrf_token() }}">
+                <button type="submit" class="btn btn-danger mb-3">Logout</button>
+            </form>
+        {% else %} <p>You are not connected.</p>
             <a href="{{ url_for('auth.login') }}" class="btn btn-success mb-3">Login</a>
-        {% endif %}
-        <a href="{{ url_for('service.list_all_services') }}" class="btn btn-secondary mb-3">All Services</a>
+        {% endif %} <a href="{{ url_for('service.list_all_services') }}" class="btn btn-primary mb-3">All Services</a>
     </div>
 
-    <div class="container mt-5">
-        <h2 class="mb-4 text-center">Service detail</h2>
 
-        <table class="table table-bordered table-striped">
-            <thead>
-            <tr>
-                <th>ID</th>
-                <th>name</th>
-                <th>description</th>
-                <td>created_at</td>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td>{{ service.id }}</td>
-                <td>{{ service.name }}</td>
-                <td>{{ service.description }}</td>
-                <td>{{ service.created_at }}</td>
-            </tr>
-            </tbody>
-        </table>
-        <a href="{{ url_for('service.list_all_services') }}" class="btn btn-secondary">back</a>
+    <div class="container mt-4">
+        <ul class="list-group">
+            <li class="list-group-item"><strong>ID:</strong> {{ service.service_id }}</li>
+            <li class="list-group-item"><strong>Name:</strong> {{ service.name }}</li>
+            <li class="list-group-item"><strong>Description:</strong> {{ service.description }}</li>
+            <li class="list-group-item"><strong>URL Image:</strong> {{ service.url_image }}</li>
+            <li class="list-group-item">
+                <strong>Image:</strong>
+                {% if service.url_image %}
+                    <img src="{{ url_for('static', filename=service.url_image.lstrip('/')) }}" alt="{{ service.name }}"
+                         class="img-fluid">
+                {% else %}
+                    <p>No Image</p>
+                {% endif %}
+            </li>
+        </ul>
     </div>
+
+
 {% endblock %}
-
-

@@ -1,6 +1,6 @@
 -- Table roles
 CREATE TABLE IF NOT EXISTS roles (
-    id SERIAL PRIMARY KEY,
+    role_id SERIAL PRIMARY KEY,
     name VARCHAR(100) UNIQUE NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -8,14 +8,14 @@ CREATE TABLE IF NOT EXISTS roles (
 
 -- Table users
 CREATE TABLE IF NOT EXISTS users (
-    id SERIAL PRIMARY KEY,
+    user_id SERIAL PRIMARY KEY,
     username VARCHAR(100) UNIQUE NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
     role_id INTEGER,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (role_id) REFERENCES roles(id) ON DELETE CASCADE
+    FOREIGN KEY (role_id) REFERENCES roles(role_id) ON DELETE CASCADE
 );
 
 -- Table habitats
@@ -60,7 +60,7 @@ CREATE TABLE IF NOT EXISTS img_animals (
     description TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (animal_id) REFERENCES animals(id) ON DELETE CASCADE
+    FOREIGN KEY (animal_id) REFERENCES animals(animal_id) ON DELETE CASCADE
 );
 
 -- Table services
@@ -93,21 +93,21 @@ CREATE TABLE IF NOT EXISTS foods (
     date_nourriture TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (animal_id) REFERENCES animals(id) ON DELETE CASCADE
+    FOREIGN KEY (animal_id) REFERENCES animals(animal_id) ON DELETE CASCADE
 );
 
 -- Table care (soins)
-CREATE TABLE IF NOT EXISTS care (
+CREATE TABLE IF NOT EXISTS cares (
     id SERIAL PRIMARY KEY,
     animal_id INTEGER NOT NULL,
-    user_id INTEGER,
-    type_soin VARCHAR(100) NOT NULL,
+    user_id INTEGER NOT NULL,
+    type_care VARCHAR(100) NOT NULL,
     description TEXT,
-    date_soin TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    date_care TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (animal_id) REFERENCES animals(id) ON DELETE CASCADE,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
+    FOREIGN KEY (animal_id) REFERENCES animals(animal_id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE SET NULL
 );
 
 -- Table report_vet
@@ -122,10 +122,143 @@ CREATE TABLE IF NOT EXISTS report_vet (
     description_state TEXT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (animal_id) REFERENCES animals(id) ON DELETE CASCADE,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL,
-    FOREIGN KEY (care_id) REFERENCES cares(id) ON DELETE SET NULL
+    FOREIGN KEY (animal_id) REFERENCES animals(animal_id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE SET NULL,
+    FOREIGN KEY (care_id) REFERENCES cares(cares_id) ON DELETE SET NULL
 );
+
+
+
+-- -- Table roles
+-- CREATE TABLE IF NOT EXISTS roles (
+--     role_id SERIAL PRIMARY KEY,
+--     name VARCHAR(100) UNIQUE NOT NULL,
+--     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+--     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+-- );
+--
+-- -- Table users
+-- CREATE TABLE IF NOT EXISTS users (
+--     user_id SERIAL PRIMARY KEY,
+--     username VARCHAR(100) UNIQUE NOT NULL,
+--     email VARCHAR(100) UNIQUE NOT NULL,
+--     password VARCHAR(255) NOT NULL,
+--     role_id INTEGER,
+--     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+--     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+--     FOREIGN KEY (role_id) REFERENCES roles(role_id) ON DELETE CASCADE
+-- );
+--
+-- -- Table habitats
+-- CREATE TABLE IF NOT EXISTS habitats (
+--     habitat_id SERIAL PRIMARY KEY,
+--     name VARCHAR(100) UNIQUE NOT NULL,
+--     url_image VARCHAR(255) NOT NULL,
+--     description TEXT NOT NULL,
+--     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+--     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+-- );
+--
+-- -- Table images habitats
+-- CREATE TABLE IF NOT EXISTS img_habitats (
+--     id SERIAL PRIMARY KEY,
+--     habitat_id INTEGER NOT NULL,
+--     filename VARCHAR(255) NOT NULL,
+--     description TEXT,
+--     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+--     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+--     FOREIGN KEY (habitat_id) REFERENCES habitats(habitat_id) ON DELETE CASCADE
+-- );
+--
+-- -- Table animals
+-- CREATE TABLE IF NOT EXISTS animals (
+--     animal_id SERIAL PRIMARY KEY,
+--     name VARCHAR(100) UNIQUE NOT NULL,
+--     race VARCHAR(100) NOT NULL,
+--     description TEXT,
+--     url_image VARCHAR(255),
+--     habitat_id INTEGER,
+--     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+--     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+--     FOREIGN KEY (habitat_id) REFERENCES habitats(habitat_id) ON DELETE SET NULL
+-- );
+--
+-- -- Table images animals
+-- CREATE TABLE IF NOT EXISTS img_animals (
+--     id SERIAL PRIMARY KEY,
+--     animal_id INTEGER NOT NULL,
+--     filename VARCHAR(255) NOT NULL,
+--     description TEXT,
+--     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+--     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+--     FOREIGN KEY (animal_id) REFERENCES animals(animal_id) ON DELETE CASCADE
+-- );
+--
+-- -- Table services
+-- CREATE TABLE IF NOT EXISTS services (
+--     service_id SERIAL PRIMARY KEY,
+--     name VARCHAR(100) UNIQUE NOT NULL,
+--     url_image VARCHAR(255) NOT NULL,
+--     description TEXT NOT NULL,
+--     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+--     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+-- );
+--
+-- -- Table images services
+-- CREATE TABLE IF NOT EXISTS img_services (
+--     id SERIAL PRIMARY KEY,
+--     service_id INTEGER NOT NULL,
+--     filename VARCHAR(255) NOT NULL,
+--     description TEXT,
+--     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+--     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+--     FOREIGN KEY (service_id) REFERENCES services(service_id) ON DELETE CASCADE
+-- );
+--
+-- -- Table foods
+-- CREATE TABLE IF NOT EXISTS foods (
+--     id SERIAL PRIMARY KEY,
+--     animal_id INTEGER NOT NULL,
+--     type_nourriture VARCHAR(100) NOT NULL,
+--     quantite VARCHAR(50) NOT NULL,
+--     date_nourriture TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+--     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+--     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+--     FOREIGN KEY (animal_id) REFERENCES animals(animal_id) ON DELETE CASCADE
+-- );
+--
+-- -- Table cares (soins)
+-- CREATE TABLE IF NOT EXISTS cares (
+--     care_id SERIAL PRIMARY KEY,
+--     animal_id INTEGER NOT NULL,
+--     user_id INTEGER NOT NULL,
+--     type_care VARCHAR(100) NOT NULL,
+--     description TEXT,
+--     date_care TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+--     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+--     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+--     FOREIGN KEY (animal_id) REFERENCES animals(animal_id) ON DELETE CASCADE,
+--     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE SET NULL
+-- );
+--
+-- -- Table report_vet
+-- CREATE TABLE IF NOT EXISTS report_vet (
+--     report_id SERIAL PRIMARY KEY,
+--     animal_id INTEGER NOT NULL,
+--     user_id INTEGER,
+--     care_id INTEGER,
+--     state VARCHAR(100) NOT NULL,
+--     food VARCHAR(100) NOT NULL,
+--     quantity_food VARCHAR(100) NOT NULL,
+--     description_state TEXT NOT NULL,
+--     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+--     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+--     FOREIGN KEY (animal_id) REFERENCES animals(animal_id) ON DELETE CASCADE,
+--     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE SET NULL,
+--     FOREIGN KEY (care_id) REFERENCES cares(care_id) ON DELETE SET NULL
+-- );
+
+
 
 -- Fonction commune pour tous les triggers
 CREATE OR REPLACE FUNCTION update_updated_at_column()

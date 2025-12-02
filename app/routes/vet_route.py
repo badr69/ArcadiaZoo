@@ -8,6 +8,6 @@ vet_bp = Blueprint('vet', __name__, url_prefix="/vet")
 @login_required
 def vet_dash():
     form = LogoutForm()
-    role = current_user.role if current_user else None
-    return render_template('dash/vet_dash.html', form=form, role=role)
+    role_name = current_user.role_name if current_user else None
+    return render_template('dash/vet_dash.html', form=form, role_name=role_name)
 

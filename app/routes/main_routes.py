@@ -3,11 +3,12 @@ from flask import Blueprint, render_template, redirect, url_for, flash
 from app.forms.contact_forms import ContactForm
 from app.forms.auth_forms import LoginForm
 from app.forms.review_form import ReviewForm
-from app.models.habitat_model import Habitat
+from app.models.habitat_model import HabitatModel
 from app.models.service_model import ServiceModel
 from app.models.animal_model import AnimalModel
 from app.controllers.review_controller import ReviewController
 from app.utils.decorators import roles_required
+from app.models.review_model import ReviewModel
 
 
 main_bp = Blueprint('main', __name__)
@@ -17,12 +18,12 @@ main_bp = Blueprint('main', __name__)
 def index():
     form = ReviewForm()
     animals = AnimalModel.list_all_animals()
-    habitats = Habitat.list_all_habitats()
+    habitats = HabitatModel.list_all_habitats()
     services = ServiceModel.list_all_services()
 
     if form.validate_on_submit():
         # Créer un review avec les données du formulaire
-        review = Review(
+        review = ReviewModel(
             pseudo=form.pseudo.data,
             message=form.message.data,
             rating=form.rating.data,
@@ -49,7 +50,7 @@ def services():
     services = []
     for s in services_objects:
         services.append({
-            'id': s.id,
+            'id': s.service_id,
             'name': s.name,
             'url_image': s.url_image,
             'description': s.description,
@@ -65,7 +66,7 @@ def animals():
     animals = []
     for a in animals_objects:
         animals.append({
-            'id': a.id,
+            'id': a.animal_id,
             'name': a.name,
             'url_image': a.url_image,# chemin relatif depuis static
             'description': a.description,
@@ -77,11 +78,11 @@ def animals():
 
 @main_bp.route('/habitats/')
 def habitats():
-    habitats_objects = Habitat.list_all_habitats()  # renvoie une liste d'objets Habitat
+    habitats_objects = HabitatModel.list_all_habitats()  # renvoie une liste d'objets Habitat
     habitats = []
     for h in habitats_objects:
         habitats.append({
-            'id': h.id,
+            'id': h.habitat_id,
             'name': h.name,
             'url_image': h.url_image,
             'description': h.description,

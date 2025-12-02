@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}role Detail{% endblock %}
+
+{% block content %}
+    <div>
+        {% if current_user.is_authenticated and current_user.role_name == "admin" %}
+            <p>Welcome {{ current_user.username }} 👌 </p>
+        {% endif %}
+        <a href="{{ url_for('admin.admin_dash') }}" class="btn btn-dark mb-3">admin dash</a>
+        <form action="{{ url_for('auth.logout') }}" method="POST" style="display:inline;">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button type="submit" class="btn btn-danger mb-3">Logout</button>
+        </form>
+        <a href="{{ url_for('role.list_all_roles') }}" class="btn btn-primary mb-3">All Roles</a>
+    </div>
+    <div class="container mt-5">
+
+        <h1 class="text-center mb-4">role Details</h1>
+
+        <div class="container mt-4">
+            <ul class="list-group">
+                <li class="list-group-item"><strong>role id:</strong> {{ role.id }}</li>
+                <li class="list-group-item"><strong>role_name:</strong> {{ role.name }}</li>
+                <li class="list-group-item"><strong>Ccreated_at:</strong> {{ role.created_at }}</li>
+            </ul>
+        </div>
+    </div>
+{% endblock %}
+

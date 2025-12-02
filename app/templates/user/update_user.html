@@ -8,7 +8,10 @@
             <p>Welcome {{ current_user.username }} 👌 </p>
         {% endif %}
         <a href="{{ url_for('admin.admin_dash') }}" class="btn btn-dark mb-3">admin dash</a>
-        <a href="{{ url_for('auth.logout') }}" class="btn btn-danger mb-3">Logout</a>
+        <form action="{{ url_for('auth.logout') }}" method="POST" style="display:inline;">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button type="submit" class="btn btn-danger mb-3">Logout</button>
+        </form>
         <a href="{{ url_for('user.list_all_users') }}" class="btn btn-primary mb-3">All Users</a>
     </div>
     <h2 class="mb-4 text-center">Update User</h2>
@@ -43,8 +46,8 @@
                     </div>
 
                     <div class="mb-3">
-                        {{ form.role_name.label(class="form-label") }}
-                        {{ form.role_name(class="form-select") }}
+                        {{ form.role_id.label(class="form-label") }}
+                        {{ form.role_id(class="form-select") }}
                     </div>
 
                     <div class="mb-3">

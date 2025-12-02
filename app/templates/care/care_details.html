@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}Care Details{% endblock %}
+
+{% block content %}
+    <div>
+        {% if current_user.is_authenticated %}
+            {% if current_user.role_name == 'admin' %}
+                <p>Welcome {{ current_user.username }} 👑</p>
+                <a href="{{ url_for('admin.admin_dash') }}" class="btn btn-dark mb-3">Admin Dash</a>
+            {% elif current_user.role_name == 'employee' %}
+                <p>Welcome {{ current_user.username }} 👌</p>
+                <a href="{{ url_for('employee.employee_dash') }}" class="btn btn-dark mb-3">Employee Dash</a>
+            {% elif current_user.role_name == 'vet' %}
+                <p>Welcome {{ current_user.username }} 👌</p>
+                <a href="{{ url_for('vet.vet_dash') }}" class="btn btn-dark mb-3">Vet Dash</a>
+            {% else %}
+                <p>Welcome {{ current_user.username }}</p>
+            {% endif %}
+            <form action="{{ url_for('auth.logout') }}" method="POST" style="display:inline;">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button type="submit" class="btn btn-danger mb-3">Logout</button>
+            </form>
+        {% else %}
+            <p>You are not connected.</p>
+            <a href="{{ url_for('auth.login') }}" class="btn btn-success mb-3">Login</a>
+        {% endif %}
+        <a href="{{ url_for('care.list_all_cares') }}" class="btn btn-primary mb-3">All Cares</a>
+    </div>
+
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">Update Care</h1>
+        <div class="container mt-4">
+            <ul class="list-group">
+                <li class="list-group-item"><strong>care id:</strong> {{ care.care_id }}</li>
+                <li class="list-group-item"><strong>user id(vet):</strong> {{ care.user_id }}</li>
+                <li class="list-group-item"><strong>type of care:</strong> {{ care.type_care }}</li>
+                <li class="list-group-item"><strong>description:</strong> {{ care.description }}</li>
+                <li class="list-group-item"><strong>date of care:</strong> {{ care.date_care }}</li>
+                <li class="list-group-item"><strong>Ccreated_at:</strong> {{ care.created_at }}</li>
+                <li class="list-group-item"><strong>update_at:</strong> {{ care.updated_at }}</li>
+            </ul>
+        </div>
+        {#            <div class="card">#}
+        {#                <div class="card-body">#}
+        {#                    <p><strong>Animal ID :</strong> {{ care.animal_id }}</p>#}
+        {#                    <p><strong>user ID(vet) :</strong> {{ care.user_id }}</p>#}
+        {#                    <p><strong>Type de care :</strong> {{ care.type_care }}</p>#}
+        {#                    <p><strong>Description :</strong> {{ care.description }}</p>#}
+        {#                    <p><strong>Date of care#}
+        {#                        :</strong> {{ care.date_care.strftime('%Y-%m-%d %H:%M') if care.date_care else '' }}</p>#}
+        {#                    <p><strong>Created_at#}
+        {#                        :</strong> {{ care.created_at.strftime('%Y-%m-%d %H:%M') if care.created_at else '' }}</p>#}
+        {#                    <p><strong>Updated_at#}
+        {#                        :</strong> {{ care.updated_at.strftime('%Y-%m-%d %H:%M') if care.updated_at else '' }}</p>#}
+        {#                </div>#}
+        {#                <div class="card-footer">#}
+        {#                    <a href="{{ url_for('care.update_care', care_id=care.care_id) }}"#}
+        {#                       class="btn btn-primary">Update</a>#}
+        {#                </div>#}
+        {#            </div>#}
+    </div>
+
+{% endblock %}

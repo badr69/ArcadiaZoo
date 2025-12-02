@@ -1,35 +1,55 @@
-from flask import Blueprint, render_template,abort
 from app.controllers.user_controller import UserController
+from flask import Blueprint
 from app.utils.decorators import roles_required
+from flask_login import login_required
+
+user_bp = Blueprint('user', __name__, url_prefix='/user')
 
 
-user_bp = Blueprint('user', __name__, url_prefix="/user")
-
-@user_bp.route("/list_all_users")
+# -------------------- LIST --------------------
+@user_bp.route('/list_all_users', methods=['GET'])
+@login_required
 @roles_required("admin")
 def list_all_users():
-     return UserController.list_all_users()
+    # Méthode statique -> pas besoin d'instance
+    return UserController.list_all_users()
 
-@user_bp.route("/<int:user_id>")
+
+# -------------------- GET BY ID --------------------
+@user_bp.route('/<int:user_id>', methods=['GET'])
+@login_required
 @roles_required("admin")
 def get_user_by_id(user_id):
-    user = UserController.get_user_by_id(user_id)
-    if not user:
-        abort(404)  # renvoie une erreur 404 si l'utilisateur n'existe pas
-    return render_template("user/user_detail.html", user=user)
+    # Méthode statique -> pas besoin d'instance
+    return UserController.get_user_by_id(user_id)
 
-@user_bp.route("/create_user", methods=["GET", "POST"])
+# -------------------- CREATE --------------------
+@user_bp.route('/create_user', methods=['GET', 'POST'])
+@login_required
 @roles_required("admin")
 def create_user():
+    # Méthode statique -> pas besoin d'instance
     return UserController.create_user()
 
-@user_bp.route("/update_user/<int:user_id>", methods=["GET", "POST"])
+
+# -------------------- UPDATE --------------------
+@user_bp.route('/update_user/<int:user_id>', methods=['GET', 'POST'])
+@login_required
 @roles_required("admin")
 def update_user(user_id):
-    return UserController.update_user(user_id)
+    # Méthode d'instance -> on instancie avec user_id
+    controller = UserController(user_id)
+    return controller.update_user()
 
-@user_bp.route("/delete_user/<int:user_id>", methods=["POST"])
+
+# -------------------- DELETE --------------------
+@user_bp.route('/delete_user/<int:user_id>', methods=['GET', 'POST'])
+@login_required
 @roles_required("admin")
 def delete_user(user_id):
-    return UserController.delete_user(user_id)
+    # Méthode d'instance -> on instancie avec user_id
+    controller = UserController(user_id)
+    return controller.delete_user()
+
+
 

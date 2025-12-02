@@ -8,8 +8,8 @@ employee_bp = Blueprint('employee', __name__, url_prefix="/employee")
 
 @employee_bp.route('/employee_dash')
 @login_required
-@roles_required("employee", "admin")
+@roles_required("admin", "employee")
 def employee_dash():
     form = LogoutForm()
-    role = current_user.role if current_user else None
-    return render_template('dash/employee_dash.html', form=form, role=role)
+    role_name = current_user.role_name if current_user else None
+    return render_template('dash/employee_dash.html', form=form, role_name=role_name)

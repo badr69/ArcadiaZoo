@@ -12,40 +12,37 @@
                 <p>Welcome {{ current_user.username }} 👌</p>
                 <a href="{{ url_for('employee.employee_dash') }}" class="btn btn-dark mb-3">Employee Dash</a>
             {% else %}
-                <p>Welcome {{ current_user.username }}</p>
+                <p>Welcome {{ current_user.username }} 👌</p>
             {% endif %}
-            <a href="{{ url_for('auth.logout') }}" class="btn btn-danger mb-3">Logout</a>
+            <form action="{{ url_for('auth.logout') }}" method="POST" style="display:inline;">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button type="submit" class="btn btn-danger mb-3">Logout</button>
+            </form>
         {% else %}
-            <p>You are not cennected.</p>
+            <p>You are not connected.</p>
             <a href="{{ url_for('auth.login') }}" class="btn btn-success mb-3">Login</a>
         {% endif %}
         <a href="{{ url_for('habitat.list_all_habitats') }}" class="btn btn-primary mb-3">All Habitats</a>
     </div>
-    <div class="container mt-5">
-        <h2 class="text-center mb-4">Habitat detail</h2>
 
-        <table class="table table-bordered table-striped">
-            <thead>
-            <tr>
-                <th>ID</th>
-                <th>name</th>
-                <th>description</th>
-                <th>url_image</th>
-                <th>created_at</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td>{{ habitat.id }}</td>
-                <td>{{ habitat.name }}</td>
-                <td>{{ habitat.description }}</td>
-                <td>{{ habitat.url_image }}</td>
-                <td>{{ habitat.created_at }}</td>
-            </tr>
-            </tbody>
-        </table>
-        <a href="{{ url_for('habitat.list_all_habitats') }}" class="btn btn-secondary">Back</a>
+    <div class="container mt-4">
+        <ul class="list-group">
+            <li class="list-group-item"><strong>ID:</strong> {{ habitat.id }}</li>
+            <li class="list-group-item"><strong>Name:</strong> {{ habitat.name }}</li>
+            <li class="list-group-item"><strong>url_image:</strong> {{ habitat.url_image }}</li>
+            <li class="list-group-item"><strong>Description:</strong> {{ habitat.description }}</li>
+            <li class="list-group-item">
+                <strong>Image:</strong>
+                {% if habitat.url_image %}
+                    <img src="{{ url_for('static', filename=habitat.url_image.lstrip('/')) }}" alt="{{ habitat.name }}"
+                         class="img-fluid">
+                {% else %}
+                    <p>No Image</p>
+                {% endif %}
+            </li>
+        </ul>
     </div>
 {% endblock %}
+
 
 

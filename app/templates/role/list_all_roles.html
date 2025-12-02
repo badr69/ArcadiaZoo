@@ -1,55 +1,60 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div>
-    {% if current_user.is_authenticated and current_user.role_name == "admin" %}
-        <p>Welcome {{ current_user.username }} 👌 </p>
-    {% endif %}
-    <a href="{{ url_for('admin.admin_dash') }}" class="btn btn-dark mb-3">Admin Dash</a>
-    <a href="{{ url_for('auth.logout') }}" class="btn btn-danger mb-3">Logout</a>
-</div>
+    <div>
+        {% if current_user.is_authenticated and current_user.role_name == "admin" %}
+            <p>Welcome {{ current_user.username }} 👌 </p>
+        {% endif %}
+        <a href="{{ url_for('admin.admin_dash') }}" class="btn btn-dark mb-3">Admin Dash</a>
+        <form action="{{ url_for('auth.logout') }}" method="POST" style="display:inline;">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button type="submit" class="btn btn-danger mb-3">Logout</button>
+        </form>
+    </div>
 
-<h2 class="text-center mb-4">List All Roles</h2>
-<div>
-    <a href="{{ url_for('role.create_role') }}" class="btn btn-primary mb-3">Create Role</a>
-</div>
-
-<div class="container-fluid mt-4">
-    <table class="table table-striped table-bordered">
-        <thead class="table-dark">
+    <h1 class="text-center mb-4">List All Roles</h1>
+    <div>
+        {% if current_user.is_authenticated and current_user.role_name == 'admin' %}
+            <a href="{{ url_for('role.create_role') }}" class="btn btn-primary mb-3">Create Rle</a>
+        {% endif %}
+    </div>
+     <div class="container-fluid mt-4">
+        <table class="table table-striped table-bordered">
+            <thead class="table-dark">
             <tr>
                 <th>Id</th>
                 <th>Name</th>
-                <th>Created At</th>
+                <th>Created_At</th>
                 <th>Actions</th>
             </tr>
-        </thead>
-        <tbody>
-        {% for role in roles %}
-            <tr>
-                <td>{{ role.id }}</td>
-                <td>{{ role.name }}</td>
-                <td>{{ role.created_at.strftime('%d/%m/%Y %H:%M') if role.created_at }}</td>
-                <td>
-                    <a href="{{ url_for('role.update_role', role_id=role.id) }}" class="btn btn-warning btn-sm">Update</a>
-                    <a href="{{ url_for('role.get_role_by_id', role_id=role.id) }}" class="btn btn-warning btn-sm">Details</a>
+            </thead>
+            <tbody>
+            {% for role in roles %}
+                <tr>
+                    <td>{{ role.id }}</td>
+                    <td>{{ role.name }}</td>
+                    <td>{{ role.created_at.strftime('%d/%m/%Y %H:%M') if role.created_at }}</td>
+                    <td>
+                        <a href="{{ url_for('role.update_role', role_id=role.id) }}" class="btn btn-warning btn-sm">Update</a>
+                        <a href="{{ url_for('role.get_role_by_id', role_id=role.id) }}" class="btn btn-info btn-sm">Details</a>
 
-                    <form action="{{ url_for('role.delete_role', role_id=role.id) }}" method="POST" style="display:inline;">
-                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                        <button type="submit" class="btn btn-danger btn-sm"
-                                onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?');">
-                            Delete
-                        </button>
-                    </form>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="5" class="text-center">No role found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-</div>
+                        <form action="{{ url_for('role.delete_role', role_id=role.id) }}" method="POST"
+                              style="display:inline;">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                            <button type="submit" class="btn btn-danger btn-sm"
+                                    onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?');">
+                                Delete
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="5" class="text-center">No role found</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
 
 {% endblock %}

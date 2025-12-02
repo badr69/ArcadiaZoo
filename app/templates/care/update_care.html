@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block title %}Update Care{% endblock %}
+
+{% block content %}
+    <div>
+        {% if current_user.is_authenticated %}
+            {% if current_user.role_name == 'admin' %}
+                <p>Welcome {{ current_user.username }} 👑</p>
+                <a href="{{ url_for('admin.admin_dash') }}" class="btn btn-dark mb-3">Admin Dash</a>
+            {% elif current_user.role_name == 'employee' %}
+                <p>Welcome {{ current_user.username }} 👌</p>
+                <a href="{{ url_for('employee.employee_dash') }}" class="btn btn-dark mb-3">Employee Dash</a>
+            {% elif current_user.role_name == 'vet' %}
+                <p>Welcome {{ current_user.username }} 👌</p>
+                <a href="{{ url_for('vet.vet_dash') }}" class="btn btn-dark mb-3">Vet Dash</a>
+            {% else %}
+                <p>Welcome {{ current_user.username }}</p>
+            {% endif %}
+            <form action="{{ url_for('auth.logout') }}" method="POST" style="display:inline;">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button type="submit" class="btn btn-danger mb-3">Logout</button>
+            </form>
+        {% else %}
+            <p>You are not connected.</p>
+            <a href="{{ url_for('auth.login') }}" class="btn btn-success mb-3">Login</a>
+        {% endif %}
+        <a href="{{ url_for('care.list_all_cares') }}" class="btn btn-primary mb-3">All Cares</a>
+    </div>
+
+
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">Modifier care {{ care.id }}</h1>
+        <form method="POST">
+            {{ form.hidden_tag() }}
+
+            <div class="mb-3">
+                {{ form.animal_id.label }}
+                {{ form.animal_id(class="form-select") }}
+                {% for error in form.animal_id.errors %}
+                    <div class="text-danger">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            <div class="mb-3">
+                {{ form.user_id.label }} {# anciennement vet_id#}
+                {{ form.user_id(class="form-select") }}
+                {% for error in form.user_id.errors %}
+                    <div class="text-danger">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            <div class="mb-3">
+                {{ form.type_care.label }}
+                {{ form.type_care(class="form-select") }}
+                {% for error in form.type_care.errors %}
+                    <div class="text-danger">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            <div class="mb-3">
+                {{ form.description.label }}
+                {{ form.description(class="form-control") }}
+                {% for error in form.description.errors %}
+                    <div class="text-danger">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            <div class="mb-3">
+                {{ form.date_care.label }}
+                {{ form.date_care(class="form-control", type="date") }}
+                {% for error in form.date_care.errors %}
+                    <div class="text-danger">{{ error }}</div>
+                {% endfor %}
+            </div>
+            <button type="submit" class="btn btn-primary">Update</button>
+        </form>
+    </div>
+{% endblock %}

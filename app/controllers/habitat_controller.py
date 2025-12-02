@@ -1,123 +1,126 @@
-import os
+# app/controllers/habitat_controller.py
+
+from flask import render_template, redirect, url_for, flash, current_app
 from pathlib import Path
+from werkzeug.utils import secure_filename
 from app.forms.habitat_forms import HabitatCreateForm, HabitatUpdateForm
 from app.services.habitat_service import HabitatService
-from flask import render_template, redirect, url_for, flash
-from werkzeug.utils import secure_filename
-from flask import current_app
+from app.utils.security import sanitize_html
+import uuid
 
-from app.utils.security import detect_sql_injection, sanitize_html
+ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "gif"}
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+def generate_unique_filename(filename):
+    ext = filename.rsplit('.', 1)[1].lower()
+    return f"{uuid.uuid4().hex}.{ext}"
 
 
 class HabitatController:
+
+    # ======================================================
+    # LIST ALL HABITATS
+    # ======================================================
     @staticmethod
     def list_all_habitats():
         habitats = HabitatService.list_all_habitats()
-        return render_template('habitat/list_all_habitats.html', habitats=habitats)
+        return render_template("habitat/list_all_habitats.html", habitats=habitats)
 
+    # ======================================================
+    # GET HABITAT BY ID
+    # ======================================================
     @staticmethod
     def get_habitat_by_id(habitat_id):
-        habitat = HabitatService.get_habitat_by_id(habitat_id)
-        if habitat is None:
-            flash("Habitat non trouvé.", "danger")
-            return redirect(url_for('habitat.list_habitats'))
-        return render_template('habitat/habitat_details.html', habitat=habitat)
+        service, error = HabitatService.get_habitat_by_id(habitat_id)
+        if error:
+            flash(error, "danger")
+            return redirect(url_for("habitat.list_all_habitats"))
+        return render_template("habitat/habitat_details.html", habitat=service)
 
+    # ======================================================
+    # CREATE HABITAT
+    # ======================================================
     @staticmethod
     def create_habitat():
         form = HabitatCreateForm()
-        # Debug éventuel (à supprimer en production)
-        # current_app.logger.debug("Form errors: %s", form.errors)
-
         if form.validate_on_submit():
-            name = sanitize_html(form.name.data)
             file = form.url_image.data
-            description = sanitize_html(form.description.data)
-
-            if detect_sql_injection(name) or detect_sql_injection(description):
-                flash("Invalide Input.", "danger")
-                return render_template("habitat/create_habitat.html", form=form)
-
-            # 1) Vérifier qu’un fichier a bien été téléversé
-            if not file or file.filename == "":
-                flash("Veuillez ajouter une image.", "danger")
-                return render_template("habitat/create_habitat.html", form=form)
-
-            # 2) Sauvegarder l’image
-            try:
-                filename = secure_filename(file.filename)
+            url_image = None
+            if file and allowed_file(file.filename):
+                filename = secure_filename(file.filename.lower())
+                filename = generate_unique_filename(filename)
                 upload_dir = Path(current_app.config['HABITAT_IMG_FOLDER'])
                 upload_dir.mkdir(parents=True, exist_ok=True)
-
                 filepath = upload_dir / filename
                 file.save(filepath)
-
-                # Chemin à enregistrer en BDD
                 url_image = f"uploads/habitat_img/{filename}"
 
-                # 3) Appeler le service
-                result = HabitatService.create_habitat(
-                    name=name,
-                    url_image=url_image,
-                    description=description
-                )
-
-                if result.get("status"):
-                    flash("Habitat créé avec succès.", "success")
-                    return redirect(url_for("habitat.list_all_habitats"))
-
-                flash(result.get("message", "Erreur inconnue lors de la création."), "danger")
-
-            except Exception:
-                current_app.logger.exception("Erreur lors de la création de l'habitat")
-                flash("Une erreur est survenue pendant la création de l’habitat.", "danger")
-
-        # GET initial ou formulaire invalide
-        return render_template("habitat/create_habitat.html", form=form)
-
-    @staticmethod
-    def update_habitat(habitat_id):
-        habitat = HabitatService.get_habitat_by_id(habitat_id)
-        if habitat is None:
-            flash("Habitat non trouvé.", "danger")
-            return redirect(url_for('habitat.list_all_habitats'))
-
-        form = HabitatUpdateForm(obj=habitat)  # Pré-remplit le formulaire avec l'objet habitat
-
-        if form.validate_on_submit():
             name = sanitize_html(form.name.data)
-            file = form.url_image.data
             description = sanitize_html(form.description.data)
 
-            if detect_sql_injection(name) or detect_sql_injection(description):
-                flash("Invalide Input.", "danger")
-                return render_template("habitat/update_habitat.html", form=form)
-
-
-            if hasattr(file, 'filename') and file.filename != '':
-                filename = secure_filename(file.filename)
-                upload_path = os.path.join(current_app.root_path, 'static/uploads', filename)
-                os.makedirs(os.path.dirname(upload_path), exist_ok=True)
-                file.save(upload_path)
-                url_image = f'uploads/habitat_img/{filename}'
+            service, error = HabitatService.create_habitat(name, url_image, description)
+            if error:
+                flash(error, "danger")
             else:
-                url_image = habitat.url_image  # garder l'ancienne image
+                flash("Habitat créé avec succès.", "success")
+                return redirect(url_for("habitat.list_all_habitats"))
 
-            # Appeler la mise à jour dans le service
-            result = HabitatService.update_habitat(habitat_id, name, url_image, description)
-            if result['status']:
-                flash("Habitat mis à jour.", "success")
-                return redirect(url_for('habitat.list_all_habitats'))
+        return render_template("habitat/create_habitat.html", form=form)
+
+    # ======================================================
+    # INSTANCE CONTROLLER
+    # ======================================================
+    def __init__(self, habitat_id):
+        self.service = HabitatService(habitat_id)
+
+    # ======================================================
+    # UPDATE HABITAT
+    # ======================================================
+    def update_habitat(self):
+        if not self.service.exists():
+            flash("Habitat non trouvé.", "danger")
+            return redirect(url_for("habitat.list_all_habitats"))
+
+        form = HabitatUpdateForm(obj=self.service.habitat)
+        if form.validate_on_submit():
+            file = form.url_image.data
+            url_image = self.service.habitat.url_image  # par défaut garder l'ancienne image
+
+            if hasattr(file, "filename") and file.filename:
+                if allowed_file(file.filename):
+                    filename = secure_filename(file.filename.lower())
+                    filename = generate_unique_filename(filename)
+                    upload_dir = Path(current_app.config['HABITAT_IMG_FOLDER'])
+                    upload_dir.mkdir(parents=True, exist_ok=True)
+                    filepath = upload_dir / filename
+                    file.save(filepath)
+                    url_image = f"uploads/habitat_img/{filename}"
+                else:
+                    flash("Format d'image non autorisé.", "danger")
+                    return render_template(
+                        "habitat/update_habitat.html", form=form, habitat=self.service.habitat
+                    )
+
+            name = sanitize_html(form.name.data)
+            description = sanitize_html(form.description.data)
+            success, error = self.service.update_habitat(name, url_image, description)
+            if success:
+                flash("Habitat mis à jour avec succès.", "success")
+                return redirect(url_for("habitat.list_all_habitats"))
             else:
-                flash(result['message'], "danger")
+                flash(error, "danger")
 
-        return render_template('habitat/update_habitat.html', form=form, habitat=habitat)
+        return render_template("habitat/update_habitat.html", form=form, habitat=self.service.habitat)
 
-    @staticmethod
-    def delete_habitat(habitat_id):
-        result = HabitatService.delete_habitat(habitat_id)
-        if result['status']:
-            flash("Habitat supprimé.", "success")
+    # ======================================================
+    # DELETE HABITAT
+    # ======================================================
+    def delete_habitat(self):
+        success, error = self.service.delete_habitat()
+        if error:
+            flash(error, "danger")
         else:
-            flash(result['message'], "danger")
-        return redirect(url_for('habitat.list_all_habitats'))
+            flash("Habitat supprimé avec succès.", "success")
+        return redirect(url_for("habitat.list_all_habitats"))

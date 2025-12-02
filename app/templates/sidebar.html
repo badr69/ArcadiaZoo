@@ -45,20 +45,25 @@
         </form>
     </div>
 
-    {% if role == 'admin' %}
+    {% if role_name == 'admin' %}
         <a href="{{ url_for('role.list_all_roles') }}" class="btn btn-dark">All Roles</a><br>
         <a href="{{ url_for('user.list_all_users') }}" class="btn btn-dark">All Users</a><br>
-        <a href="{{ url_for('habitat.list_all_habitats') }}" class="btn btn-dark">All Habitats</a><br>
+        <a href="{{ url_for('habitat.list_all_habitats') }}" class="btn btn-dark">All Habitats </a><br>
+        <a href="{{ url_for('img_habitat.list_all_img_ha') }}" class="btn btn-dark">All Habitats images</a><br>
         <a href="{{ url_for('animal.list_all_animals') }}" class="btn btn-dark">All Animals</a><br>
         <a href="{{ url_for('service.list_all_services') }}" class="btn btn-dark">All services</a><br>
+        <a href="{{ url_for('care.list_all_cares') }}" class="btn btn-dark">All cares</a><br>
+
         {#        <a href="{{ url_for('employee.list_all_employees') }}" class="btn btn-dark">All Employees</a><br>#}
         {#        <a href="{{ url_for('vet.list_all_vets') }}" class="btn btn-dark">All Vets</a><br>#}
-    {% elif role == 'employee' %}
+    {% elif role_name == 'employee' %}
         <a href="{{ url_for('animal.list_all_animals') }}" class="btn btn-dark">All animals</a><br>
         <a href="{{ url_for('service.list_all_services') }}" class="btn btn-dark">All services</a><br>
         <a href="{{ url_for('food.list_all_foods') }}" class="btn btn-dark">List All Foods</a><br>
-    {% elif role == 'vet' %}
+    {% elif role_name == 'vet' %}
         <a href="{{ url_for('animal.list_all_animals') }}" class="btn btn-dark">All animals</a><br>
+        <a href="{{ url_for('care.list_all_cares') }}" class="btn btn-dark">All cares</a><br>
+        <a href="{{ url_for('food.list_all_foods') }}" class="btn btn-dark">List All Foods</a><br>
     {% endif %}
 </nav>
 

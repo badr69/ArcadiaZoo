@@ -1,120 +1,137 @@
 from app.db.psql import get_db_connection
+from datetime import datetime
 
 class FoodModel:
-    def __init__(self, animal_id, type_food, quantity, date_food, id=None):
-        self.id = id
+    def __init__(self, food_id, animal_id, vet_id, employee_id,
+                 name_food, quantity, date_food=None, created_at=None, updated_at=None):
+        self.food_id = food_id
         self.animal_id = animal_id
-        self.type_food = type_food
+        self.vet_id = vet_id
+        self.employee_id = employee_id
+        self.name_food = name_food
         self.quantity = quantity
         self.date_food = date_food
+        self.created_at = created_at
+        self.updated_at = updated_at
+
+        # Conversion automatique des dates si strings
+        self.date_food = (datetime.strptime(date_food, "%Y-%m-%d %H:%M:%S")
+                          if isinstance(date_food, str) else date_food)
+        self.created_at = (datetime.strptime(created_at, "%Y-%m-%d %H:%M:%S")
+                           if isinstance(created_at, str) else created_at)
+        self.updated_at = (datetime.strptime(updated_at, "%Y-%m-%d %H:%M:%S")
+                           if isinstance(updated_at, str) else updated_at)
 
 
-    @staticmethod
-    def list_all_foods():
-        conn = get_db_connection()
-        cur = conn.cursor()
+    # ===================== READ =====================
+    @classmethod
+    def list_all_foods(cls):
         try:
-            cur.execute("""
-                SELECT f.id, a.name AS animal_name, f.type_food, f.quantity, f.date_food
-                FROM foods f
-                JOIN animals a ON f.animal_id = a.id
-                ORDER BY f.date_food DESC
-            """)
-            rows = cur.fetchall()
-            return rows
+            with get_db_connection() as conn:
+                with conn.cursor() as cur:
+                    cur.execute("""
+                        SELECT food_id, animal_id, vet_id, employee_id,
+                               name_food, quantity, date_food, created_at, updated_at
+                        FROM foods
+                        ORDER BY food_id
+                    """)
+                    rows = cur.fetchall()
+                    return [cls(*row) for row in rows]
         except Exception as e:
-            print("Erreur récupération:", e)
+            print(f"[FoodModel.list_all_foods] Error: {e}")
             return []
-        finally:
-            cur.close()
-            conn.close()
 
-    @staticmethod
-    def get_food_by_id(food_id):
-        conn = get_db_connection()
-        cur = conn.cursor()
+    @classmethod
+    def get_food_by_id(cls, food_id):
         try:
-            cur.execute("""
-                SELECT id, animal_id, type_food, quantity, date_food
-                FROM foods
-                WHERE id = %s
-            """, (food_id,))
-            row = cur.fetchone()
-            if row:
-                return FoodModel(
-                    id=row[0],
-                    animal_id=row[1],
-                    type_food=row[2],
-                    quantity=row[3],
-                    date_food=row[4]
-                )
-            return None
+            with get_db_connection() as conn:
+                with conn.cursor() as cur:
+                    cur.execute("""
+                        SELECT food_id, animal_id, vet_id, employee_id,
+                               name_food, quantity, date_food, created_at, updated_at
+                        FROM foods
+                        WHERE food_id = %s
+                    """, (food_id,))
+                    row = cur.fetchone()
+                    return cls(*row) if row else None
         except Exception as e:
-            print("Erreur get_by_id:", e)
+            print(f"[FoodModel.get_food_by_id] Error: {e}")
             return None
-        finally:
-            cur.close()
-            conn.close()
 
-    def create_food(self):
-        conn = get_db_connection()
-        cur = conn.cursor()
+    # ===================== USERS =====================
+    @classmethod
+    def list_all_vets(cls):
         try:
-            cur.execute("""
-                INSERT INTO foods (animal_id, type_food, quantity, date_food)
-                VALUES (%s, %s, %s, %s)
-                RETURNING id
-            """, (self.animal_id, self.type_food, self.quantity, self.date_food))
-            self.id = cur.fetchone()[0]
-            conn.commit()
-            return self.id
+            with get_db_connection() as conn:
+                with conn.cursor() as cur:
+                    cur.execute("""
+                        SELECT u.user_id, u.username
+                        FROM users u
+                        JOIN roles r ON u.role_id = r.role_id
+                        WHERE r.name = 'vet'
+                        ORDER BY u.username
+                    """)
+                    rows = cur.fetchall()
+                    return [{"user_id": r[0], "username": r[1]} for r in rows]
         except Exception as e:
-            conn.rollback()
-            print("Erreur création nourriture:", e)
-            return None
-        finally:
-            cur.close()
-            conn.close()
+            print(f"[FoodModel.list_all_vets] Error: {e}")
+            return []
 
-    def update_food(self):
-        if self.id is None:
-            print("Erreur : impossible de mettre à jour un objet sans id")
+    # ===================== CREATE =====================
+    @classmethod
+    def create_food(cls, animal_id, vet_id, employee_id, name_food, quantity, date_food=None):
+        date_food = date_food or datetime.now()
+        try:
+            with get_db_connection() as conn:
+                with conn.cursor() as cur:
+                    cur.execute("""
+                        INSERT INTO foods (animal_id, vet_id, employee_id, name_food, quantity, date_food)
+                        VALUES (%s, %s, %s, %s, %s, %s)
+                        RETURNING food_id
+                    """, (animal_id, vet_id, employee_id, name_food, quantity, date_food))
+                    food_id = cur.fetchone()[0]
+                    conn.commit()
+                    return cls.get_food_by_id(food_id)
+        except Exception as e:
+            print(f"[FoodModel.create_food] Error: {e}")
+            return None
+
+    # ===================== UPDATE =====================
+    def update_food(self, animal_id=None, vet_id=None, employee_id=None, name_food=None, quantity=None, date_food=None):
+        animal_id = animal_id or self.animal_id
+        vet_id = vet_id or self.vet_id
+        employee_id = employee_id or self.employee_id
+        name_food = name_food or self.name_food
+        quantity = quantity or self.quantity
+        date_food = date_food or self.date_food
+        try:
+            with get_db_connection() as conn:
+                with conn.cursor() as cur:
+                    cur.execute("""
+                        UPDATE foods
+                        SET animal_id = %s,
+                            vet_id = %s,
+                            employee_id = %s,
+                            name_food = %s,
+                            quantity = %s,
+                            date_food = %s,
+                            updated_at = NOW()
+                        WHERE food_id = %s
+                    """, (animal_id, vet_id, employee_id, name_food, quantity, date_food, self.food_id))
+                    conn.commit()
+                    return cur.rowcount > 0
+        except Exception as e:
+            print(f"[FoodModel.update_food] Error: {e}")
             return False
 
-        conn = get_db_connection()
-        cur = conn.cursor()
+    # ===================== DELETE =====================
+    def delete_food(self):
         try:
-            cur.execute("""
-                UPDATE foods
-                SET animal_id = %s,
-                    type_food = %s,
-                    quantity = %s,
-                    date_food = %s,
-                    updated_at = NOW()
-                WHERE id = %s
-            """, (self.animal_id, self.type_food, self.quantity, self.date_food, self.id))
-            conn.commit()
-            return True
+            with get_db_connection() as conn:
+                with conn.cursor() as cur:
+                    cur.execute("DELETE FROM foods WHERE food_id = %s", (self.food_id,))
+                    conn.commit()
+                    return cur.rowcount > 0
         except Exception as e:
-            conn.rollback()
-            print("Erreur mise à jour:", e)
+            print(f"[FoodModel.delete_food] Error: {e}")
             return False
-        finally:
-            cur.close()
-            conn.close()
-
-    @staticmethod
-    def delete_food(food_id):
-        conn = get_db_connection()
-        cur = conn.cursor()
-        try:
-            cur.execute("DELETE FROM foods WHERE id = %s", (food_id,))
-            conn.commit()
-            return True
-        except Exception as e:
-            conn.rollback()
-            print("Erreur suppression:", e)
-            return False
-        finally:
-            cur.close()
-            conn.close()

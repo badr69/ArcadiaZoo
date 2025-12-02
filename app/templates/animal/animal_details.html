@@ -1,8 +1,9 @@
 {% extends "base.html" %}
 
-{% block title %}Détail Animal{% endblock %}
+{% block title %}Animal Details{% endblock %}
 
 {% block content %}
+
     <div>
         {% if current_user.is_authenticated %}
             {% if current_user.role_name == 'admin' %}
@@ -17,39 +18,55 @@
             {% else %}
                 <p>Welcome {{ current_user.username }}</p>
             {% endif %}
-            <a href="{{ url_for('auth.logout') }}" class="btn btn-danger mb-3">Logout</a>
+            <form action="{{ url_for('auth.logout') }}" method="POST" style="display:inline;">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button type="submit" class="btn btn-danger mb-3">Logout</button>
+            </form>
         {% else %}
-            <p>You are not cennected.</p>
+            <p>You are not connected.</p>
             <a href="{{ url_for('auth.login') }}" class="btn btn-success mb-3">Login</a>
-            <a href="{{ url_for('user.animal_all_animals') }}" class="btn btn-primary mb-3">All Aimals</a>
+            <a href="{{ url_for('animal.list_all_animals') }}" class="btn btn-primary mb-3">All Animals</a>
         {% endif %}
+        <a href="{{ url_for('animal.list_all_animals') }}" class="btn btn-primary mb-3">All Animals</a>
+
     </div>
-    <div class="container mt-5">
-        <h2 class="mb-4">Animal Details</h2>
-            <table class="table table-bordered table-striped">
-                <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>name</th>
-                    <th>race</th>
-                    <th>description</th>
-                    <th>url_image</th>
-                    <th>update_at</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>{{ animal.id }}</td>
-                    <td>{{ animal.name }}</td>
-                    <td>{{ animal.race }}</td>
-                    <td>{{ animal.description }}</td>
-                    <td>{{ animal.url_image }}
-                    <td>{{ animal.created_at }}</td>
-                </tr>
-                </tbody>
-            </table>
-            <a href="{{ url_for('animal.list_all_animals') }}" class="btn btn-secondary">Back</a>
+
+    <h1 class="text-center mb-4">Animal Details</h1>
+
+    <div class="container mt-4">
+        <ul class="list-group">
+            <li class="list-group-item"><strong>ID:</strong> {{ animal.animal_id }}</li>
+            <li class="list-group-item"><strong>Name:</strong> {{ animal.name }}</li>
+            <li class="list-group-item"><strong>Race:</strong> {{ animal.race }}</li>
+            <li class="list-group-item">
+                <strong>Image:</strong>
+                {% if animal.url_image %}
+                    <img src="{{ url_for('static', filename=animal.url_image.lstrip('/')) }}" alt="{{ animal.name }}"
+                         class="img-fluid">
+                {% else %}
+                    <p>No Image</p>
+                {% endif %}
+            </li>
+        </ul>
     </div>
+
 {% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

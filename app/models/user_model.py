@@ -1,168 +1,223 @@
-import psycopg2
 from app.db.psql import get_db_connection
 from flask_login import UserMixin
-from app.utils.security import verify_password
 
 
 class UserModel(UserMixin):
-    def __init__(self, id, username, email, password_hash=None, role_id=None, role_name=None, created_at=None):
-        self.id = id
+    def __init__(self, user_id=None, username=None, email=None, password_hash=None,
+                 role_id=None, role_name=None, created_at=None, updated_at=None
+    ):
+        self.user_id = user_id
         self.username = username
         self.email = email
         self.password_hash = password_hash
         self.role_id = role_id
         self.role_name = role_name
         self.created_at = created_at
+        self.updated_at = updated_at
 
     @property
-    def role(self):
-        return self.role_name
+    def id(self):
+        return self.user_id
 
-    # ========== GETTERS (instanciation d'un objet) ==========
-
+    # ====================================
+    # ==========     READ     ============
+    # ====================================
     @classmethod
-    def authenticate(cls, email, password):
-        user = cls.get_by_email(email)
-        if user and verify_password(user.password_hash, password):
-            return user
-        return None
-
-    @classmethod
-    def get_by_email(cls, email):
-        conn = cur = None
+    def list_all_users(cls):
         try:
-            conn = get_db_connection()
-            cur = conn.cursor()
-            cur.execute("""
-                        SELECT u.id, u.username, u.email, u.password, u.role_id, r.name AS role_name, u.created_at
+            with get_db_connection() as conn:
+                with conn.cursor() as cur:
+                    cur.execute("""
+                        SELECT u.user_id, u.username, u.email, u.password_hash,
+                               u.role_id, r.name AS role_name,
+                               u.created_at, u.updated_at
                         FROM users u
-                                 LEFT JOIN roles r ON u.role_id = r.id
-                        WHERE u.email = %s
-                        """, (email,))
-            row = cur.fetchone()
-            print(f"[get_by_email] row récupérée: {row}")
-            return cls(*row) if row else None
+                        LEFT JOIN roles r ON u.role_id = r.role_id
+                        ORDER BY u.user_id
+                    """)
+
+                    rows = cur.fetchall()
+                    return [cls(*row) for row in rows]
+
         except Exception as e:
-            print(f"[get_by_email error]: {e}")
-            return None
-        finally:
-            if cur: cur.close()
-            if conn: conn.close()
+            print(f"[UserModel.list_all_users] Error: {e}")
+            return []
+
+    @classmethod
+    def list_all_vets(cls):
+        """
+        Retourne tous les utilisateurs dont le rôle est 'vet'.
+        Retour : liste d'objets UserModel
+        """
+        try:
+            with get_db_connection() as conn:
+                with conn.cursor() as cur:
+                    cur.execute("""
+                        SELECT u.user_id, u.username, u.email, u.password_hash,
+                               u.role_id, r.name AS role_name,
+                               u.created_at, u.updated_at
+                        FROM users u
+                        LEFT JOIN roles r ON u.role_id = r.role_id
+                        WHERE r.name = 'vet'
+                        ORDER BY u.username
+                    """)
+                    rows = cur.fetchall()
+                    return [cls(*row) for row in rows]
+
+        except Exception as e:
+            print(f"[UserModel.list_all_vets] Error: {e}")
+            return []
+
+    @classmethod
+    def list_all_employees(cls):
+        """
+        Retourne tous les utilisateurs dont le rôle est 'employee'.
+        Retour : liste d'objets UserModel
+        """
+        try:
+            with get_db_connection() as conn:
+                with conn.cursor() as cur:
+                    cur.execute("""
+                        SELECT u.user_id, u.username, u.email, u.password_hash,
+                               u.role_id, r.name AS role_name,
+                               u.created_at, u.updated_at
+                        FROM users u
+                        LEFT JOIN roles r ON u.role_id = r.role_id
+                        WHERE r.name = 'employee'
+                        ORDER BY u.username
+                    """)
+                    rows = cur.fetchall()
+                    return [cls(*row) for row in rows]
+        except Exception as e:
+            print(f"[UserModel.list_all_employees] Error: {e}")
+            return []
+
 
     @classmethod
     def get_user_by_id(cls, user_id):
-        conn = cur = None
         try:
-            conn = get_db_connection()
-            cur = conn.cursor()
-            cur.execute("""
-                        SELECT u.id, u.username, u.email, u.password, u.role_id, r.name AS role_name, u.created_at
+            with get_db_connection() as conn:
+                with conn.cursor() as cur:
+                    cur.execute("""
+                        SELECT u.user_id, u.username, u.email, u.password_hash,
+                               u.role_id, r.name AS role_name,
+                               u.created_at, u.updated_at
                         FROM users u
-                                 LEFT JOIN roles r ON u.role_id = r.id
-                        WHERE u.id = %s
-                        """, (user_id,))
-            row = cur.fetchone()
-            return cls(*row) if row else None
+                        LEFT JOIN roles r ON u.role_id = r.role_id
+                        WHERE u.user_id = %s
+                    """, (user_id,))
+                    row = cur.fetchone()
+                    return cls(*row) if row else None
+
         except Exception as e:
-            print(f"[get_user_by_id error]: {e}")
+            print(f"[UserModel.get_user_by_id] Error: {e}")
             return None
-        finally:
-            if cur: cur.close()
-            if conn: conn.close()
 
     @classmethod
-    def list_all_users(cls):
-        conn = cur = None
+    def get_user_by_email(cls, email):
         try:
-            conn = get_db_connection()
-            cur = conn.cursor()
-            cur.execute("""
-                        SELECT u.id, u.username, u.email, u.password, u.role_id, r.name AS role_name, u.created_at
+            with get_db_connection() as conn:
+                with conn.cursor() as cur:
+                    cur.execute("""
+                        SELECT u.user_id, u.username, u.email, u.password_hash,
+                               u.role_id, r.name AS role_name,
+                               u.created_at, u.updated_at
                         FROM users u
-                                 LEFT JOIN roles r ON u.role_id = r.id
-                        """)
-            rows = cur.fetchall()
-            return [cls(*row) for row in rows]
+                        LEFT JOIN roles r ON u.role_id = r.role_id
+                        WHERE u.email = %s
+                    """, (email,))
+
+                    row = cur.fetchone()
+                    return cls(*row) if row else None
+
         except Exception as e:
-            print(f"[list_all_users error]: {e}")
-            return []
-        finally:
-            if cur: cur.close()
-            if conn: conn.close()
+            print(f"[UserModel.get_user_by_email] Error: {e}")
+            return None
 
-    # ========== CREATE / UPDATE / DELETE ==========
 
-    @staticmethod
-    def create_user(username, email, password, role_id):
-        conn = cur = None
+
+    # ====================================
+    # ==========    CREATE    ============
+    # ====================================
+    @classmethod
+    def create_user(cls, username, email, password_hash, role_id):
+        """ATTENTION : ici nous ne hashons pas.
+        Le mot de passe est déjà hashé dans UserService."""
         try:
-            conn = get_db_connection()
-            cur = conn.cursor()
-            # hashed_password = generate_password_hash(password)
-            cur.execute("""
-                        INSERT INTO users (username, email, password, role_id)
+            with get_db_connection() as conn:
+                with conn.cursor() as cur:
+                    cur.execute("""
+                        INSERT INTO users (username, email, password_hash, role_id)
                         VALUES (%s, %s, %s, %s)
-                        """, (username, email, password, role_id))
-            conn.commit()
-            return True
+                        RETURNING user_id
+                    """, (username, email, password_hash, role_id))
+
+                    user_id = cur.fetchone()[0]
+                    conn.commit()
+                    return cls.get_user_by_id(user_id)
         except Exception as e:
-            print(f"[create_user error]: {e}")
-            if conn: conn.rollback()
-            return False
-        finally:
-            if cur: cur.close()
-            if conn: conn.close()
+            print(f"[UserModel.create_user] Error: {e}")
+            return None
 
-    @staticmethod
-    def update_user(user_id: int, username: str, email: str, role_id: int):
-        conn = cur = None
+    # ====================================
+    # ==========    UPDATE    ============
+    # ====================================
+    def update_user(self, username, email, role_id, password_hash=None):
+        """Modifie uniquement les données — aucune logique métier ici."""
         try:
-            conn = get_db_connection()
-            cur = conn.cursor()
+            with get_db_connection() as conn:
+                with conn.cursor() as cur:
+                    if password_hash:
+                        # Met à jour aussi le mot de passe
+                        cur.execute("""
+                                    UPDATE users
+                                    SET username      = %s,
+                                        email         = %s,
+                                        role_id       = %s,
+                                        password_hash = %s,
+                                        updated_at    = NOW()
+                                    WHERE user_id = %s
+                                    """, (username, email, role_id, password_hash, self.user_id))
+                    else:
+                        # Pas de modification du mot de passe
+                        cur.execute("""
+                                    UPDATE users
+                                    SET username   = %s,
+                                        email      = %s,
+                                        role_id    = %s,
+                                        updated_at = NOW()
+                                    WHERE user_id = %s
+                                    """, (username, email, role_id, self.user_id))
 
-            # Vérifie que le rôle existe
-            cur.execute("SELECT id FROM roles WHERE id = %s", (role_id,))
-            if cur.fetchone() is None:
-                return {"error": "Rôle inexistant."}, 400
-
-            cur.execute("""
-                        UPDATE users
-                        SET username = %s,
-                            email    = %s,
-                            role_id  = %s
-                        WHERE id = %s
-                        """, (username, email, role_id, user_id))
-
-            if cur.rowcount == 0:
-                return {"error": "Utilisateur non trouvé."}, 404
-
-            conn.commit()
-            return {"message": "Utilisateur mis à jour."}, 200
-        except psycopg2.Error as db_err:
-            print("[PostgreSQL] update_user:", db_err)
-            if conn: conn.rollback()
-            return {"error": "Erreur PostgreSQL."}, 500
-        except Exception as exc:
-            print("[Exception] update_user:", exc)
-            if conn: conn.rollback()
-            return {"error": "Erreur serveur."}, 500
-        finally:
-            if cur: cur.close()
-            if conn: conn.close()
-
-    @staticmethod
-    def delete_user(user_id):
-        conn = cur = None
-        try:
-            conn = get_db_connection()
-            cur = conn.cursor()
-            cur.execute("DELETE FROM users WHERE id = %s", (user_id,))
-            conn.commit()
-            return cur.rowcount > 0
+                    if cur.rowcount == 0:
+                        return False
+                    conn.commit()
+                    return True
         except Exception as e:
-            print(f"[delete_user error]: {e}")
-            if conn: conn.rollback()
+            print(f"[UserModel.update_user] Error: {e}")
             return False
-        finally:
-            if cur: cur.close()
-            if conn: conn.close()
+
+    # ====================================
+    # ==========    DELETE    ============
+    # ====================================
+    def delete_user(self):
+        try:
+            with get_db_connection() as conn:
+                with conn.cursor() as cur:
+                    cur.execute("""
+                        DELETE FROM users
+                        WHERE user_id = %s
+                    """, (self.user_id,))
+
+                    conn.commit()
+                    return cur.rowcount > 0
+
+        except Exception as e:
+            print(f"[UserModel.delete_user] Error: {e}")
+            return False
+
+
+
+
+
+

@@ -1,137 +1,159 @@
+# app/models/animal_model.py
 from app.db.psql import get_db_connection
-
+from typing import List, Optional
 
 class AnimalModel:
-    def __init__(self, id, name, race, description, url_image, created_at=None, updated_at=None):
-        self.id = id
+    """Modèle pour gérer les animaux."""
+
+    def __init__(
+        self,
+        animal_id: int,
+        name: str,
+        race: str,
+        description: str,
+        url_image: str,
+        habitat_id: int,
+        habitat_name: Optional[str] = None,
+        created_at: Optional[str] = None,
+        updated_at: Optional[str] = None
+    ):
+        self.animal_id = animal_id
         self.name = name
         self.race = race
         self.description = description
         self.url_image = url_image
+        self.habitat_id = habitat_id
+        self.habitat_name = habitat_name
         self.created_at = created_at
         self.updated_at = updated_at
 
+    # ===================== READ =====================
     @classmethod
-    def create_animal(cls, name, race, description, url_image):
-        conn = None
-        cur = None
+    def list_all_animals(cls) -> List["AnimalModel"]:
         try:
-            conn = get_db_connection()
-            cur = conn.cursor()
-            cur.execute("""
-                INSERT INTO animals (name, race, description, url_image)
-                VALUES (%s, %s, %s, %s)
-                RETURNING id, created_at
-            """, (name, race, description, url_image))
-            row = cur.fetchone()
-            print("Resultat RETURNING :", row)
-            conn.commit()
-            animal_id, created_at = row
-            # TODO: Ajouter created_at dans l'objet retourné pour avoir toutes les données
-            return cls(animal_id, name, race, description, url_image)
-
+            with get_db_connection() as conn:
+                with conn.cursor() as cur:
+                    cur.execute("""
+                        SELECT a.animal_id,
+                               a.name,
+                               a.race,
+                               a.description,
+                               a.url_image,
+                               a.habitat_id,
+                               h.name AS habitat_name,
+                               a.created_at,
+                               a.updated_at
+                        FROM animals a
+                        LEFT JOIN habitats h ON a.habitat_id = h.habitat_id
+                        ORDER BY a.animal_id
+                    """)
+                    rows = cur.fetchall()
+                    return [cls(*row) for row in rows]
         except Exception as e:
-            print(f"Erreur lors de la création d'un animal : {e}")
-            return None
-        finally:
-            if cur:
-                cur.close()
-            if conn:
-                conn.close()
-
-    @classmethod
-    def list_all_animals(cls):
-        conn = None
-        cur = None
-        try:
-            conn = get_db_connection()
-            cur = conn.cursor()
-            cur.execute("SELECT id, name, race, description, url_image, created_at, updated_at FROM animals ORDER BY id")
-            rows = cur.fetchall()
-            animals = []
-            for row in rows:
-                animals.append(cls(*row))
-            return animals
-        except Exception as e:
-            print(f"Erreur lors de la récupération des animaux : {e}")
+            print(f"[list_all_animals error]: {e}")
             return []
-        finally:
-            if cur:
-                cur.close()
-            if conn:
-                conn.close()
 
     @classmethod
-    def get_animal_by_id(cls, animal_id):
-        conn = None
-        cur = None
+    def get_animal_by_id(cls, animal_id: int) -> Optional["AnimalModel"]:
         try:
-            conn = get_db_connection()
-            cur = conn.cursor()
-            cur.execute("""
-                SELECT id, name, race, description, url_image, created_at, updated_at
-                FROM animals WHERE id = %s
-            """, (animal_id,))
-            row = cur.fetchone()
-            if row:
-                return cls(*row)
+            with get_db_connection() as conn:
+                with conn.cursor() as cur:
+                    cur.execute("""
+                        SELECT a.animal_id,
+                               a.name,
+                               a.race,
+                               a.description,
+                               a.url_image,
+                               a.habitat_id,
+                               h.name AS habitat_name,
+                               a.created_at,
+                               a.updated_at
+                        FROM animals a
+                        LEFT JOIN habitats h ON a.habitat_id = h.habitat_id
+                        WHERE a.animal_id = %s
+                    """, (animal_id,))
+                    row = cur.fetchone()
+                    return cls(*row) if row else None
+        except Exception as e:
+            print(f"[get_animal_by_id error]: {e}")
             return None
+
+    # ===================== CREATE =====================
+    @classmethod
+    def create_animal(
+        cls,
+        name: str,
+        race: str,
+        description: str,
+        url_image: str,
+        habitat_id: int
+    ) -> Optional["AnimalModel"]:
+        try:
+            with get_db_connection() as conn:
+                with conn.cursor() as cur:
+                    cur.execute("SELECT animal_id FROM animals WHERE name = %s", (name,))
+                    if cur.fetchone():
+                        print(f"[create_animal warning]: Nom déjà existant: {name}")
+                        return None
+
+                    cur.execute("""
+                        INSERT INTO animals (name, race, description, url_image, habitat_id)
+                        VALUES (%s, %s, %s, %s, %s)
+                        RETURNING animal_id, created_at
+                    """, (name, race, description, url_image, habitat_id))
+                    animal_id, created_at = cur.fetchone()
+                    conn.commit()
+                    return cls(animal_id, name, race, description, url_image, habitat_id, created_at=created_at)
         except Exception as e:
-            print(f"Erreur lors de la récupération de l'animal par id : {e}")
+            print(f"[create_animal error]: {e}")
             return None
-        finally:
-            if cur:
-                cur.close()
-            if conn:
-                conn.close()
 
-    @classmethod
-    def update_animal(cls, animal_id, name, race, description, url_image):
-        conn = None
-        cur = None
+    # ===================== UPDATE =====================
+    def update_animal(
+        self,
+        name: str,
+        race: str,
+        description: str,
+        url_image: str,
+        habitat_id: int
+    ) -> bool:
         try:
-            conn = get_db_connection()
-            cur = conn.cursor()
-            cur.execute("""
-                UPDATE animals
-                SET name=%s, race=%s, description=%s, url_image=%s, updated_at=NOW()
-                WHERE id=%s
-            """, (name, race, description, url_image, animal_id))
-            conn.commit()
-            if cur.rowcount == 0:
-                # TODO: le cas où l'animal n'existe pas (retourner message clair ou exception)
-                print(f"Aucun animal trouvé avec l'id {animal_id} pour mise à jour.")
-                return False
-            return True
-        except Exception as e:
-            print(f"Erreur lors de la mise à jour de l'animal : {e}")
-            return False
-        finally:
-            if cur:
-                cur.close()
-            if conn:
-                conn.close()
+            with get_db_connection() as conn:
+                with conn.cursor() as cur:
+                    cur.execute("""
+                        SELECT animal_id FROM animals 
+                        WHERE name = %s AND animal_id != %s
+                    """, (name, self.animal_id))
+                    if cur.fetchone():
+                        print(f"[update_animal warning]: Nom déjà utilisé: {name}")
+                        return False
 
-    @classmethod
-    def delete_animal(cls, animal_id):
-        conn = None
-        cur = None
-        try:
-            conn = get_db_connection()
-            cur = conn.cursor()
-            cur.execute("DELETE FROM animals WHERE id = %s", (animal_id,))
-            conn.commit()
-            if cur.rowcount == 0:
-                # TODO le cas où l'animal à supprimer n'existe pas
-                print(f"Aucun animal trouvé avec l'id {animal_id} à supprimer.")
-                return False
-            return True
+                    cur.execute("""
+                        UPDATE animals
+                        SET name = %s, race = %s, description = %s, url_image = %s, habitat_id = %s, updated_at = NOW()
+                        WHERE animal_id = %s
+                    """, (name, race, description, url_image, habitat_id, self.animal_id))
+                    conn.commit()
+
+                    self.name = name
+                    self.race = race
+                    self.description = description
+                    self.url_image = url_image
+                    self.habitat_id = habitat_id
+                    return True
         except Exception as e:
-            print(f"Erreur lors de la suppression de l'animal : {e}")
+            print(f"[update_animal error]: {e}")
             return False
-        finally:
-            if cur:
-                cur.close()
-            if conn:
-                conn.close()
+
+    # ===================== DELETE =====================
+    def delete_animal(self) -> bool:
+        try:
+            with get_db_connection() as conn:
+                with conn.cursor() as cur:
+                    cur.execute("DELETE FROM animals WHERE animal_id = %s", (self.animal_id,))
+                    conn.commit()
+                    return cur.rowcount > 0
+        except Exception as e:
+            print(f"[delete_animal error]: {e}")
+            return False
 
